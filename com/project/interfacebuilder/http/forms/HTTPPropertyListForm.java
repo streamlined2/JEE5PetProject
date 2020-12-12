@@ -1,6 +1,7 @@
 package com.project.interfacebuilder.http.forms;
 
 import com.project.Helpers;
+import com.project.inspection.ListItem;
 import com.project.inspection.PropertyInfo;
 import com.project.inspection.PropertyListItem;
 import com.project.inspection.property.InformationPropertyInfo;
@@ -129,7 +130,7 @@ public class HTTPPropertyListForm extends HTTPDataAwareForm {
 		out.print("id=\"");
 		out.print(id);
 		out.print("\" ");
-		PropertyListItem item=getDataSource().getPropertyList().findByProperty(pInfo);
+		ListItem item=getDataSource().getPropertyList().findByProperty(pInfo);
 		if(item!=null){
 			out.print("checked");
 		}

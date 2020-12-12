@@ -6,8 +6,8 @@ import java.util.List;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.EntityInspector;
+import com.project.inspection.ListItem;
 import com.project.inspection.PropertyInfo;
-import com.project.inspection.PropertyListItem;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.Helpers;
 import com.project.interfacebuilder.http.actions.HTTPProceedAction;
@@ -62,7 +62,7 @@ public class HTTPQueryForm extends HTTPDataRangeForm {
 			append("\"").
 			append(">");
 		
-		for(PropertyListItem item:getDataSource().getPropertyList().getOrderedSet()){
+		for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=item.getPropertyInfo();
 			buffer.append("<th align=\"center\">").append(pInfo.getDisplayName()).append("</th>");
 		}
@@ -74,7 +74,7 @@ public class HTTPQueryForm extends HTTPDataRangeForm {
 			Object[] infoData=entityData.getInfoData();
 			
 			int count=0;
-			for(PropertyListItem item:getDataSource().getPropertyList().getOrderedSet()){
+			for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
 				InformationPropertyInfo pInfo=item.getPropertyInfo();
 				Object value=infoData[count++];
 				buffer.

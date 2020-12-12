@@ -6,9 +6,9 @@ import com.project.Helpers;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.EntityInspector;
+import com.project.inspection.ListItem;
 import com.project.inspection.PropertyInfo.AlignType;
 import com.project.inspection.property.InformationPropertyInfo;
-import com.project.inspection.PropertyListItem;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPAddNewAction;
@@ -113,7 +113,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 	private String formListTitle() throws InterfaceException {
 		StringBuilder b=new StringBuilder();
 		b.append(Helpers.padString(AlignType.CENTER, COUNTER_WIDTH, "", Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
-		for(PropertyListItem item:getDataSource().getPropertyList().getOrderedSet()){
+		for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=item.getPropertyInfo();
 			b.append(Helpers.padString(AlignType.CENTER, getColumnWidth(pInfo), pInfo.getDisplayName(), Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
 		}
@@ -128,7 +128,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		int k=0;
 		
 		Object[] data=d.getInfoData();
-		for(PropertyListItem pItem:getDataSource().getPropertyList().getOrderedSet()){
+		for(ListItem pItem:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=pItem.getPropertyInfo();
 			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo), EntityInspector.convertToString(data[k++]), Helpers.NON_BREAKING_SPACE));
 			if(k<data.length){
@@ -142,7 +142,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		StringBuilder b=new StringBuilder();
 		b.append(Helpers.padString(AlignType.RIGHT, COUNTER_WIDTH, "", Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
 		int k=0;
-		for(PropertyListItem item:getDataSource().getPropertyList().getOrderedSet()){
+		for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=item.getPropertyInfo();
 			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo), "", Helpers.NON_BREAKING_SPACE));
 			if(k++<columnCount){

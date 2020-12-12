@@ -20,7 +20,7 @@ public abstract class HTTPDataAwareForm extends HTTPForm {
 	}
 
 	protected void checkState() throws InterfaceException{
-		if(dataSource==null) throw new IllegalStateException("QueryResult reference must be set");
+		if(dataSource==null) throw new IllegalStateException("DataSource reference must be set");
 	}
 	
 }

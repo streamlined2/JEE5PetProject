@@ -51,7 +51,7 @@ public abstract class HTTPApplyActionSupport<ItemType extends ListItem> extends 
 			
 			if(HTTPControllerSupport.parameterIsNotEmpty(parameters,HTTPForm.getUseFlagName(pInfo))){
 	
-				ItemType item=list.createItem(controller,pInfo, parameters, actions);
+				ItemType item=list.createItem(controller, pInfo, parameters, actions);
 				list.addItem(item);
 				
 			}
