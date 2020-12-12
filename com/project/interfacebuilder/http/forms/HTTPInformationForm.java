@@ -2,7 +2,6 @@ package com.project.interfacebuilder.http.forms;
 
 import java.awt.Dimension;
 
-import com.project.Startup;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
 

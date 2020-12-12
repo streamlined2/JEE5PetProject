@@ -1,5 +1,6 @@
 package com.project.interfacebuilder.http.forms;
 
+import java.util.Locale;
 import java.util.Set;
 
 import com.project.Helpers;
@@ -19,7 +20,7 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	
 	public QueryList getQueries() throws InterfaceException {
 		if(queries == null){ // lazy initialization
-			queries = QueryListBuilder.createQueryList();
+			queries = QueryListBuilder.createQueryList(this);
 		}
 		return queries;
 	}
@@ -51,13 +52,13 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	}
 
 	@Override
-	protected String getTitleName() {
-		return Helpers.getLocalizedDisplayName("EntityNamesBundle", "Query", "name");
+	protected String getTitleName(Locale locale) {
+		return Helpers.getLocalizedDisplayName("EntityNamesBundle", locale, "Query", "name");
 	}
 
 	@Override
-	protected String getTitleDesc() {
-		return Helpers.getLocalizedDisplayName("EntityNamesBundle", "Query", "desc");
+	protected String getTitleDesc(Locale locale) {
+		return Helpers.getLocalizedDisplayName("EntityNamesBundle", locale, "Query", "desc");
 	}
 
 	@Override

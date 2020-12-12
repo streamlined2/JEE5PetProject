@@ -35,7 +35,7 @@ public abstract class HTTPSelectorSetForm extends HTTPDataAwareForm {
 			out.print("<fieldset>");
 			
 			out.print("<legend>");
-			out.print(getDataSource().getDisplayName());
+			out.print(getDataSource().getDisplayName(getSelectedLocale()));
 			out.print("</legend>");
 			
 			out.print("<table>");

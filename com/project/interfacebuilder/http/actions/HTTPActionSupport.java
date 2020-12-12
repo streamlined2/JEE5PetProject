@@ -3,18 +3,19 @@ package com.project.interfacebuilder.http.actions;
 import java.awt.Font;
 import java.io.PrintWriter;
 
+import com.project.Startup;
 import com.project.interfacebuilder.ActionSupport;
+import com.project.interfacebuilder.Controller;
 import com.project.interfacebuilder.ControllerSupport.FormChainElement;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.Helpers;
 import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.interfacebuilder.transition.Dispatcher;
 
 // Bridge design pattern: abstract class hierarchy ActionSupport/HTTPActionSupport implements contract behavior, 
 // that implied by interface hierarchy Action/HTTPAction
-public abstract class HTTPActionSupport extends ActionSupport implements HTTPAction {
+public abstract class HTTPActionSupport extends ActionSupport {
 	
 	public HTTPActionSupport(String name) {
 		super(name);
@@ -37,15 +38,15 @@ public abstract class HTTPActionSupport extends ActionSupport implements HTTPAct
 		return Helpers.getStyle(getRenderFont());
 	}
 	
-	protected HTTPController controller;
+	protected Controller controller;
 	
-	public void setController(HTTPController controller){
+	public void setController(Controller controller){
 		this.controller = controller;
 	}
 	
 	protected void checkState(){ // sentinel method to watch for form's illegal state
-		if(controller==null) throw new IllegalStateException("controller must be set for action "+getDisplayName());
-		if(getTargetForm()==null) throw new IllegalStateException("target form must be set for action "+getDisplayName());
+		if(controller==null) throw new IllegalStateException("controller must be set for action "+getDisplayName(Startup.DEFAULT_LOCALE));
+		if(getTargetForm()==null) throw new IllegalStateException("target form must be set for action "+getDisplayName(Startup.DEFAULT_LOCALE));
 	}
 	
 	public void render(Form form) throws InterfaceException {
@@ -56,7 +57,7 @@ public abstract class HTTPActionSupport extends ActionSupport implements HTTPAct
 			out.print("type=\"submit\" name=\"");
 			out.print(getInnerName());
 			out.print("\" value=\"");
-			out.print(getDisplayName());
+			out.print(getDisplayName(form.getSelectedLocale()));
 			out.print("\" ");
 			out.print(getStyle());
 			out.print(" />");

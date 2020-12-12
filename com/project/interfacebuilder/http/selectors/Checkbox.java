@@ -4,7 +4,6 @@ import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.Selector;
-import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class Checkbox extends SelectorSupport {
 

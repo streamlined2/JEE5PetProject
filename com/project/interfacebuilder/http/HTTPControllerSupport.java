@@ -2,9 +2,18 @@ package com.project.interfacebuilder.http;
 
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.ejb.EJBException;
 import javax.servlet.RequestDispatcher;
@@ -29,9 +38,9 @@ import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.ConfirmAction;
 import com.project.interfacebuilder.ControllerSupport;
 import com.project.interfacebuilder.Form;
+import com.project.interfacebuilder.FormSupport;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.Selector;
-import com.project.interfacebuilder.http.actions.HTTPAction;
 import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.interfacebuilder.transition.Dispatcher;
 
@@ -46,6 +55,15 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	private ServletContext context;
 	private ServletConfig config;
 	
+	private List<Locale> supportedLocales = new ArrayList<Locale>();
+	{
+		supportedLocales.add(Locale.forLanguageTag("uk-UA"));
+		supportedLocales.add(Locale.forLanguageTag("ru-RU"));
+		supportedLocales.add(Locale.US);
+		supportedLocales.add(Locale.ENGLISH);
+		supportedLocales.add(Locale.UK);
+	};
+
 	public HTTPControllerSupport() throws InterfaceException{
 		super();
 		
@@ -106,8 +124,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		
 		Action action=null;
 		
-		java.util.List<HTTPAction> actions=
-			(java.util.List<HTTPAction>)getAttribute(HTTPController.ACTIONS_ATTRIBUTE);
+		java.util.List<Action> actions=
+			(java.util.List<Action>)getAttribute(HTTPController.ACTIONS_ATTRIBUTE);
 		
 		if(actions!=null){
 			action = getActivatedAction(actions, request.getParameterMap());
@@ -127,7 +145,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	protected void activateTarget(Form form) throws InterfaceException {
 		
 		if(form instanceof HTTPForm){
-			((HTTPForm)form).activate();
+			((FormSupport)form).activate();
 		}
 		
 	}
@@ -135,14 +153,14 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	@Override
 	protected Form getSource() {
 		checkState();
-		return (HTTPForm)getAttribute(HTTPController.SOURCE_FORM_ATTRIBUTE);
+		return (FormSupport)getAttribute(HTTPController.SOURCE_FORM_ATTRIBUTE);
 	}
 
 	@Override
 	protected void setUpAction(Action action, Form sourceForm) {
 		
-		if(action instanceof HTTPAction){
-			HTTPAction a=(HTTPAction)action;
+		if(action instanceof Action){
+			Action a=(Action)action;
 			a.setController(this);
 			a.setSourceForm(sourceForm);
 		}
@@ -152,8 +170,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	@Override
 	protected void setUpActionTarget(Action action, Form targetForm) {
 		
-		if(action instanceof HTTPAction){
-			((HTTPAction)action).setTargetForm(targetForm);
+		if(action instanceof Action){
+			((Action)action).setTargetForm(targetForm);
 		}
 		
 	}
@@ -191,9 +209,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		if(!(dataSource instanceof EntityDataSource)) throw new InterfaceException("saveChanges may be applied only to EntityDataSource");
 
 		@SuppressWarnings("unchecked")
-		java.util.List<HTTPAction> actions=(java.util.List<HTTPAction>)getAttribute(HTTPController.ACTIONS_ATTRIBUTE);
+		java.util.List<Action> actions=(java.util.List<Action>)getAttribute(HTTPController.ACTIONS_ATTRIBUTE);
 		
-		@SuppressWarnings("unchecked")
 		Map<String,String[]> requestParametersMap=(Map<String,String[]>)request.getParameterMap();
 
 		Boolean createNew=(Boolean)getAttribute(HTTPController.CREATE_NEW_ATTRIBUTE);
@@ -211,12 +228,12 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 
 	private void saveChanges(
 			EntityDataSource dataSource,
-			java.util.List<HTTPAction> actions, 
+			java.util.List<Action> actions, 
 			Map<String,String[]> requestParametersMap, 
 			boolean createNew, 
 			Object primaryKey) throws InterfaceException{
 		
-		HTTPAction action=getActivatedAction(actions, requestParametersMap);
+		Action action=getActivatedAction(actions, requestParametersMap);
 		if(action instanceof ConfirmAction){
 			
 			updateEntity(actions, requestParametersMap, dataSource, createNew, primaryKey);
@@ -226,7 +243,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	}
 
 	private void updateEntity(
-			List<HTTPAction> actions, 
+			List<Action> actions, 
 			Map<String, String[]> map,
 			EntityDataSource dataSource, 
 			boolean createNew, 
@@ -280,7 +297,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	}
 
 	public Object findPropertyValue(
-			PropertyInfo pInfo, List<HTTPAction> actions, Map<String, String[]> map) throws InterfaceException {
+			PropertyInfo pInfo, List<Action> actions, Map<String, String[]> map) throws InterfaceException {
 	
 		String propertyName=pInfo.getPropertyName();
 		Class<?> propertyType=pInfo.getType();
@@ -323,14 +340,14 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		return null;
 	}
 
-	private boolean isActivatedAction(String pName,List<HTTPAction> actions){
+	private boolean isActivatedAction(String pName,List<Action> actions){
 		return getActivatedAction(pName,actions)!=null;
 	}
 
-	private HTTPAction getActivatedAction(String parameterName,java.util.List<HTTPAction> actions){
+	private Action getActivatedAction(String parameterName,java.util.List<Action> actions){
 		if(parameterName!=null && !parameterName.isEmpty()){
 			if(actions!=null){
-				for(HTTPAction action:actions){
+				for(Action action:actions){
 					if(parameterName.trim().equals(action.getInnerName())) return action;
 				}
 			}
@@ -338,11 +355,11 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		return null;
 	}
 
-	public HTTPAction getActivatedAction(
-			java.util.List<HTTPAction> actions, java.util.Map<String,String[]> requestParameters) {
+	public Action getActivatedAction(
+			java.util.List<Action> actions, java.util.Map<String,String[]> requestParameters) {
 	
 		for(Iterator<String> keys=requestParameters.keySet().iterator();keys.hasNext();){
-			HTTPAction action=getActivatedAction(keys.next(),actions);
+			Action action=getActivatedAction(keys.next(),actions);
 			if(action!=null) return action;
 		}
 	
@@ -361,7 +378,6 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		return request.getParameter(name);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String[]> getParameters() {
 		if(request==null) throw new IllegalStateException("request must be set for getParameter");
@@ -426,6 +442,149 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	
 	public FilterRangeBoundary getFilterRangeKind(){
 		return filterRangeKind;
+	}
+	
+	private static class LocaleHolder implements Comparable<LocaleHolder>{
+		
+		private Locale locale;
+		private int rank;
+		private int level;
+		
+		LocaleHolder(Locale locale,int level,int rank){
+			this.locale = locale;
+			this.level = level;
+			this.rank = rank;
+		}
+		
+		Locale getLocale(){
+			return locale;
+		}
+		
+		@Override public int hashCode(){
+			return locale.hashCode();
+		}
+		
+		@Override public boolean equals(Object other){
+			if(!(other instanceof Locale)) return false;
+			Locale o = (Locale)other;
+			return equals(o);
+		}
+		
+		@Override public String toString(){
+			return "name="+locale.toString()+",rank="+rank+",level="+level;
+		}
+
+		@Override
+		public int compareTo(LocaleHolder other) {
+			return locale.hashCode()-other.locale.hashCode();
+		}
+
+	}
+	
+	private Set<LocaleHolder> deriveLocaleSet(List<Locale> list){
+
+		ResourceBundle.Control control = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
+
+		Set<LocaleHolder> set = new TreeSet<LocaleHolder>();
+
+		int rank = 0;
+		for(Locale locale:list){
+
+			List<Locale> candidates = control.getCandidateLocales("", locale);
+			
+			int parentIndex = candidates.size()-2;
+			if(parentIndex>=0){
+
+				Locale parent = candidates.get(parentIndex);
+				LocaleHolder parentHolder = findLocaleHolder(set, parent);
+				int level = 0;
+				for(Locale candidate:candidates){
+					if(!candidate.equals(Locale.ROOT)){
+						LocaleHolder holder = new LocaleHolder(candidate,level++,((parentHolder!=null)? parentHolder.rank: rank));
+						set.add(holder);
+					}
+				}
+			}
+
+			rank++;
+		
+		}
+		return set;
+	}
+
+	private LocaleHolder findLocaleHolder(Set<LocaleHolder> set, Locale parent) {
+		for(LocaleHolder localeHolder:set){
+			if(parent.equals(localeHolder.locale)){
+				return localeHolder;
+			}
+		}
+		return null;
+	}
+	
+	private SortedSet<LocaleHolder> getActiveLocaleHolders(List<Locale> requestLocales){
+		
+		Set<LocaleHolder> supportedLocaleSet = deriveLocaleSet(supportedLocales);
+		Set<LocaleHolder> requestLocaleSet = appendLocaleSet(requestLocales,supportedLocaleSet);
+
+		requestLocaleSet.retainAll(supportedLocaleSet);
+		
+		SortedSet<LocaleHolder> setByRank = new TreeSet<LocaleHolder>(new Comparator<LocaleHolder>(){
+			
+			private final static int MAX_RANKS = 100;
+			
+			private int orderIndex(LocaleHolder a){
+				return a.level*MAX_RANKS+a.rank;
+			}
+
+			@Override
+			public int compare(LocaleHolder a, LocaleHolder b) {
+				return orderIndex(a)-orderIndex(b);
+			}
+			
+		});
+		
+		setByRank.addAll(requestLocaleSet);
+		
+		return setByRank;
+	}
+	
+	private Set<LocaleHolder> appendLocaleSet(
+			List<Locale> requestLocales, Set<LocaleHolder> supportedLocaleSet) {
+		Set<LocaleHolder> resultSet = new TreeSet<LocaleHolder>();
+		for(Locale locale:requestLocales){
+			LocaleHolder holder = findLocaleHolder(supportedLocaleSet, locale);
+			if(holder!=null){
+				Set<LocaleHolder> appendSet = getAppendLocaleSet(supportedLocaleSet, holder.rank, holder.level);
+				resultSet.addAll(appendSet);
+			}
+		}
+		return resultSet;
+	}
+
+	private Set<LocaleHolder> getAppendLocaleSet(Set<LocaleHolder> supportedLocaleSet, int rank, int level) {
+		Set<LocaleHolder> set = new HashSet<LocaleHolder>();
+		for(LocaleHolder holder:supportedLocaleSet){
+			if(holder.rank==rank && holder.level<=level){
+				set.add(holder);
+			}
+		}
+		return set;
+	}
+
+	public void setLocaleAttribute(){
+		setAttribute(
+				HTTPController.AVAILABLE_LOCALE_SET_ATTRIBUTE, 
+				getActiveLocaleHolders(Collections.list(request.getLocales())));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Locale getSelectedLocale(){
+		final Locale defaultLocale = Startup.DEFAULT_LOCALE; 
+		Object attr = getAttribute(HTTPController.AVAILABLE_LOCALE_SET_ATTRIBUTE);
+		if(attr==null) return defaultLocale;
+		SortedSet<LocaleHolder> locales = (SortedSet<LocaleHolder>) attr;
+		if(locales.size()==0) return defaultLocale;
+		return locales.first().getLocale();
 	}
 
 }

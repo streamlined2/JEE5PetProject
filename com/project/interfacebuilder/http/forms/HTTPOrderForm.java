@@ -73,7 +73,7 @@ public class HTTPOrderForm extends HTTPDataAwareForm {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", "Entity", "property"));
+		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", getSelectedLocale(), "Entity", "property"));
 		out.print("</span>");
 		
 		out.print("</th>");
@@ -83,7 +83,7 @@ public class HTTPOrderForm extends HTTPDataAwareForm {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", "Entity", "orderBy"));
+		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", getSelectedLocale(), "Entity", "orderBy"));
 		out.print("</span>");
 		
 		out.print("</th>");
@@ -93,7 +93,7 @@ public class HTTPOrderForm extends HTTPDataAwareForm {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", "Entity", "order"));
+		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", getSelectedLocale(), "Entity", "order"));
 		out.print("</span>");
 		
 		out.print("</th>");
@@ -103,7 +103,7 @@ public class HTTPOrderForm extends HTTPDataAwareForm {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", "Entity", "sortOrder"));
+		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", getSelectedLocale(), "Entity", "sortOrder"));
 		out.print("</span>");
 		
 		out.print("</th>");
@@ -159,7 +159,7 @@ public class HTTPOrderForm extends HTTPDataAwareForm {
 			out.print("selected");
 		}
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("TypeValuesBundle","SortOrderType",SortOrderType.ASCENDING.toString(),SortOrderType.ASCENDING.toString()));//EntityInspector.convertToString(SortOrderType.ASCENDING)
+		out.print(Helpers.getLocalizedDisplayName("TypeValuesBundle", getSelectedLocale(), "SortOrderType", SortOrderType.ASCENDING.toString(), SortOrderType.ASCENDING.toString()));//EntityInspector.convertToString(SortOrderType.ASCENDING)
 		out.print("</option>");
 
 		out.print("<option ");
@@ -170,7 +170,7 @@ public class HTTPOrderForm extends HTTPDataAwareForm {
 			out.print("selected");
 		}
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("TypeValuesBundle","SortOrderType",SortOrderType.DESCENDING.toString(),SortOrderType.DESCENDING.toString()));//EntityInspector.convertToString(SortOrderType.DESCENDING)
+		out.print(Helpers.getLocalizedDisplayName("TypeValuesBundle", getSelectedLocale(), "SortOrderType",SortOrderType.DESCENDING.toString(),SortOrderType.DESCENDING.toString()));//EntityInspector.convertToString(SortOrderType.DESCENDING)
 		out.print("</option>");
 
 		out.print("</select>");

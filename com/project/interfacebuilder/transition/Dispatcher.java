@@ -3,6 +3,7 @@ package com.project.interfacebuilder.transition;
 import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.ControllerSupport.FormChainElement;
 import com.project.interfacebuilder.Form;
+import com.project.interfacebuilder.FormSupport;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPAddNewAction;
 import com.project.interfacebuilder.http.actions.HTTPApplyFilterAction;
@@ -24,15 +25,12 @@ import com.project.interfacebuilder.http.forms.HTTPBrowseForm;
 import com.project.interfacebuilder.http.forms.HTTPEditForm;
 import com.project.interfacebuilder.http.forms.HTTPEntitySelectionForm;
 import com.project.interfacebuilder.http.forms.HTTPFilterForm;
-import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.interfacebuilder.http.forms.HTTPInformationForm;
 import com.project.interfacebuilder.http.forms.HTTPOrderForm;
 import com.project.interfacebuilder.http.forms.HTTPPropertyListForm;
 import com.project.interfacebuilder.http.forms.HTTPQueryForm;
 import com.project.interfacebuilder.http.forms.HTTPQuerySelectionForm;
 import com.project.interfacebuilder.http.forms.HTTPTopLevelMenuSelectionForm;
-import com.project.interfacebuilder.transition.TransitionRule;
-import com.project.interfacebuilder.transition.TransitionRuleSet;
 
 // builds interface elements & encapsulates dispatcher behavior for MVC/front controller design pattern
 public class Dispatcher {
@@ -43,7 +41,7 @@ public class Dispatcher {
 	private HTTPEditForm editForm;
 	private HTTPFilterForm filterForm;
 	private HTTPOrderForm orderForm;
-	private HTTPForm propertyListForm;
+	private FormSupport propertyListForm;
 	private HTTPEntitySelectionForm entitySelectionForm;
 	private HTTPQuerySelectionForm querySelectionForm;
 	private HTTPTopLevelMenuSelectionForm topLevelMenuSelectionForm;

@@ -66,7 +66,7 @@ public class HTTPPropertyListForm extends HTTPDataAwareForm {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", "Entity", "property"));
+		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", getSelectedLocale(), "Entity", "property"));
 		out.print("</span>");
 		
 		out.print("</th>");
@@ -76,7 +76,7 @@ public class HTTPPropertyListForm extends HTTPDataAwareForm {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", "Entity", "orderBy"));
+		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", getSelectedLocale(), "Entity", "orderBy"));
 		out.print("</span>");
 		
 		out.print("</th>");
@@ -86,7 +86,7 @@ public class HTTPPropertyListForm extends HTTPDataAwareForm {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", "Entity", "order"));
+		out.print(Helpers.getLocalizedDisplayName("PropertyNamesBundle", getSelectedLocale(), "Entity", "order"));
 		out.print("</span>");
 		
 		out.print("</th>");

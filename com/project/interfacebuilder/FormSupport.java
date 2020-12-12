@@ -4,13 +4,9 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-
-import javax.naming.NamingException;
-
-import com.project.AgentRemote;
-import com.project.Startup;
 
 public abstract class FormSupport implements Form {
 	
@@ -85,6 +81,10 @@ public abstract class FormSupport implements Form {
 	@Override
 	public State getState() {
 		return this.new FormState();
+	}
+
+	public Locale getSelectedLocale() {
+		return null;
 	}
 
 }

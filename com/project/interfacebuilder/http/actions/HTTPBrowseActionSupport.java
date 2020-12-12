@@ -1,12 +1,12 @@
 package com.project.interfacebuilder.http.actions;
 
 import com.project.Helpers;
+import com.project.datasource.EntityDataSource;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
-import com.project.datasource.EntityDataSource;
 
 public abstract class HTTPBrowseActionSupport extends HTTPSelectItemAction <EntityInfo> {
 
@@ -28,8 +28,8 @@ public abstract class HTTPBrowseActionSupport extends HTTPSelectItemAction <Enti
 		try {
 			
 			Class<?> entityClass=Class.forName(Helpers.getEntityFullClassName(selectedEntityName));
-			EntityInfo entityInfo=EntityInspector.getEntityInfo(entityClass);
-			EntityDataSource dataSource = new EntityDataSource(entityInfo); 
+			EntityInfo entityInfo=EntityInspector.getEntityInfo(entityClass,controller.getSelectedLocale());
+			EntityDataSource dataSource = new EntityDataSource(dataRangeForm,entityInfo); 
 			dataRangeForm.setDataSource(dataSource);
 
 			controller.setAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE, dataSource);

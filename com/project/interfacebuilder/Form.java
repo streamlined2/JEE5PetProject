@@ -2,6 +2,7 @@ package com.project.interfacebuilder;
 
 import java.awt.Font;
 import java.util.List;
+import java.util.Locale;
 
 public interface Form {
 	
@@ -18,6 +19,9 @@ public interface Form {
 	
 	public Integer getNextControlId();
 	
+	public Controller getController();
+	public void setController(Controller controller);
+
 	public interface State {
 		
 		/**
@@ -27,5 +31,6 @@ public interface Form {
 		
 	}
 	public State getState();
+	public Locale getSelectedLocale();
 	
 }

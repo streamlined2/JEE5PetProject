@@ -1,9 +1,11 @@
 package com.project.interfacebuilder.http.forms;
 
 import java.awt.Dimension;
+import java.util.Locale;
 
 import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.Action;
+import com.project.interfacebuilder.Controller;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
@@ -105,6 +107,8 @@ public abstract class HTTPForm extends HTTPFormSupport implements Form {
 		out.print("<tr>");
 		out.print("<td align=\"center\">");
 		
+		action.setController(controller);
+		
 		action.render(this);
 
 		out.print("</td>");
@@ -112,14 +116,19 @@ public abstract class HTTPForm extends HTTPFormSupport implements Form {
 
 	}
 	
-	protected HTTPController controller;
+	protected Controller controller;
 
-	public HTTPController getController() {
+	public Controller getController() {
 		return controller;
 	}
 
-	public void setController(HTTPController controller) {
+	public void setController(Controller controller) {
 		this.controller = controller;
+	}
+	
+	@Override
+	public Locale getSelectedLocale(){
+		return getController().getSelectedLocale();
 	}
 
 }

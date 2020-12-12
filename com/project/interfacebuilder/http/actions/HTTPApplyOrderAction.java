@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.project.datasource.DataSource;
 import com.project.inspection.OrderingItem;
+import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
@@ -23,7 +24,7 @@ public class HTTPApplyOrderAction extends HTTPApplyActionSupport<OrderingItem> {
 		if(dataSource==null) throw new InterfaceException(HTTPController.DATA_SOURCE_ATTRIBUTE+" must be set before applying HTTPApplyOrderAction");
 		
 		@SuppressWarnings("unchecked")
-		java.util.List<HTTPAction> actions=(java.util.List<HTTPAction>)controller.getAttribute(HTTPController.ACTIONS_ATTRIBUTE);
+		java.util.List<Action> actions=(java.util.List<Action>)controller.getAttribute(HTTPController.ACTIONS_ATTRIBUTE);
 		if(actions==null) throw new InterfaceException(HTTPController.ACTIONS_ATTRIBUTE+" must be set after HTTPBrowseForm submission");
 
 		Map<String,String[]> requestParametersMap=controller.getParameters();

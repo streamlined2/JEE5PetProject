@@ -69,7 +69,7 @@ public class HTTPFilterAction extends HTTPActionSupport {
 		out.print("<span ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(getLocalizedName(elementName));
+		out.print(getLocalizedName(controller.getSelectedLocale(),elementName));
 		out.print("</span>");
 
 	}

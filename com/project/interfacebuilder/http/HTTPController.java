@@ -1,13 +1,6 @@
 package com.project.interfacebuilder.http;
 
-import java.util.List;
-import java.util.Map;
-
-import com.project.inspection.Filter.FilterRangeBoundary;
-import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.Controller;
-import com.project.interfacebuilder.InterfaceException;
-import com.project.interfacebuilder.http.actions.HTTPAction;
 
 public interface HTTPController extends Controller {
 	
@@ -26,21 +19,6 @@ public interface HTTPController extends Controller {
 	public static final String FILTER_RANGE_GROUP = "filterRangeGroup";
 	public static final String WRAPPED_EXCEPTION = "wrappedException";
 	public static final String INTERFACE_EXCEPTION_MESSAGE = "exceptionMessage";
+	public static final String AVAILABLE_LOCALE_SET_ATTRIBUTE = "availableLocaleSet";
 	
-	public Object getAttribute(String name);
-	public void setAttribute(String name,Object value);
-	
-	public String getParameter(String name);
-	public Map<String,String[]> getParameters();
-	
-	public String getLink();
-	
-	public void saveChanges() throws InterfaceException;
-
-	public Object findPropertyValue(
-			PropertyInfo pInfo, List<HTTPAction> actions, Map<String, String[]> map) throws InterfaceException;
-
-	public FilterRangeBoundary getFilterRangeKind();
-	public void updateFilterRangeKind();
-
 }

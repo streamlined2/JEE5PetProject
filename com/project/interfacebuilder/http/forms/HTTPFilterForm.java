@@ -60,7 +60,7 @@ public class HTTPFilterForm extends HTTPSelectorSetForm {
 	
 	@Override
 	public void activate() throws InterfaceException {
-		entityData=EntityInspector.initializeEntityData(getDataSource(),getBoundaryKind());
+		entityData=EntityInspector.initializeEntityData(this,getDataSource(),getBoundaryKind());
 
 		super.activate();
 	}

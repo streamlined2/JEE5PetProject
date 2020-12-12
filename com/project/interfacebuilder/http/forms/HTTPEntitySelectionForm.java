@@ -1,5 +1,6 @@
 package com.project.interfacebuilder.http.forms;
 
+import java.util.Locale;
 import java.util.Set;
 
 import com.project.Helpers;
@@ -26,7 +27,7 @@ public class HTTPEntitySelectionForm extends HTTPSelectionViewForm<EntityInfo> {
 
 	@Override
 	protected Set<EntityInfo> getItemSet() throws InterfaceException {
-		return EntityClass.getEntitySet();
+		return EntityClass.getEntitySet(getSelectedLocale());
 	}
 
 	@Override
@@ -45,13 +46,13 @@ public class HTTPEntitySelectionForm extends HTTPSelectionViewForm<EntityInfo> {
 	}
 
 	@Override
-	protected String getTitleName() {
-		return Helpers.getLocalizedDisplayName("EntityNamesBundle", "Entity", "name");
+	protected String getTitleName(Locale locale) {
+		return Helpers.getLocalizedDisplayName("EntityNamesBundle", locale, "Entity", "name");
 	}
 
 	@Override
-	protected String getTitleDesc() {
-		return Helpers.getLocalizedDisplayName("EntityNamesBundle", "Entity", "desc");
+	protected String getTitleDesc(Locale locale) {
+		return Helpers.getLocalizedDisplayName("EntityNamesBundle", locale, "Entity", "desc");
 	}
 
 	@Override

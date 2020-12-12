@@ -1,5 +1,6 @@
 package com.project.interfacebuilder.http.forms;
 
+import java.util.Locale;
 import java.util.Set;
 
 import com.project.Helpers;
@@ -77,13 +78,13 @@ public abstract class HTTPMenuSelectionForm extends HTTPSelectionViewForm<MenuIt
 	}
 
 	@Override
-	protected String getTitleName() {
-		return Helpers.getLocalizedDisplayName("EntityNamesBundle", "Menu", "name");
+	protected String getTitleName(Locale locale) {
+		return Helpers.getLocalizedDisplayName("EntityNamesBundle", locale, "Menu", "name");
 	}
 
 	@Override
-	protected String getTitleDesc() {
-		return Helpers.getLocalizedDisplayName("EntityNamesBundle", "Menu", "desc");
+	protected String getTitleDesc(Locale locale) {
+		return Helpers.getLocalizedDisplayName("EntityNamesBundle", locale, "Menu", "desc");
 	}
 	
 }

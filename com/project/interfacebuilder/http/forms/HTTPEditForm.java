@@ -33,10 +33,10 @@ public class HTTPEditForm extends HTTPSelectorSetForm {
 		checkState();
 		
 		if(createNew){
-			entityData=EntityInspector.initializeEntityData(getDataSource());
+			entityData=EntityInspector.initializeEntityData(this,getDataSource());
 		}else{
 			if(primaryKey==null) throw new InterfaceException("primary key must be set before HTTPEditForm activation.");
-			entityData=Startup.getAgent().fetchEntity((EntityDataSource)getDataSource(),primaryKey);
+			entityData=Startup.getAgent().fetchEntity((EntityDataSource)getDataSource(),primaryKey,this);
 		}
 
 		controller.setAttribute(HTTPController.CREATE_NEW_ATTRIBUTE, Boolean.valueOf(createNew));

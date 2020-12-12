@@ -1,5 +1,7 @@
 package com.project.interfacebuilder.http.forms;
 
+import java.util.Locale;
+
 import com.project.Helpers;
 import com.project.inspection.property.PropertyInfo.AlignType;
 import com.project.interfacebuilder.InterfaceException;
@@ -18,7 +20,7 @@ public abstract class HTTPSelectionViewForm <ItemType extends SelectionViewItem>
 				Helpers.padString(
 					AlignType.CENTER, 
 					getItemNameWidth(), 
-					getTitleName(), 
+					getTitleName(getSelectedLocale()), 
 					Helpers.NON_BREAKING_SPACE
 				)
 			).
@@ -27,7 +29,7 @@ public abstract class HTTPSelectionViewForm <ItemType extends SelectionViewItem>
 				Helpers.padString(
 					AlignType.CENTER, 
 					getItemDescriptionWidth(), 
-					getTitleDesc(), 
+					getTitleDesc(getSelectedLocale()), 
 					Helpers.NON_BREAKING_SPACE
 				)
 			).
@@ -41,7 +43,7 @@ public abstract class HTTPSelectionViewForm <ItemType extends SelectionViewItem>
 				Helpers.padString(
 					AlignType.CENTER, 
 					getItemNameWidth(), 
-					e.getItemName(), 
+					e.getItemName(getSelectedLocale()), 
 					Helpers.NON_BREAKING_SPACE
 				)
 			).
@@ -50,7 +52,7 @@ public abstract class HTTPSelectionViewForm <ItemType extends SelectionViewItem>
 				Helpers.padString(
 					AlignType.LEFT, 
 					getItemDescriptionWidth(), 
-					e.getItemDescripion(), 
+					e.getItemDescripion(getSelectedLocale()), 
 					Helpers.NON_BREAKING_SPACE
 				)
 			).
@@ -61,8 +63,8 @@ public abstract class HTTPSelectionViewForm <ItemType extends SelectionViewItem>
 
 	protected abstract int getItemDescriptionWidth();
 
-	protected abstract String getTitleDesc();
+	protected abstract String getTitleDesc(Locale locale);
 
-	protected abstract String getTitleName();
+	protected abstract String getTitleName(Locale locale);
 
 }

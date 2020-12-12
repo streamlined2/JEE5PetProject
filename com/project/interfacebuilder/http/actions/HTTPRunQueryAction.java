@@ -28,7 +28,7 @@ public class HTTPRunQueryAction extends HTTPSelectItemAction<MenuItem> {
 		
 		QueryDefinition queryDef = querySelectionForm.getSelectedItem();
 		
-		QueryDataSource dataSource = new QueryDataSource(queryDef);
+		QueryDataSource dataSource = new QueryDataSource(resultForm,queryDef);
 		
 		resultForm.setDataSource(dataSource);
 

@@ -1,6 +1,7 @@
 package com.project.interfacebuilder.menu;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import com.project.Helpers;
 import com.project.interfacebuilder.SelectionViewItem;
@@ -29,8 +30,8 @@ public class MenuItem implements Serializable, SelectionViewItem, Comparable<Men
 	}
 
 	@Override
-	public String getItemName() {
-		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", name, "name");
+	public String getItemName(Locale locale) {
+		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", locale, name, "name");
 	}
 	
 	public int getOrder(){
@@ -46,8 +47,8 @@ public class MenuItem implements Serializable, SelectionViewItem, Comparable<Men
 	}
 
 	@Override
-	public String getItemDescripion() {
-		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", name, "desc");
+	public String getItemDescripion(Locale locale) {
+		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", locale, name, "desc");
 	}
 
 	@Override

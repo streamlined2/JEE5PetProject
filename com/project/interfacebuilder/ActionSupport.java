@@ -1,5 +1,7 @@
 package com.project.interfacebuilder;
 
+import java.util.Locale;
+
 import com.project.Helpers;
 
 //defines basic functionality of Action interface descendants
@@ -24,12 +26,12 @@ public abstract class ActionSupport implements Action {
 		this.name = name;
 	}
 
-	public String getDisplayName() {
-		return getLocalizedName(getName());
+	public String getDisplayName(Locale locale) {
+		return getLocalizedName(locale, getName());
 	}
 	
-	protected String getLocalizedName(String key){
-		return Helpers.getLocalizedDisplayName("ActionNamesBundle", "", key, key);
+	protected String getLocalizedName(Locale locale, String key){
+		return Helpers.getLocalizedDisplayName("ActionNamesBundle", locale, "", key, key);
 	}
 	
 	@Override

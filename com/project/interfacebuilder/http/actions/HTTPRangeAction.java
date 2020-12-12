@@ -2,13 +2,12 @@ package com.project.interfacebuilder.http.actions;
 
 import java.io.PrintWriter;
 
-import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
 
-public class HTTPRangeAction extends HTTPActionSupport implements Action {
+public class HTTPRangeAction extends HTTPActionSupport {
 
 	public HTTPRangeAction() {
 		super("Range");
@@ -61,7 +60,7 @@ public class HTTPRangeAction extends HTTPActionSupport implements Action {
 		out.print("\" ");
 		out.print(getStyle());
 		out.print(">");
-		out.print(getLocalizedName(elementName));
+		out.print(getLocalizedName(controller.getSelectedLocale(),elementName));
 		out.print("</label>");
 
 		out.print("<input type=\"text\" ");
