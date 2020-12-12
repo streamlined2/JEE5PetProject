@@ -18,7 +18,7 @@ public class HTTPApplyFilterAction extends HTTPApplyActionSupport<FilterItem> {
 	@Override
 	public void perform() throws InterfaceException {
 		
-		checkState();
+		checkState(); // check if parameters are valid
 		
 		DataSource dataSource=(DataSource) controller.getAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE);
 		if(dataSource==null) throw new InterfaceException(HTTPController.DATA_SOURCE_ATTRIBUTE+" must be set before applying HTTPApplyFilterAction");

@@ -14,7 +14,7 @@ public class HTTPRangeAction extends HTTPActionSupport implements Action {
 		super("Range");
 	}
 
-	@Override
+	@Override //this Action interface element has different view, so it redefines render method
 	public void render(Form form) throws InterfaceException {
 
 		if(!(form instanceof HTTPDataRangeForm)) throw new InterfaceException("form must be instance of HTTPDataRangeForm");
@@ -81,7 +81,7 @@ public class HTTPRangeAction extends HTTPActionSupport implements Action {
 		out.print("/>");
 	}
 
-	@Override
+	@Override // different behavior implemented by redefinition of perform method 
 	public void perform() throws InterfaceException {
 
 		//autoboxing

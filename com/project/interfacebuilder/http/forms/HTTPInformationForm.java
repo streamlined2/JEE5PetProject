@@ -2,6 +2,7 @@ package com.project.interfacebuilder.http.forms;
 
 import java.awt.Dimension;
 
+import com.project.Startup;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
 
@@ -18,7 +19,6 @@ public class HTTPInformationForm extends HTTPForm {
 		
 		out.print("<center><h2>This program has been developed by <a href=\"#photo\"><i>Sergey G. Pilipenko</i></a> primarily for self-education, training and amusement");
 		out.print("<br><i>Please do not regard it as fully-fledged commercial application</i></h2></center>");
-		
 		
 		out.print("<h3><p>You may check author's LinkedIn profile <i><a href=\"http://ua.linkedin.com/pub/sergey-pilipenko/6/696/b70\"> here </a></i></p>");
 		out.print("<p>or communicate to him by<ul>");

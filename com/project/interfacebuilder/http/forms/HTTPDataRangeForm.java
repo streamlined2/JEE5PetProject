@@ -91,7 +91,7 @@ public abstract class HTTPDataRangeForm extends HTTPDataAwareForm {
 
 		setFinish(getStart()+tableData.size()-1);
 
-		controller.setAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE, getDataSource());
+		controller.setAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE, getDataSource());// form passes parameters to action object by setting ServletContext attribute
 		
 		super.activate();
 	

@@ -1,6 +1,6 @@
 package com.project.interfacebuilder.http.actions;
 
-import com.project.interfacebuilder.ControllerSupport.FormContextItem;
+import com.project.interfacebuilder.ControllerSupport.FormChainElement;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
@@ -12,8 +12,8 @@ public abstract class HTTPSelectItemAction <ItemType extends SelectionViewItem> 
 		super(actionName);
 	}
 
-	@Override
-	public FormContextItem findTarget(Form srcForm)
+	@Override // find target form for selected menu item
+	public FormChainElement findTarget(Form srcForm)
 			throws InterfaceException {
 
 		HTTPSelectionViewForm<ItemType> sourceForm = getSourceSelectionViewForm();

@@ -9,12 +9,12 @@ import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
 public abstract class ControllerSupport implements Controller {
 	
-	public static class FormContextItem {
+	public static class FormChainElement {
 		private Form form;
 		private InterfaceContext context;
 		private Form.State formState;
 		
-		public FormContextItem(Form form, InterfaceContext context) {
+		public FormChainElement(Form form, InterfaceContext context) {
 			super();
 			this.form = form;
 			this.context = context;
@@ -35,19 +35,21 @@ public abstract class ControllerSupport implements Controller {
 		
 	}
 	
-	private List<FormContextItem> chain = new LinkedList<FormContextItem>();
+	private List<FormChainElement> formChain = new LinkedList<FormChainElement>();
 	
+	// save form state in chain
 	public void push(Form form,InterfaceContext context){
-		chain.add(0,new FormContextItem(form,context));
+		formChain.add(0,new FormChainElement(form,context));
 	}
 	
-	public FormContextItem pop(){
-		if(chain.size()==0) return null;
-		if(chain.size()==1) return chain.get(0);
-		return chain.remove(0);
+	// retrieve last form state from chain
+	public FormChainElement pop(){
+		if(formChain.size()==0) return null;
+		if(formChain.size()==1) return formChain.get(0);
+		return formChain.remove(0);
 	}
 	
-	@Override //template method
+	@Override // template method specifies fixed behavior pattern, ancestors allowed to change it only by overriding restricted set of abstract methods, such as performAction, activateTarget and so on   
 	public final void service() throws InterfaceException{
 		
 		try{
@@ -66,7 +68,7 @@ public abstract class ControllerSupport implements Controller {
 	
 				setUpAction(action,sourceForm);
 				
-				FormContextItem item = action.findTarget(sourceForm); 
+				FormChainElement item = action.findTarget(sourceForm); 
 				
 				if(item!=null){
 					

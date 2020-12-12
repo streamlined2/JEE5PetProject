@@ -386,7 +386,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		return Helpers.nonEmtpyParameter(findParameterValue(parameters,parameterKey));
 	}
 
-	@Override
+	@Override // common unhandled error page located under WEB-INF
 	public void errorPage(Exception e) throws InterfaceException {
 		RequestDispatcher dispatcher=context.getRequestDispatcher("/WEB-INF/errorPage.jsp");
 		request.setAttribute(HTTPController.WRAPPED_EXCEPTION, getWrappedException(e));

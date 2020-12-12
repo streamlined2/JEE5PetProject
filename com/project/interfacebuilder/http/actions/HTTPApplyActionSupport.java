@@ -19,6 +19,7 @@ public abstract class HTTPApplyActionSupport<ItemType extends ListItem> extends 
 		super(name);
 	}
 
+	// add & remove property values for passed parameters
 	protected final void synchronizeValuesAndParameters(
 			DataSource dataSource,ListIterable<ItemType> list,
 			Map<String, String[]> parameters, List<HTTPAction> actions) throws InterfaceException {
@@ -29,6 +30,7 @@ public abstract class HTTPApplyActionSupport<ItemType extends ListItem> extends 
 			
 	}
 
+	// remove parameter value if appropriate property is absent in request
 	private void removeAbsentValues(
 			Iterable<ItemType> list, Map<String, String[]> parameters,
 			List<HTTPAction> actions) throws InterfaceException {
@@ -42,6 +44,7 @@ public abstract class HTTPApplyActionSupport<ItemType extends ListItem> extends 
 		}
 	}
 
+	// add parameter value for each property that is present in request
 	private void addValuesFromParameters(
 			DataSource dataSource, ListIterable<ItemType> list, 
 			Map<String, String[]> parameters,

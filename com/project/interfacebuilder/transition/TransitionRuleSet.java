@@ -7,6 +7,7 @@ import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
+// transition rules collection
 public final class TransitionRuleSet {
 	
 	private SortedMap<TransitionRule.TransitionRuleKey,TransitionRule> map=

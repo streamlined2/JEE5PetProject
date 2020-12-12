@@ -76,7 +76,7 @@ public abstract class FormSupport implements Form {
 	
 	public class FormState implements Form.State{
 
-		@Override
+		@Override //blank form state: need to be overridden by ancestors
 		public void reset() {
 		}
 		

@@ -4,6 +4,7 @@ import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
+// the class represents transition rule from source state, that determined by source form, context and applied action, to target state  
 public class TransitionRule {
 	
 	private InterfaceContext sourceContext;
@@ -55,8 +56,11 @@ public class TransitionRule {
 		return targetContext;
 	}
 	
+	// transition rules set is ordered by key that this inner class represents
+	// to introduce different ordering another class should be set up 
 	public class TransitionRuleKey implements Comparable<TransitionRuleKey> {
 		
+		// build order key values based on outer class properties
 		private String getKey(){
 			return new StringBuilder().
 					append(sourceContext.name()).
@@ -86,8 +90,7 @@ public class TransitionRule {
 		@Override
 		public boolean equals(Object o){
 			if(o instanceof TransitionRuleKey){
-				TransitionRuleKey key=(TransitionRuleKey)o;
-				return getKey().equals(key.getKey());
+				return getKey().equals(((TransitionRuleKey)o).getKey());
 			}
 			return false;
 		}

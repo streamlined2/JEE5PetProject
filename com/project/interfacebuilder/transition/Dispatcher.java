@@ -1,7 +1,7 @@
 package com.project.interfacebuilder.transition;
 
 import com.project.interfacebuilder.Action;
-import com.project.interfacebuilder.ControllerSupport.FormContextItem;
+import com.project.interfacebuilder.ControllerSupport.FormChainElement;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPAddNewAction;
@@ -34,6 +34,7 @@ import com.project.interfacebuilder.http.forms.HTTPTopLevelMenuSelectionForm;
 import com.project.interfacebuilder.transition.TransitionRule;
 import com.project.interfacebuilder.transition.TransitionRuleSet;
 
+// builds interface elements & encapsulates dispatcher behavior for MVC/front controller design pattern
 public class Dispatcher {
 
 	private HTTPQueryForm queryForm;
@@ -73,14 +74,23 @@ public class Dispatcher {
 		INFORMATION_CONTEXT
 	}
 	
-	//singleton pattern
+	//singleton pattern (private constructor, static factory method getDispatcher, static object reference) 
 	private static Dispatcher dispatcher=null;
 	
-	public Dispatcher() throws InterfaceException{
+	private Dispatcher() throws InterfaceException{
 		setTransitionRuleSet(new TransitionRuleSet());
 		setCurrentContext(InterfaceContext.TOP_LEVEL_MENU_SELECTION);
 		defineInterface();
 		defineTransitionRules();
+	}
+
+	//factory method/builder pattern
+	//lazy initialization pattern
+	public static Dispatcher getDispatcher() throws InterfaceException{
+		if(dispatcher==null){
+			dispatcher=new Dispatcher();
+		}
+		return dispatcher;
 	}
 
 	private void defineInterface() throws InterfaceException {
@@ -114,16 +124,6 @@ public class Dispatcher {
 		browseAction = new HTTPBrowseAction();
 		runQueryAction = new HTTPRunQueryAction();
 		
-	}
-
-	//factory method/builder pattern
-	//singleton pattern
-	//lazy initialization pattern
-	public static Dispatcher getDispatcher() throws InterfaceException{
-		if(dispatcher==null){
-			dispatcher=new Dispatcher();
-		}
-		return dispatcher;
 	}
 
 	private InterfaceContext currentContext;
@@ -195,13 +195,13 @@ public class Dispatcher {
 
 	}
 
-	public FormContextItem getTarget(Form sourceForm,Action action) throws InterfaceException{
+	public FormChainElement getTarget(Form sourceForm,Action action) throws InterfaceException{
 		
 		TransitionRule rule=ruleSet.getTransitionRule(currentContext,sourceForm,action);
 		
 		if(rule==null) throw new InterfaceException("transition rule is undefined for context "+currentContext+", source form "+sourceForm+" and action "+action);
 		
-		return new FormContextItem(
+		return new FormChainElement(
 				rule.getTarget(),
 				rule.getTargetContext());
 	}

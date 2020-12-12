@@ -10,6 +10,7 @@ import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPBrowseAction;
 import com.project.interfacebuilder.http.actions.HTTPQueryAction;
 
+// substitute formal parameter ItemType of HTTPSelectionViewForm by actual parameter EntityInfo (instance of SelectionViewItem) to make use of generic class HTTPSelectionViewForm  
 public class HTTPEntitySelectionForm extends HTTPSelectionViewForm<EntityInfo> {
 	
 	private static final int ENTITY_NAME_WIDTH = 15;

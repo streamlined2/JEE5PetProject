@@ -25,7 +25,7 @@ public abstract class HTTPEditActionSupport extends HTTPActionSupport /*HTTPSele
 		String pkParameter=controller.getParameter(HTTPController.PRIMARY_KEY_ATTRIBUTE);
 		if(pkParameter==null) throw new InterfaceException("PRIMARY_KEY_ATTRIBUTE parameter must be set before applying HTTPEditActionSupport");
 	
-		DataSource dataSource=(DataSource) controller.getAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE);
+		DataSource dataSource=(DataSource) controller.getAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE);// action retrieves parameter value that has been set by form by calling ServletContext.getAttribute
 		if(dataSource==null) throw new InterfaceException(HTTPController.DATA_SOURCE_ATTRIBUTE+" must be set after HTTPBrowseForm submission");
 		
 		if(!(dataSource instanceof EntityDataSource)) throw new InterfaceException("dataSource must be instance of EntityDataSource for HTTPEditActionSupport"); 
