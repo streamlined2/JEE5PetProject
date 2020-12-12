@@ -3,6 +3,7 @@ package com.project.inspection;
 import java.util.List;
 import java.util.Map;
 
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPAction;

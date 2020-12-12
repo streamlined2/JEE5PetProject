@@ -1,10 +1,8 @@
 package com.project;
 
 
-import java.beans.PropertyDescriptor;
 import java.util.ResourceBundle;
 
-import com.project.inspection.EntityInfo;
 import com.project.inspection.PropertyInfo.AlignType;
 
 

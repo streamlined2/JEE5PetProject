@@ -18,7 +18,7 @@ public class EntityNamesBundle_uk_UA extends ListResourceBundle {
 				{"Phone.name","Телефон"},
 				{"Phone.desc","Інформація про телефони організацій та приватних осіб"},
 				{"Country.name","Країна"},
-				{"Country.desc","Дані про країну споживача, компанії тощо"}
+				{"Country.desc","Дані про країну споживача, компанії тощо"},
 		};
 	}
 

@@ -1,5 +1,7 @@
 package com.project.inspection;
 
+import com.project.inspection.property.InformationPropertyInfo;
+
 //immutable filter item class
 public class FilterItem extends ListItem {
 	

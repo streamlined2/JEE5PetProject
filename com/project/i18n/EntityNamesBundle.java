@@ -18,7 +18,7 @@ public class EntityNamesBundle extends ListResourceBundle {
 				{"Customer.desc","Company customer data"},
 				{"Phone.desc","Private person and company phone information"},
 				{"Country.name","Name"},
-				{"Country.desc","Country information"}
+				{"Country.desc","Country information"},
 		};
 	}
 

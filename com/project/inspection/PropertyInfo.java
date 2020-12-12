@@ -2,8 +2,6 @@ package com.project.inspection;
 
 import java.io.Serializable;
 
-import com.project.interfacebuilder.Selector;
-
 public abstract class PropertyInfo implements Serializable, Comparable<PropertyInfo> {
 	
 	private static final long serialVersionUID = 1301705573489615320L;
@@ -53,15 +51,40 @@ public abstract class PropertyInfo implements Serializable, Comparable<PropertyI
 
 	@Override
 	public int compareTo(PropertyInfo o) {
-		return propertyName.compareTo(o.propertyName);
+		if(this.equals(o)) return 0;
+		if(this.entityInfo.hashCode()>o.entityInfo.hashCode()) return 1;
+		else if(this.entityInfo.hashCode()<o.entityInfo.hashCode()) return -1;
+		else return this.propertyName.compareToIgnoreCase(o.propertyName); 
 	}
 	
 	public boolean isPrimaryKey(){
 		return false;
 	}
 	
+	public boolean isForeignKey(){
+		return false;
+	}
+	
 	public boolean isInformation(){
 		return false;
+	}
+	
+	public boolean isEntityCollection(){
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return entityInfo.hashCode()*31+propertyName.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object another) {
+		if(!(another instanceof PropertyInfo)) return false;
+		PropertyInfo pInfo = (PropertyInfo) another;
+		if(!entityInfo.equals(pInfo.entityInfo)) return false;
+		if(!propertyName.equalsIgnoreCase(pInfo.propertyName)) return false;
+		return true;
 	}
 
 }

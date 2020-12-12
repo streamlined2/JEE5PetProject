@@ -1,6 +1,5 @@
 package com.project;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 
 import javax.naming.Context;
@@ -27,7 +26,7 @@ public class Client1 {
 		c.set(Calendar.HOUR_OF_DAY,12);
 		c.set(Calendar.MINUTE, 40);
 		c.set(Calendar.SECOND, 30);
-		Customer cust=new Customer("John Doe", "New York", "+380972452228", Customer.Kind.PERSON, c.getTime());
+		Customer cust=new Customer("John Doe", "New York", Customer.Kind.PERSON, c.getTime());
 		Customer customer=agent.createEntity(cust);
 		
 		customer.setName("John West");

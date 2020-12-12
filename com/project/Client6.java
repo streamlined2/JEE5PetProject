@@ -8,7 +8,6 @@ import javax.rmi.PortableRemoteObject;
 
 import com.project.entities.Customer;
 import com.project.entities.EntityClass;
-import com.project.entities.EntityType;
 import com.project.entities.Phone;
 import com.project.inspection.EntityInfo;
 import com.project.interfacebuilder.InterfaceException;

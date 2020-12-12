@@ -9,6 +9,7 @@ public class ActionNamesBundle extends ListResourceBundle {
 		return new Object[][]{
 				{"Confirm","Confirm"},
 				{"SaveChanges","Save"},
+				{"MenuSelect","Select"},
 				{"Edit","Edit"},
 				{"Range","Set Range"},
 				{"rangeStart","from"},

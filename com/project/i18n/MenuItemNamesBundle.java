@@ -16,7 +16,17 @@ public class MenuItemNamesBundle extends ListResourceBundle {
 				{"Customers.name","Customers"},
 				{"Customers.desc","All available customers"},
 				{"Phones.name","Phones"},
-				{"Phones.desc","All available phones"}
+				{"Phones.desc","All available phones"},
+				{"Customers_Phones.name","Customers and phones"},
+				{"Customers_Phones.desc","Phone numbers listed by customers"},
+				{"Country_Customers.name","Customers by country"},
+				{"Country_Customers.desc","Customers by country"},
+				{"Customers_Rating.name","Total rating"},
+				{"Customers_Rating.desc","Customers' address total rating"},
+				{"Customers_Average_Rating.name","Average rating"},
+				{"Customers_Average_Rating.desc","Customers' address average rating"},
+				{"Customers_Count_Rating.name","Count rating"},
+				{"Customers_Count_Rating.desc","Customers' address count rating"},
 		};
 	}
 

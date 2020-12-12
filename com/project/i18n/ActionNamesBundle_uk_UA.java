@@ -10,6 +10,7 @@ public class ActionNamesBundle_uk_UA extends ListResourceBundle {
 				{"Confirm","Підтвердити"},
 				{"SaveChanges","Зберегти"},
 				{"Proceed","Продовжити"},
+				{"MenuSelect","Вибрати"},
 				{"Range","Діапазон"},
 				{"rangeStart","від"},
 				{"rangeFinish","до"},

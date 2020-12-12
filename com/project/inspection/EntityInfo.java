@@ -1,28 +1,36 @@
 package com.project.inspection;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.ListResourceBundle;
-import java.util.ResourceBundle;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.project.Helpers;
+import com.project.entities.EntityType;
+import com.project.inspection.property.EntityCollectionPropertyInfo;
+import com.project.inspection.property.ForeignKeyPropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PrimaryKeyPropertyInfo;
+import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
 import com.project.interfacebuilder.Selector;
-
 
 public class EntityInfo implements Serializable, SelectionViewItem, Comparable<EntityInfo> {
 	
 	private static final long serialVersionUID = -2103351979119508358L;
 
-	private Class<?> entityClass=null;
-	private PrimaryKeyPropertyInfo primaryKeyInfo=null;
+	private Class<? extends EntityType> entityClass = null;
+	private PrimaryKeyPropertyInfo primaryKey = null;
+	private SortedMap<String,ForeignKeyPropertyInfo> foreignKeys = new TreeMap<String,ForeignKeyPropertyInfo>();
+	private SortedMap<String,InformationPropertyInfo> infoProperties=new TreeMap<String,InformationPropertyInfo>();
+	private SortedMap<String,EntityCollectionPropertyInfo> entityCollection = new TreeMap<String,EntityCollectionPropertyInfo>();
 	
-	private TreeMap<String,PropertyInfo> info=new TreeMap<String,PropertyInfo>();
-	
-	public EntityInfo(Class<?> cl){
+	public EntityInfo(Class<? extends EntityType> cl){
 		entityClass=cl;
 	}
 	
@@ -40,63 +48,51 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 	
 	private String getDisplayProperty(String propertyName) {
 		return Helpers.getLocalizedDisplayName("EntityNamesBundle", getEntityName(), propertyName);
-/*		String key=getEntityName()+"."+propertyName;
-		ResourceBundle bundle=ListResourceBundle.getBundle(Helpers.getLocalizationBundleFullName("EntityNamesBundle"));
-		String name=key;
-		if(bundle!=null && bundle.containsKey(key)){
-			name=bundle.getString(key);
-		}
-		return name;
-*/	}
-	
-	public int getCount(){
-		return info.size();
 	}
 	
-	public Class<?> getEntityClass() {
+	public int getInfoPropertyCount(){
+		return infoProperties.size();
+	}
+	
+	public InformationPropertyInfo getInformationProperty(String name){
+		return infoProperties.get(name);
+	}
+	
+	public Class<? extends EntityType> getEntityClass() {
 		return entityClass;
 	}
 
-	public void setEntityClass(Class<?> entityClass) {
+	public void setEntityClass(Class<? extends EntityType> entityClass) {
 		this.entityClass = entityClass;
 	}
 
-	public void addProperty(PropertyInfo pInfo){
-		info.put(pInfo.getPropertyName(), pInfo);
-		if(pInfo.isPrimaryKey()){
-			primaryKeyInfo=(PrimaryKeyPropertyInfo)pInfo;
-		}
-	}
-	
-	public PropertyInfo getPropertyInfo(String name){
-		return info.get(name);
-	}
-	
-	public Collection<PropertyInfo> getProperties(){
-		return info.values(); 
-	}
-
 	public PrimaryKeyPropertyInfo getPrimaryKeyInfo() {
-		return primaryKeyInfo;
+		return primaryKey;
 	}
 	
-	public List<InformationPropertyInfo> getInfoFields(){
-		List<InformationPropertyInfo> list=new ArrayList<InformationPropertyInfo>();
-		for(PropertyInfo item:info.values()){
-			if(item.isInformation()){
-				list.add((InformationPropertyInfo)item);
-			}
+	public SortedSet<InformationPropertyInfo> getInfoFields(){
+		SortedSet<InformationPropertyInfo> set=new TreeSet<InformationPropertyInfo>();
+		for(InformationPropertyInfo item:infoProperties.values()){
+			set.add((InformationPropertyInfo)item);
 		}
-		return list;
+		return set;
+	}
+	
+	public SortedSet<ForeignKeyPropertyInfo> getForeignKeys(){
+		SortedSet<ForeignKeyPropertyInfo> set = new TreeSet<ForeignKeyPropertyInfo>();
+		for(ForeignKeyPropertyInfo foreignKey:foreignKeys.values()){
+			set.add(foreignKey);
+		}
+		return set;
 	}
 
 	public void setSelector(InformationPropertyInfo propertyInfo, Selector selector) {
 		propertyInfo.setSelector(selector);
-		PropertyInfo pInfo=getPropertyInfo(propertyInfo.getPropertyName());
+		InformationPropertyInfo pInfo=infoProperties.get((propertyInfo.getPropertyName()));
 		if(pInfo.isInformation()){
 			((InformationPropertyInfo)pInfo).setSelector(selector);
 		}
-		info.put(pInfo.getPropertyName(), pInfo);
+		infoProperties.put(pInfo.getPropertyName(), pInfo);
 	}
 	
 	public static class EntityData implements Serializable {
@@ -140,5 +136,114 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		return getItemName().compareTo(o.getItemName());
 	}
 	
+	@Override
+	public boolean equals(Object another){
+		if(!(another instanceof EntityInfo)) return false;
+		return entityClass.getName().equals(((EntityInfo)another).entityClass.getName());
+	}
 	
+	@Override
+	public int hashCode(){
+		return entityClass.getName().hashCode();
+	}
+	
+	public void addInformationProperty(InformationPropertyInfo iProperty){
+		infoProperties.put(iProperty.getPropertyName(), iProperty);
+	}
+	
+	public void setPrimaryKeyProperty(PrimaryKeyPropertyInfo pKeyProperty){
+		primaryKey=pKeyProperty;
+	}
+	
+	public void addForeignKeyProperty(ForeignKeyPropertyInfo fKeyProperty){
+		foreignKeys.put(fKeyProperty.getPropertyName(), fKeyProperty);
+	}
+	
+	public ForeignKeyPropertyInfo getForeignKeyFor(String propertyName){
+		return foreignKeys.get(propertyName);
+	}
+	
+	public ForeignKeyPropertyInfo getForeignKeyFor(Class<? extends EntityType> masterType) {
+		for(ForeignKeyPropertyInfo foreignKey:foreignKeys.values()){
+			if(foreignKey.getMasterType().equals(masterType)) 
+				return foreignKey;
+		}
+		return null;
+	}
+	
+	public void addEntityCollectionProperty(EntityCollectionPropertyInfo eCProperty){
+		entityCollection.put(eCProperty.getPropertyName(), eCProperty);
+	}
+	
+	public Collection<EntityCollectionPropertyInfo> getEntityCollectionSet(){
+		return Collections.unmodifiableCollection(entityCollection.values());
+	}
+	
+	public class LinkCountKey implements Comparable<LinkCountKey> {
+
+		private Set<ForeignKeyPropertyInfo> linkEntities = new HashSet<ForeignKeyPropertyInfo>();
+		
+		public LinkCountKey(){
+		}
+		
+		public void addLink(ForeignKeyPropertyInfo foreignKey){
+			linkEntities.add(foreignKey);
+		}
+		
+		public Set<ForeignKeyPropertyInfo> getLinks(){
+			return Collections.unmodifiableSet(linkEntities);
+		}
+		
+		public int getCount() {
+			return linkEntities.size();
+		}
+
+		@Override
+		public boolean equals(Object obj){
+			if(!(obj instanceof LinkCountKey)) return false;
+			LinkCountKey key = (LinkCountKey) obj;
+			return getCount() == key.getCount() && getEntityInfo().equals(key.getEntityInfo());
+		}
+		
+		private EntityInfo getEntityInfo() {
+			return EntityInfo.this;
+		}
+
+		@Override
+		public int hashCode(){
+			return getCount()*31+getEntityInfo().hashCode();
+		}
+		
+		@Override
+		public int compareTo(LinkCountKey key){
+			if(getCount()<key.getCount()) return -1;
+			else if(getCount()>key.getCount()) return 1;
+			return 0;
+		}
+		
+	}
+	
+	private static LinkCountKey getLinkCountKey(EntityInfo entityForKey, Collection<EntityInfo> collection) throws InterfaceException{
+		
+		LinkCountKey countKey = entityForKey.new LinkCountKey();
+		
+		for(EntityInfo entity:collection){
+			if(!entity.equals(entityForKey)){
+				for(ForeignKeyPropertyInfo foreignKey:entity.getForeignKeys()){
+					if(foreignKey.getMasterEntity().equals(entityForKey)) countKey.addLink(foreignKey);
+				}
+			}
+		}
+		
+		return countKey;
+	}
+	
+	public static SortedMap<LinkCountKey,EntityInfo> getLinkCountKeys(Collection<EntityInfo> collection) throws InterfaceException{
+		SortedMap<LinkCountKey,EntityInfo> linkCountKeyMap = new TreeMap<LinkCountKey,EntityInfo>();
+		for(EntityInfo entity:collection){
+			linkCountKeyMap.put(getLinkCountKey(entity,collection), entity);
+		}
+		return linkCountKeyMap;
+	}
+
 }

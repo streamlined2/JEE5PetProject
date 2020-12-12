@@ -2,10 +2,14 @@ package com.project.entities;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Customer extends EntityClass {
@@ -20,25 +24,23 @@ public class Customer extends EntityClass {
 	private Integer id;
 	private String name;
 	private String address;
-	private String phone;
 	private Kind kind;
 	private Date creationDate;
+	private Set<Phone> phones = new HashSet<Phone>();
+	private Country country;
 	
 	private int rating;
 	private boolean creditAvailable;
-	//private Currency sellVolume;
 	private Timestamp lastTransactionTime;
-	//private Collection<Phone> phones=new ArrayList<Phone>();
 	
 	public Customer() {
 	}
 	
-	public Customer(String name, String address, String phone,
+	public Customer(String name, String address,
 			Kind kind, Date creationDate) {
 		super();
 		this.name = name;
 		this.address = address;
-		this.phone = phone;
 		this.kind = kind;
 		this.creationDate = creationDate;
 	}
@@ -67,14 +69,6 @@ public class Customer extends EntityClass {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	public Kind getKind() {
@@ -126,14 +120,22 @@ public class Customer extends EntityClass {
 		this.lastTransactionTime = lastTransactionTime;
 	}
 
-/*	@OneToMany
-	@JoinColumn(name="CUSTOMER_ID")
-	public Collection<Phone> getPhones() {
+	@OneToMany(mappedBy="customer")
+	public Set<Phone> getPhones() {
 		return phones;
 	}
 
-	public void setPhones(Collection<Phone> phones) {
+	public void setPhones(Set<Phone> phones) {
 		this.phones = phones;
 	}
-*/
+
+	@ManyToOne
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
 }

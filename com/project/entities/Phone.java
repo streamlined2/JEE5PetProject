@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Phone extends EntityClass {
@@ -18,6 +19,7 @@ public class Phone extends EntityClass {
 	private Integer id;
 	private Kind kind;
 	private String number;
+	private Customer customer;
 	
 	public Phone(){
 	}
@@ -46,6 +48,15 @@ public class Phone extends EntityClass {
 
 	public void setNumber(String number) {
 		this.number = number;
+	}
+
+	@ManyToOne
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 	
 }

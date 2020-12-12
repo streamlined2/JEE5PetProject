@@ -1,5 +1,7 @@
 package com.project.inspection;
 
+import com.project.inspection.property.InformationPropertyInfo;
+
 public class OrderingItem extends ListItem {
 	
 	public enum SortOrderType { ASCENDING, DESCENDING };

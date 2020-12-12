@@ -1,5 +1,7 @@
 package com.project.inspection;
 
+import com.project.inspection.property.InformationPropertyInfo;
+
 public class PropertyListItem extends ListItem {
 
 	private int order;

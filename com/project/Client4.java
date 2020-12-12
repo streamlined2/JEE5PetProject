@@ -11,6 +11,7 @@ import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.PropertyInfo;
+import com.project.interfacebuilder.InterfaceException;
 import com.project.queries.EntityDataSource;
 
 public class Client4 {
@@ -19,8 +20,9 @@ public class Client4 {
 	 * @param args
 	 * @throws IntrospectionException 
 	 * @throws NamingException 
+	 * @throws InterfaceException 
 	 */
-	public static void main(String[] args) throws IntrospectionException, NamingException {
+	public static void main(String[] args) throws IntrospectionException, NamingException, InterfaceException {
 
 		Class<?> entityClass=Customer.class;
 		Object primaryKey=new Integer(11);
@@ -39,35 +41,29 @@ public class Client4 {
 		
 	}
 
-	protected static void addSelectorSet(Class<?> entityClass, EntityData entityData) {
+	protected static void addSelectorSet(Class<?> entityClass, EntityData entityData) throws InterfaceException {
 		
-		EntityInfo info;
-		try {
-			info = EntityInspector.getEntityInfo(entityClass);
-	
-			StringBuilder buffer=new StringBuilder();
+		EntityInfo info = EntityInspector.getEntityInfo(entityClass);
+
+		StringBuilder buffer=new StringBuilder();
+		
+		if(entityData!=null){
 			
-			if(entityData!=null){
-				
-				int count=0;
-				for(PropertyInfo e:info.getInfoFields()){
-					Object[] infoFieldValue=entityData.getInfoData();
-					Object value=infoFieldValue[count++];
-					String name=e.getPropertyName();
-					String s=EntityInspector.convertToString(value);
-					buffer.
-						append(name).
-						append("=").
-						append(s).
-						append("; ");
-				}
-				System.out.println(buffer);
-				buffer.setLength(0);
-					
+			int count=0;
+			for(PropertyInfo e:info.getInfoFields()){
+				Object[] infoFieldValue=entityData.getInfoData();
+				Object value=infoFieldValue[count++];
+				String name=e.getPropertyName();
+				String s=EntityInspector.convertToString(value);
+				buffer.
+					append(name).
+					append("=").
+					append(s).
+					append("; ");
 			}
+			System.out.println(buffer);
+			buffer.setLength(0);
 				
-		} catch (IntrospectionException e1) {
-			e1.printStackTrace();
 		}
 		
 	}

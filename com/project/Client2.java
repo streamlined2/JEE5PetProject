@@ -10,8 +10,8 @@ import javax.rmi.PortableRemoteObject;
 import com.project.entities.Customer;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.EntityInspector;
-import com.project.inspection.InformationPropertyInfo;
 import com.project.inspection.PropertyInfo;
 import com.project.inspection.Range;
 import com.project.interfacebuilder.InterfaceException;
@@ -83,7 +83,7 @@ public class Client2 {
 		}
 	}
 	
-	public static void printEntityList(Class<?> entityClass,List<EntityData> list) throws IntrospectionException {
+	public static void printEntityList(Class<?> entityClass,List<EntityData> list) throws InterfaceException {
 		
 		EntityInfo info=EntityInspector.getEntityInfo(entityClass);
 		

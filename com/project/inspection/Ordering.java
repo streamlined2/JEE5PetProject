@@ -11,6 +11,7 @@ import java.util.TreeSet;
 
 import com.project.Helpers;
 import com.project.inspection.OrderingItem.SortOrderType;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.actions.HTTPAction;

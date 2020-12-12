@@ -1,9 +1,10 @@
 package com.project.entities;
 
-import java.beans.IntrospectionException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -13,15 +14,15 @@ import com.project.interfacebuilder.InterfaceException;
 
 public abstract class EntityClass implements EntityType {
 	
-	private static Set<Class<? extends EntityType>> entities=new HashSet<Class<? extends EntityType>>();
+	@SuppressWarnings("unchecked")
+	private static Class<EntityClass>[] entities = (Class<EntityClass>[]) new Class<?>[]{
+			Customer.class,
+			Country.class,
+			Phone.class
+	};
 	
-	public EntityClass() {
-		try{
-			Class<? extends EntityType> cl=EntityInspector.getClassInstance();
-			entities.add(cl);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+	public static Set<Class<? extends EntityClass>> getEntityClassSet() {
+		return Collections.unmodifiableSet(new HashSet<Class<? extends EntityClass>>(Arrays.asList(entities)));
 	}
 	
 	public static Set<EntityInfo> getEntitySet() throws InterfaceException {
@@ -31,26 +32,11 @@ public abstract class EntityClass implements EntityType {
 				return o1.getDisplayName().compareTo(o2.getDisplayName());
 			}
 		});
-		for(Class<? extends EntityType> e:entities){
-			EntityInfo eInfo;
-			try {
-				eInfo = EntityInspector.getEntityInfo(e);
-				sortedSet.add(eInfo);
-			} catch (IntrospectionException exc) {
-				throw new InterfaceException(exc);
-			}
+		for(Class<EntityClass> e:entities){
+			EntityInfo eInfo = EntityInspector.getEntityInfo(e);
+			sortedSet.add(eInfo);
 		}
 		return Collections.unmodifiableSet(sortedSet);
-	}
-	
-	static{
-		formEntitySet();
-	}
-	
-	private static void formEntitySet(){
-		new Customer();
-		new Phone();
-		new Country();
 	}
 	
 }

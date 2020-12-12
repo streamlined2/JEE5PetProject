@@ -1,6 +1,5 @@
 package com.project;
 
-import java.beans.IntrospectionException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -9,13 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.sql.DataSource;
 
 import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.jdbc.meta.ClassMapping;
@@ -28,16 +25,16 @@ import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
 import org.apache.openjpa.persistence.OpenJPAPersistence;
 
 import com.project.entities.EntityType;
-import com.project.inspection.EntityInfo;
+import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.Filter;
 import com.project.inspection.FilterItem;
 import com.project.inspection.Ordering;
 import com.project.inspection.OrderingItem;
-import com.project.inspection.PropertyList;
-import com.project.inspection.PropertyListItem;
-import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.OrderingItem.SortOrderType;
 import com.project.inspection.PropertyInfo;
+import com.project.inspection.PropertyList;
+import com.project.inspection.PropertyListItem;
+import com.project.interfacebuilder.InterfaceException;
 import com.project.queries.EntityDataSource;
 import com.project.queries.QueryDefinition;
 
@@ -78,7 +75,7 @@ public class Agent implements AgentRemote {
 		manager.remove(managed);
 	}
 
-	public List<EntityData> runQuery(QueryDefinition queryDefinition){
+	public List<EntityData> runQuery(QueryDefinition queryDefinition) throws InterfaceException{
 		Query query=manager.createQuery(queryDefinition.getStatement());
 		
 		@SuppressWarnings("unchecked")
@@ -89,7 +86,7 @@ public class Agent implements AgentRemote {
 
 	//TODO implement it with Criteria Builder (JPA2)
 	@Override
-	public List<EntityData> fetchEntities(EntityDataSource dataSource) throws IntrospectionException{
+	public List<EntityData> fetchEntities(EntityDataSource dataSource) throws InterfaceException{
 		
 		Query query=getQuery(dataSource);
 		setFilterParameterValues(query,dataSource.getFilter());
@@ -120,7 +117,7 @@ public class Agent implements AgentRemote {
 		return d;
 	}
 	
-	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey){
+	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
 
 		Query query=getQuery(dataSource,primaryKey);
 
@@ -128,7 +125,7 @@ public class Agent implements AgentRemote {
 	}
 
 
-	private String getQueryString(EntityDataSource dataSource, Object primaryKey){
+	private String getQueryString(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
 
 		final String prefix="a";
 		
@@ -149,7 +146,7 @@ public class Agent implements AgentRemote {
 		return q.toString();
 	}
 	
-	private Query getQuery(EntityDataSource dataSource, Object primaryKey) {
+	private Query getQuery(EntityDataSource dataSource, Object primaryKey) throws InterfaceException {
 		
 		Query query=manager.createQuery(getQueryString(dataSource,primaryKey));
 		
@@ -159,7 +156,7 @@ public class Agent implements AgentRemote {
 	}
 
 	private Query getQuery(
-			EntityDataSource dataSource){
+			EntityDataSource dataSource) throws InterfaceException{
 		
 		final String prefix="a";
 		
@@ -315,7 +312,7 @@ public class Agent implements AgentRemote {
 	}
 	
 	private StringBuilder getPKInfoFieldList(
-			String prefix,EntityDataSource dataSource){
+			String prefix,EntityDataSource dataSource) throws InterfaceException{
 		
 		StringBuilder buffer=new StringBuilder();
 		
@@ -398,7 +395,9 @@ public class Agent implements AgentRemote {
 
 	public int getColumnSize(Class<?> type,String fieldName){
 		try {
-			return getColumnSize(getColumnTable(type,fieldName), getColumnName(type,fieldName));
+			String tableName = getColumnTable(type,fieldName);
+			String columnName = getColumnName(type,fieldName);
+			return getColumnSize(tableName, columnName);
 		} catch (SQLException e) {
 		} catch(NullPointerException e2){
 		}

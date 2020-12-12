@@ -2,6 +2,7 @@ package com.project.queries;
 
 import java.beans.IntrospectionException;
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.naming.NamingException;
 
@@ -9,8 +10,8 @@ import com.project.AgentRemote;
 import com.project.ContextBootstrap;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
-import com.project.inspection.InformationPropertyInfo;
-import com.project.inspection.PrimaryKeyPropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PrimaryKeyPropertyInfo;
 import com.project.inspection.PropertyList;
 import com.project.interfacebuilder.InterfaceException;
 
@@ -34,8 +35,6 @@ public class EntityDataSource extends DataSource {
 			return agent.fetchEntities(this);
 		} catch (NamingException e) {
 			throw new InterfaceException(e);
-		} catch (IntrospectionException e) {
-			throw new InterfaceException(e);
 		}
 	}
 
@@ -45,7 +44,7 @@ public class EntityDataSource extends DataSource {
 	}
 
 	@Override
-	public List<InformationPropertyInfo> getInformationProperties() {
+	public SortedSet<InformationPropertyInfo> getInformationProperties() {
 		return entityInfo.getInfoFields();
 	}
 	

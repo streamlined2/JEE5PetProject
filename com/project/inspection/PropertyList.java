@@ -3,14 +3,15 @@ package com.project.inspection;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.project.Helpers;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.actions.HTTPAction;
@@ -22,7 +23,7 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 	public PropertyList(){
 	}
 	
-	public PropertyList(List<InformationPropertyInfo> infoProperties){
+	public PropertyList(SortedSet<InformationPropertyInfo> infoProperties){
 		int k=1;
 		for(InformationPropertyInfo pInfo:infoProperties){
 			map.put(pInfo, new PropertyListItem(pInfo, k++));
@@ -44,14 +45,14 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 		return map.get(pInfo);
 	}
 	
-	public final List<InformationPropertyInfo> getSelectedInformationProperties(List<InformationPropertyInfo> properties){
-		List<InformationPropertyInfo> list = new LinkedList<InformationPropertyInfo>();
+	public final SortedSet<InformationPropertyInfo> getSelectedInformationProperties(SortedSet<InformationPropertyInfo> properties){
+		SortedSet<InformationPropertyInfo> set = new TreeSet<InformationPropertyInfo>();
 		for(InformationPropertyInfo infoProperty:properties){
 			if(findByProperty(infoProperty)!=null){
-				list.add(infoProperty);
+				set.add(infoProperty);
 			}
 		}
-		return list;
+		return set;
 	}
 	
 	public TreeSet<PropertyListItem> getOrderedSet(){

@@ -1,16 +1,13 @@
 package com.project;
 
 import java.beans.IntrospectionException;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
 import com.project.entities.Customer;
-import com.project.entities.EntityType;
 
 public class Client5 {
 

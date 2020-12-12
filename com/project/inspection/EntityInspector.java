@@ -17,14 +17,18 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.naming.NamingException;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.project.AgentRemote;
 import com.project.ContextBootstrap;
 import com.project.Helpers;
 import com.project.datatypes.Currency;
@@ -36,78 +40,199 @@ import com.project.inspection.PropertyInfo.AlignType;
 import com.project.inspection.PropertyInfo.FiniteType;
 import com.project.inspection.PropertyInfo.MultipleType;
 import com.project.inspection.PropertyInfo.OrderType;
+import com.project.inspection.property.EntityCollectionPropertyInfo;
+import com.project.inspection.property.ForeignKeyPropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PrimaryKeyPropertyInfo;
+import com.project.interfacebuilder.InterfaceException;
 import com.project.queries.DataSource;
 
 public final class EntityInspector {
 	
 	private EntityInspector(){}
 
+	private static class EntityInfoPool {
+		private SortedMap<String,EntityInfo> cache = new TreeMap<String,EntityInfo>();
+		
+		public void addEntity(String name,EntityInfo eInfo) {
+			cache.put(name, eInfo);
+		}
+		
+		public EntityInfo getEntity(String name){
+			return cache.get(name);
+		}
+		
+	}
+	
+	private static EntityInfoPool entityPool = new EntityInfoPool();
+	
+	public static EntityInfo getEntityInfo(Class<?> eClass) throws InterfaceException {
+		return getEntityInfo(eClass,true);
+	}
+	
 	//TODO must be replaced with Metamodel JPA 2 implementation
-	public static EntityInfo getEntityInfo(Class<?> beanClass) throws IntrospectionException{
+	public static EntityInfo getEntityInfo(Class<?> eClass,boolean constructEntityCollectionProperties) throws InterfaceException {
 		
-		BeanInfo info=Introspector.getBeanInfo(beanClass,Object.class);//,Introspector.IGNORE_ALL_BEANINFO
-		
-		PropertyDescriptor[] pd=info.getPropertyDescriptors();
-		
-		EntityInfo entityInfo=new EntityInfo(beanClass);
-		
-		for(PropertyDescriptor p:pd){
+		if(!EntityType.class.isAssignableFrom(eClass)) throw new InterfaceException("parameter must be ancestor of interface EntityType");
 			
-			Class<?> pClass=p.getPropertyType();
+		@SuppressWarnings("unchecked")
+		Class<? extends EntityType> entityClass = (Class<? extends EntityType>) eClass;
+
+		EntityInfo entityInfo = null;
+		
+		if((entityInfo = entityPool.getEntity(entityClass.getName())) == null){
 			
-			try {
+			try{
 				
-				Method readMethod=p.getReadMethod();
-				Method writeMethod=p.getWriteMethod();
+				BeanInfo info=Introspector.getBeanInfo(entityClass,Object.class);//,Introspector.IGNORE_ALL_BEANINFO
 				
-				Field field=beanClass.getDeclaredField(p.getName());
-
-				PropertyInfo pInfo=null;
-				if(isPrimaryKeyField(readMethod) || isPrimaryKeyField(field)){
+				PropertyDescriptor[] pd=info.getPropertyDescriptors();
 				
-					pInfo = new PrimaryKeyPropertyInfo(
-							entityInfo, p.getName(), pClass, 
-							readMethod.getName(), writeMethod.getName());
-
-				}else if(isForeignKeyField(readMethod) || isForeignKeyField(field)){
-
-					EntityInfo masterEntity = getMasterEntity(readMethod, field);
+				entityInfo=new EntityInfo(entityClass);
+				
+				for(PropertyDescriptor p:pd){
 					
-					pInfo = new ForeignKeyPropertyInfo(entityInfo, p.getName(), pClass,
-							readMethod.getName(), writeMethod.getName(), masterEntity);
-				
-				}else{
+					Class<?> pClass=p.getPropertyType();
 					
-					pInfo=new InformationPropertyInfo(
-							entityInfo,
-							p.getName(), 
-							getPropertyDisplayName(entityInfo, p), 
-							p.getShortDescription(), 
-							pClass, 
-							getFieldWidth(entityInfo.getEntityClass(),pClass,p.getName()), 
-							getOrderType(pClass), 
-							getFiniteType(pClass), 
-							getMultipleType(pClass),
-							getCardinality(pClass,getFiniteType(pClass)), 
-							getAlignType(pClass), 
-							readMethod.getName(), writeMethod.getName());
+					try {
+						
+						Method readMethod=p.getReadMethod();
+						Method writeMethod=p.getWriteMethod();
+						
+						Field field=entityClass.getDeclaredField(p.getName());
+		
+						if(isPrimaryKeyField(readMethod) || isPrimaryKeyField(field)){
+						
+							entityInfo.setPrimaryKeyProperty(new PrimaryKeyPropertyInfo(
+									entityInfo, p.getName(), pClass, 
+									readMethod.getName(), writeMethod.getName()));
+							
+						}else if(isForeignKeyField(readMethod) || isForeignKeyField(field)){
+		
+							entityInfo.addForeignKeyProperty(new ForeignKeyPropertyInfo(
+									entityInfo, p.getName(), pClass,
+									readMethod.getName(), writeMethod.getName(), 
+									getMasterType(readMethod, field)));
+						
+						}else if(isEntityCollection(readMethod) || isEntityCollection(field)){
+							
+							if(constructEntityCollectionProperties){
+								
+								entityInfo.addEntityCollectionProperty(new EntityCollectionPropertyInfo(
+										entityInfo, p.getName(), pClass, 
+										readMethod.getName(), writeMethod.getName(), 
+										getMappedByForeignKey(entityInfo.getEntityClass(),readMethod,field)));
+
+							}
+	
+						}else{
+							
+							entityInfo.addInformationProperty(new InformationPropertyInfo(
+									entityInfo,
+									p.getName(), 
+									getPropertyDisplayName(entityInfo, p), 
+									p.getShortDescription(), 
+									pClass, 
+									getFieldWidth(entityInfo.getEntityClass(),pClass,p.getName()), 
+									getOrderType(pClass), 
+									getFiniteType(pClass), 
+									getMultipleType(pClass),
+									getCardinality(pClass,getFiniteType(pClass)), 
+									getAlignType(pClass), 
+									readMethod.getName(), writeMethod.getName()));
+							
+						}
+						
+					} catch (SecurityException e) {
+						throw new InterfaceException(e);
+					} catch (NoSuchFieldException e) {
+						throw new InterfaceException(e);
+					}
 					
 				}
 				
-				entityInfo.addProperty(pInfo);
+				entityPool.addEntity(entityClass.getName(), entityInfo);
+				
+				return entityInfo;
 			
-			} catch (SecurityException e) {
-			} catch (NoSuchFieldException e) {
+			}catch(IntrospectionException e){
+				throw new InterfaceException(e);
 			}
-			
+
 		}
 		
 		return entityInfo;
+		
+	}
+	
+	private static ForeignKeyPropertyInfo getMappedByForeignKey(
+			Class<? extends EntityType> masterEntityClass, Method readMethod, Field field) throws InterfaceException {
+		ForeignKeyPropertyInfo foreignKey = null;
+		if((foreignKey = getMappedByForeignKey(masterEntityClass,readMethod))==null){
+			foreignKey = getMappedByForeignKey(masterEntityClass,field);
+		}
+		return foreignKey;
 	}
 
-	private static EntityInfo getMasterEntity(Method readMethod, Field field) throws IntrospectionException {
+	@SuppressWarnings("unchecked")
+	private static ForeignKeyPropertyInfo getMappedByForeignKey(
+			Class<? extends EntityType> masterEntityClass, AccessibleObject object) throws InterfaceException {
 		
-		EntityInfo masterEntity=null;
+		Annotation annotation;
+		
+		if((annotation = object.getAnnotation(OneToMany.class))!=null){
+			
+			String foreignKeyName = ((OneToMany)annotation).mappedBy();
+			Class<? extends EntityClass> targetEntityClass = ((OneToMany)annotation).targetEntity();
+			
+			SortedSet<ForeignKeyPropertyInfo> foreignKeyPropertyCandidates = new TreeSet<ForeignKeyPropertyInfo>();
+			
+			if(isEmptyTargetEntityClass(targetEntityClass)){
+				
+				for(Class<? extends EntityType> slave:EntityClass.getEntityClassSet()){
+					
+					if(!slave.equals(masterEntityClass.getClass())){
+						
+						EntityInfo slaveInfo = EntityInspector.getEntityInfo(slave,false);
+						ForeignKeyPropertyInfo foreignKey = slaveInfo.getForeignKeyFor(masterEntityClass);
+						
+						if(
+							foreignKey!=null && 
+							(
+								foreignKeyName==null || 
+								(
+									foreignKeyName!=null && foreignKey.getPropertyName().equals(foreignKeyName)
+								)
+							)
+						){
+							
+							foreignKeyPropertyCandidates.add(foreignKey);
+						
+						}
+
+					}
+				
+				}
+			}else{
+				EntityInfo slaveEntity = EntityInspector.getEntityInfo(targetEntityClass);
+				if(foreignKeyName!=null) 
+					foreignKeyPropertyCandidates.add(slaveEntity.getForeignKeyFor(foreignKeyName));
+				else 
+					foreignKeyPropertyCandidates.add(slaveEntity.getForeignKeyFor(masterEntityClass));
+			}
+			
+			if(foreignKeyPropertyCandidates.size()>0) return foreignKeyPropertyCandidates.first();
+			else throw new InterfaceException("foreign key not found for entity class "+masterEntityClass.getName());
+
+		}
+
+		throw new InterfaceException("entity collection must be marked by OneToMany annotation");
+	
+	}
+	
+	private static Class<? extends EntityType> getMasterType(Method readMethod, Field field) throws InterfaceException {
+		
+		Class<? extends EntityType> masterEntity=null;
 		if((masterEntity=getMasterEntity(readMethod.getAnnotations(),readMethod.getReturnType()))==null){
 			masterEntity=getMasterEntity(field.getAnnotations(),field.getType());
 		}
@@ -115,26 +240,46 @@ public final class EntityInspector {
 		return masterEntity;
 	}
 
-	private static EntityInfo getMasterEntity(Annotation[] annotations,Class<?> memberClass) throws IntrospectionException {
-		EntityInfo masterEntity=null;
+	@SuppressWarnings("unchecked")
+	private static Class<? extends EntityType> getMasterEntity(Annotation[] annotations,Class<?> memberClass) throws InterfaceException {
+		
+		Class<? extends EntityType> masterEntity=null;
+		
+		if(!EntityType.class.isAssignableFrom(memberClass)) throw new InterfaceException("getter return type or member type should be of type EntityType");
+		Class<? extends EntityType> resultType = (Class<? extends EntityType>)memberClass;
+
 		for(Annotation a:annotations){
 			if(a instanceof OneToOne){
-				masterEntity = getTargetEntityClass(((OneToOne)a).targetEntity(),memberClass);
+				masterEntity = getTargetEntityClass(((OneToOne)a).targetEntity(),resultType);
+				break;
 			}else if(a instanceof ManyToOne){
-				masterEntity = getTargetEntityClass(((ManyToOne)a).targetEntity(),memberClass);
+				masterEntity = getTargetEntityClass(((ManyToOne)a).targetEntity(),resultType);
+				break;
 			}
 		}
 		return masterEntity;
+	
 	}
 	
-	private static EntityInfo getTargetEntityClass(Class<?> targetEntity,Class<?> memberClass) throws IntrospectionException{
-		if(targetEntity==null){
+	private static boolean isEmptyTargetEntityClass(Class<?> targetEntityClass){
+		return (targetEntityClass==null) || (targetEntityClass.equals(void.class));
+	}
+	
+	private static Class<? extends EntityType> getTargetEntityClass(
+			Class<? extends EntityType> targetEntity,
+			Class<? extends EntityType> memberClass) throws InterfaceException{
+		if(isEmptyTargetEntityClass(targetEntity)){
 			targetEntity = memberClass;
-			if(targetEntity!=null){
-				return getEntityInfo(targetEntity);
-			}
+		}
+		if(!isEmptyTargetEntityClass(targetEntity)){
+			return targetEntity;
 		}
 		return null;
+	}
+
+	private static boolean isEntityCollection(AccessibleObject object) {
+		return 
+			object.isAnnotationPresent(OneToMany.class);
 	}
 
 	private static boolean isForeignKeyField(AccessibleObject object) {
@@ -148,14 +293,7 @@ public final class EntityInspector {
 
 	private static String getPropertyDisplayName(EntityInfo entityInfo, PropertyDescriptor p) {
 		return Helpers.getLocalizedDisplayName("PropertyNamesBundle", entityInfo.getEntityName(), p.getName(), p.getDisplayName());
-/*		ResourceBundle bundle=ResourceBundle.getBundle(Helpers.getLocalizationBundleFullName("PropertyNamesBundle"));
-		String pDName=p.getDisplayName();
-		String resourceKey=entityInfo.getEntityName()+"."+p.getName();
-		if(bundle!=null && bundle.containsKey(resourceKey)){
-			pDName=bundle.getString(resourceKey);
-		}
-		return pDName;
-*/	}
+	}
 	
 	private static MultipleType getMultipleType(Class<?> pClass) {
 		if(pClass.isArray()) return MultipleType.MULTIPLE;
@@ -274,7 +412,21 @@ public final class EntityInspector {
 		
 	}
 	
+	public static String convertToDecoratedString(Object value){
+		StringBuilder decorated = new StringBuilder();
+		
+		Class<?> c=value.getClass();
+		if(isString(c) || isCharacter(c)){
+			decorated = decorated.append("'").append(value).append("'");
+		}else{
+			decorated = decorated.append(value);
+		}
+		
+		return decorated.toString();
+	}
+	
 	public static String convertToString(Object value){
+		
 		if(value==null){
 			return "";
 		}else{
@@ -312,18 +464,6 @@ public final class EntityInspector {
 			
 		}
 	}
-
-/*
-	public static String getValueDisplayName(String bundleName, String prefix, String propertyValue) {
-		ResourceBundle bundle=ResourceBundle.getBundle(bundleName);
-		String key=prefix+"."+propertyValue;
-		String valueName=propertyValue;
-		if(bundle!=null && bundle.containsKey(key)){
-			valueName=bundle.getString(key);
-		}
-		return valueName;
-	}
-*/	
 
 	private static String getValueDisplayName(String propertyValue, Class<?> propertyClass) {
 		return Helpers.getLocalizedDisplayName("TypeValuesBundle", getClassName(propertyClass), propertyValue);
@@ -487,13 +627,13 @@ public final class EntityInspector {
 		return (EntityType)entityType.newInstance();
 	}
 
-	public static EntityData initializeEntityData(DataSource dataSource) {
+	public static EntityData initializeEntityData(DataSource dataSource) throws InterfaceException {
 		return initializeEntityData(dataSource,FilterRangeBoundary.START);
 	}
 	
-	public static EntityData initializeEntityData(DataSource dataSource,FilterRangeBoundary boundaryKind) {
+	public static EntityData initializeEntityData(DataSource dataSource,FilterRangeBoundary boundaryKind) throws InterfaceException {
 		
-		List<InformationPropertyInfo> infoList=dataSource.getSelectedInformationProperties();
+		SortedSet<InformationPropertyInfo> infoList=dataSource.getSelectedInformationProperties();
 		
 		LinkedList<Object> dataList = new LinkedList<Object>();
 		
@@ -581,11 +721,12 @@ public final class EntityInspector {
 		return value;
 	}
 
-	private static int getFieldWidth(Class<?> entityType,Class<?> propertyType, String fieldName) {
+	private static int getFieldWidth(Class<?> entityType,Class<?> propertyType, String fieldName) throws InterfaceException {
 		
 		int columnSize=-1;
 		try {
-			columnSize=ContextBootstrap.getAgentReference(null).getColumnSize(entityType,fieldName);
+			AgentRemote agent = ContextBootstrap.getAgentReference(null);
+			columnSize=agent.getColumnSize(entityType,fieldName);
 
 			if(isCharacter(propertyType)){
 				return 1;
@@ -606,6 +747,7 @@ public final class EntityInspector {
 			}
 
 		} catch (NamingException e) {
+			throw new InterfaceException(e);
 		}
 
 		return 0;
