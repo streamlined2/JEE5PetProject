@@ -28,12 +28,12 @@ import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.Filter;
 import com.project.inspection.FilterItem;
+import com.project.inspection.ListItem;
 import com.project.inspection.Ordering;
 import com.project.inspection.OrderingItem;
 import com.project.inspection.OrderingItem.SortOrderType;
 import com.project.inspection.PropertyInfo;
 import com.project.inspection.PropertyList;
-import com.project.inspection.PropertyListItem;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.queries.EntityDataSource;
 import com.project.queries.QueryDefinition;
@@ -81,7 +81,7 @@ public class Agent implements AgentRemote {
 		@SuppressWarnings("unchecked")
 		List<Object[]> list=(List<Object[]>)query.getResultList();
 		
-		return copyQueryResultToEntityData(list);
+		return copyQueryResultToEntityData(list,queryDefinition.hasPrimaryKey());
 	}
 
 	//TODO implement it with Criteria Builder (JPA2)
@@ -96,32 +96,45 @@ public class Agent implements AgentRemote {
 		@SuppressWarnings("unchecked")
 		List<Object[]> list=(List<Object[]>)query.getResultList();
 		
-		return copyQueryResultToEntityData(list);
+		return copyQueryResultToEntityData(list,true);
 	}
 	
-	private static List<EntityData> copyQueryResultToEntityData(List<Object[]> list){
+	private static List<EntityData> copyQueryResultToEntityData(List<Object[]> list, boolean hasPrimaryKey){
 		
 		List<EntityData> result=new ArrayList<EntityData>();
 		for(Object[] o:list){
-			result.add(getEntityData(o,null));
+			result.add(getEntityData(o,null,hasPrimaryKey));
 		}
 		
 		return result;
 
 	}
-
-	private static EntityData getEntityData(Object[] o,PropertyList propertyList) {
-		Object primaryKeyValue=o[0];
-		Object[] infoFieldValues=Arrays.copyOfRange(o, 1, o.length);
+	
+	private static EntityData getEntityData(Object[] o,PropertyList propertyList, boolean hasPrimaryKey) {
+		Object primaryKeyValue;
+		Object[] infoFieldValues;
+		if(hasPrimaryKey) {
+			primaryKeyValue = o[0];
+			infoFieldValues = Arrays.copyOfRange(o, 1, o.length);
+		}else{
+			primaryKeyValue = null;
+			infoFieldValues = Arrays.copyOfRange(o, 0, o.length);
+		}
 		EntityData d=new EntityData(primaryKeyValue,infoFieldValues,propertyList);
 		return d;
+		
+		
+	}
+
+	private static EntityData getEntityData(Object[] o,PropertyList propertyList, QueryDefinition queryDefinition) {
+		return getEntityData(o,propertyList, queryDefinition.hasPrimaryKey());
 	}
 	
 	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
 
 		Query query=getQuery(dataSource,primaryKey);
 
-		return getEntityData((Object[]) query.getSingleResult(),new PropertyList(dataSource.getEntityInfo()));
+		return getEntityData((Object[]) query.getSingleResult(),new PropertyList(dataSource.getEntityInfo()),true);
 	}
 
 
@@ -322,7 +335,7 @@ public class Agent implements AgentRemote {
 			append(".").
 			append(dataSource.getEntityInfo().getPrimaryKeyInfo().getPropertyName()).
 			append(listSeparator);
-		for(PropertyListItem i:dataSource.getPropertyList().getOrderedSet()){
+		for(ListItem i:dataSource.getPropertyList().getOrderedSet()){
 			buffer.
 				append(prefix).
 				append(".").

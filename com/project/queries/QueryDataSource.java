@@ -1,5 +1,6 @@
 package com.project.queries;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -46,8 +47,11 @@ public class QueryDataSource extends DataSource {
 	}
 
 	@Override
-	public SortedSet<InformationPropertyInfo> getInformationProperties() throws InterfaceException {
-		return new TreeSet(queryDefinition.getInfoProperties()); 
+	public List<InformationPropertyInfo> getInformationProperties() throws InterfaceException {
+		List<InformationPropertyInfo> properties = new ArrayList<InformationPropertyInfo>();
+		properties.addAll(queryDefinition.getInfoProperties());
+		properties.addAll(queryDefinition.getGroupProperties());
+		return properties; 
 	}
 
 	@Override

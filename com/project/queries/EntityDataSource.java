@@ -44,7 +44,7 @@ public class EntityDataSource extends DataSource {
 	}
 
 	@Override
-	public SortedSet<InformationPropertyInfo> getInformationProperties() {
+	public List<InformationPropertyInfo> getInformationProperties() {
 		return entityInfo.getInfoFields();
 	}
 	

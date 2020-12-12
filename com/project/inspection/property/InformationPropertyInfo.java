@@ -90,4 +90,12 @@ public class InformationPropertyInfo extends PropertyInfo {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("InformationPropertyInfo [displayName=")
+				.append(displayName).append(", desc=").append(desc).append("]");
+		return builder.toString();
+	}
+
 }

@@ -1,21 +1,20 @@
 package com.project.queries;
 
 import java.util.List;
-import java.util.SortedSet;
 
 import com.project.inspection.EntityInfo.EntityData;
-import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.Filter;
 import com.project.inspection.Ordering;
 import com.project.inspection.PropertyList;
 import com.project.inspection.Range;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 
 public abstract class DataSource {
 	
 	public abstract List<EntityData> get() throws InterfaceException;
 	
-	public abstract SortedSet<InformationPropertyInfo> getInformationProperties() throws InterfaceException;
+	public abstract List<InformationPropertyInfo> getInformationProperties() throws InterfaceException;
 	
 	private Range range=null;
 
@@ -73,7 +72,7 @@ public abstract class DataSource {
 	
 	public abstract String getDisplayName();
 
-	public final SortedSet<InformationPropertyInfo> getSelectedInformationProperties() throws InterfaceException{
+	public final List<InformationPropertyInfo> getSelectedInformationProperties() throws InterfaceException{
 		return getPropertyList().getSelectedInformationProperties(getInformationProperties());
 	}
 

@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -633,9 +634,9 @@ public final class EntityInspector {
 	
 	public static EntityData initializeEntityData(DataSource dataSource,FilterRangeBoundary boundaryKind) throws InterfaceException {
 		
-		SortedSet<InformationPropertyInfo> infoList=dataSource.getSelectedInformationProperties();
+		List<InformationPropertyInfo> infoList=dataSource.getSelectedInformationProperties();
 		
-		LinkedList<Object> dataList = new LinkedList<Object>();
+		List<Object> dataList = new LinkedList<Object>();
 		
 		for(InformationPropertyInfo pInfo:infoList){
 			

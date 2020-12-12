@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -70,8 +72,8 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		return primaryKey;
 	}
 	
-	public SortedSet<InformationPropertyInfo> getInfoFields(){
-		SortedSet<InformationPropertyInfo> set=new TreeSet<InformationPropertyInfo>();
+	public List<InformationPropertyInfo> getInfoFields(){
+		List<InformationPropertyInfo> set=new LinkedList<InformationPropertyInfo>();
 		for(InformationPropertyInfo item:infoProperties.values()){
 			set.add((InformationPropertyInfo)item);
 		}
