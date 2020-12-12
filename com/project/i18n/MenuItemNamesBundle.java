@@ -11,6 +11,8 @@ public class MenuItemNamesBundle extends ListResourceBundle {
 				{"Entity.desc","Browse defined entities"},
 				{"Query.name","Query"},
 				{"Query.desc","Run query and see result"},
+				{"Info.name","Info"},
+				{"Info.desc","Get information about program"},
 				{"Countries.name","Countries"},
 				{"Countries.desc","All available countries"},
 				{"Customers.name","Customers"},

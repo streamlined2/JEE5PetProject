@@ -11,6 +11,8 @@ public class MenuItemNamesBundle_uk_UA extends ListResourceBundle {
 				{"Entity.desc","Перегляд визначених сутностей"},
 				{"Query.name","Запит"},
 				{"Query.desc","Виконати запит та переглянути результат"},
+				{"Info.name","Інфо"},
+				{"Info.desc","Здобути інформацію про програму"},
 				{"Countries.name","Країни"},
 				{"Countries.desc","Всі відомі країни"},
 				{"Customers.name","Клієнти"},
