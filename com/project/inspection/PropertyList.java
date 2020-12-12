@@ -13,10 +13,13 @@ import java.util.TreeSet;
 
 import com.project.Helpers;
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.actions.HTTPAction;
+import com.project.queries.QueryDataSource;
 import com.project.queries.QueryDefinition;
+import com.project.queries.QueryDefinition.InformationProperty;
 import com.project.queries.QueryDefinition.Property;
 
 public class PropertyList implements Serializable, ListIterable<PropertyListItem> {
@@ -30,6 +33,14 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 		int k=1;
 		for(InformationPropertyInfo pInfo:infoProperties){
 			map.put(pInfo, new PropertyListItem(pInfo, k++));
+		}
+	}
+	
+	public PropertyList(QueryDataSource queryDataSource) throws InterfaceException{
+		int k=1;
+		for(Property property:queryDataSource.getQueryDefinition().getInfoGroupProperties()){
+			PropertyListItem item = new PropertyListItem(property, k++);
+			map.put(item.getPropertyInfo(), item);
 		}
 	}
 	
@@ -111,7 +122,7 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 	}
 
 	@Override
-	public void addItem(PropertyListItem item) {
+	public void addItem(PropertyListItem item) throws InterfaceException {
 		map.put(item.getPropertyInfo(), item);
 	}
 

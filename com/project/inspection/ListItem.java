@@ -4,31 +4,62 @@ import java.io.Serializable;
 
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.queries.QueryDefinition;
 
 public abstract class ListItem implements Serializable {
 	
-	protected InformationPropertyInfo propertyInfo;
-
-	public ListItem(InformationPropertyInfo pInfo){
-		propertyInfo = pInfo;
+	protected InformationPropertyInfo propertyInfo = null;
+	
+	public ListItem(InformationPropertyInfo propertyInfo){
+		this.propertyInfo = propertyInfo;
 	}
-
-	public InformationPropertyInfo getPropertyInfo() {
-		return propertyInfo;
+	
+	public abstract QueryDefinition.Property getProperty();
+	
+	public final InformationPropertyInfo getPropertyInfo() throws InterfaceException{
+		if(propertyInfo!=null){
+			return propertyInfo;
+		}else if(getProperty()!=null){
+			return getProperty().getReferencedProperty();
+		}
+		return null;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ListItem [propertyInfo=");
-		builder.append(propertyInfo);
+		builder.append("ListItem [property=");
+		builder.append(getProperty().toString());
+		builder.append(", propertyInfo=");
+		builder.append(propertyInfo.toString());
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof ListItem)) return false;
+		ListItem item = (ListItem)obj;
+		try {
+			return getPropertyInfo().equals(item.getPropertyInfo());
+		} catch (InterfaceException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode(){
+		try {
+			return getPropertyInfo().hashCode();
+		} catch (InterfaceException e) {
+			return -1;
+		}
+	}
 
-	public String getDisplayName() throws InterfaceException {
-		if(propertyInfo!=null) return propertyInfo.getDisplayName();
-		else return "";
+	public final String getDisplayName() throws InterfaceException {
+		if(getProperty()!=null) return getProperty().getDisplayName();
+		else if(propertyInfo!=null) return propertyInfo.getDisplayName();
+		return "";
 	}
 
 }

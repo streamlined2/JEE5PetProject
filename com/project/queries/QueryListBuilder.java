@@ -110,7 +110,7 @@ public final class QueryListBuilder {
 					new OrderByEntry("address")}, 
 				GroupPolicy.GROUP,
 				new GroupEntry[]{
-					new GroupEntry(Customer.class,"rating",GroupOperation.SUM,"ratings")}
+					new GroupEntry(Customer.class,"rating",GroupOperation.TOTAL,"ratings")}
 			)
 		);
 

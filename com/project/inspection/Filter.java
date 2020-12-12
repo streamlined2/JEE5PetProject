@@ -87,7 +87,7 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 	}
 
 	@Override
-	public void addItem(FilterItem item) {
+	public void addItem(FilterItem item) throws InterfaceException {
 		map.put(item.getPropertyInfo(), item);
 	}
 

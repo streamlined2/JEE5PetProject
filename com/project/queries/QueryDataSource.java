@@ -2,16 +2,14 @@ package com.project.queries;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.naming.NamingException;
 
 import com.project.AgentRemote;
 import com.project.ContextBootstrap;
 import com.project.inspection.EntityInfo.EntityData;
-import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.PropertyList;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 
 public class QueryDataSource extends DataSource {
@@ -56,7 +54,13 @@ public class QueryDataSource extends DataSource {
 
 	@Override
 	public PropertyList getDefaultPropertyList() throws InterfaceException {
-		return new PropertyList(getInformationProperties());
+		return new PropertyList(this);
+	}
+
+	//TODO may be changed later depending on query properties
+	@Override
+	public boolean isModifiable() {
+		return false;
 	}
 
 }

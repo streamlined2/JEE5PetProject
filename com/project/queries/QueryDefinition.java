@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,16 +26,13 @@ import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PrimaryKeyPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
-import com.project.queries.QueryDefinition.FilterEntry;
-import com.project.queries.QueryDefinition.OrderByEntry;
 import com.project.queries.QueryDefinition.FilterEntry.Relation;
 import com.project.queries.QueryDefinition.OrderByEntry.SortOrder;
-import com.project.queries.QueryDefinition.Property;
 
 public class QueryDefinition implements Serializable, SelectionViewItem, Comparable<QueryDefinition> {
 
 	public enum GroupPolicy { DONT_GROUP, GROUP };
-	public enum GroupOperation { COUNT, SUM, AVERAGE };
+	public enum GroupOperation { COUNT, TOTAL, AVERAGE };
 	
 	private String name;
 	private String description;
@@ -60,7 +56,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 				return new AverageSumProperty(dataProperty,entry.getAlias(),order);
 			case COUNT:
 				return new CountProperty(dataProperty,entry.getAlias(),order);
-			case SUM:
+			case TOTAL:
 				return new TotalSumProperty(dataProperty,entry.getAlias(),order);
 			}
 		}
@@ -89,7 +85,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		
 		public abstract String getDisplayName() throws InterfaceException;
 		
-		public abstract PropertyInfo getReferencedProperty() throws InterfaceException;
+		public abstract InformationPropertyInfo getReferencedProperty() throws InterfaceException;
 		
 		@Override
 		public int compareTo(Property other){
@@ -134,7 +130,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		@Override
-		public PropertyInfo getReferencedProperty() throws InterfaceException {
+		public InformationPropertyInfo getReferencedProperty() throws InterfaceException {
 			return getInformationProperty();
 		}
 	}
@@ -151,7 +147,23 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		protected InformationProperty getDataProperty(){
 			return dataProperty;
 		}
+		
+		public abstract GroupOperation getGroupOperation();
 
+		@Override
+		public String getDisplayName() throws InterfaceException {
+			StringBuilder builder = new StringBuilder().
+				append(Helpers.getLocalizedDisplayName("QueryPropertyPrefixBundle", "", getQueryPropertyPrefixKey(), getQueryPropertyPrefixKey())).
+				append("(").
+				append(getDataProperty().getInformationProperty().getDisplayName().toLowerCase()).
+				append(")");
+			return builder.toString(); 
+		}
+
+		private String getQueryPropertyPrefixKey() {
+			return EntityInspector.convertToString(getGroupOperation());
+		}
+		
 	}
 	
 	public class AverageSumProperty extends AggregatedProperty {
@@ -172,13 +184,13 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		@Override
-		public String getDisplayName() throws InterfaceException {
-			return "Average of "+getDataProperty().getInformationProperty().getDisplayName();
+		public InformationPropertyInfo getReferencedProperty() throws InterfaceException {
+			return getDataProperty().getInformationProperty();
 		}
 
 		@Override
-		public PropertyInfo getReferencedProperty() throws InterfaceException {
-			return getDataProperty().getInformationProperty();
+		public GroupOperation getGroupOperation() {
+			return GroupOperation.AVERAGE;
 		}
 		
 	}
@@ -201,13 +213,13 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 		
 		@Override
-		public String getDisplayName() throws InterfaceException {
-			return "Total of "+getDataProperty().getInformationProperty().getDisplayName();
-		}
-		
-		@Override
-		public PropertyInfo getReferencedProperty() throws InterfaceException {
+		public InformationPropertyInfo getReferencedProperty() throws InterfaceException {
 			return getDataProperty().getInformationProperty();
+		}
+
+		@Override
+		public GroupOperation getGroupOperation() {
+			return GroupOperation.TOTAL;
 		}
 		
 	}
@@ -230,13 +242,13 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		@Override
-		public String getDisplayName() throws InterfaceException {
-			return "Count of "+getDataProperty().getInformationProperty().getDisplayName();
-		}
-		
-		@Override
-		public PropertyInfo getReferencedProperty() throws InterfaceException {
+		public InformationPropertyInfo getReferencedProperty() throws InterfaceException {
 			return getDataProperty().getInformationProperty();
+		}
+
+		@Override
+		public GroupOperation getGroupOperation() {
+			return GroupOperation.COUNT;
 		}
 		
 	}
@@ -478,7 +490,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 			statement.append(" group by ");
 
-			for(InformationProperty property:getInformationProperties()){
+			for(InformationProperty property:getInformationPropertyList()){
 			
 				addFieldDesc(statement, property, separator, getEntityAlias(entities, property.getInformationProperty()));
 			
@@ -524,13 +536,20 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 	public List<InformationPropertyInfo> getInfoProperties() throws InterfaceException {
 		List<InformationPropertyInfo> propertyList = new LinkedList<InformationPropertyInfo>();
-		for(InformationProperty property:getInformationProperties()){
+		for(InformationProperty property:getInformationPropertyList()){
 			propertyList.add(property.getInformationProperty());
 		}
 		return propertyList;
 	}
 
-	public SortedSet<InformationProperty> getInformationProperties() {
+	public List<Property> getInfoGroupProperties() throws InterfaceException {
+		List<Property> propertyList = new LinkedList<Property>();
+		propertyList.addAll(getInformationPropertyList());
+		propertyList.addAll(getGroupPropertyList());
+		return propertyList;
+	}
+
+	public SortedSet<InformationProperty> getInformationPropertyList() {
 		return Collections.unmodifiableSortedSet(new TreeSet<InformationProperty>(properties.values()));
 	}
 
@@ -542,6 +561,18 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			if(property!=null && property.getDataProperty()!=null){
 				InformationProperty infoProperty = property.getDataProperty();
 				propertyList.add(infoProperty.getInformationProperty());
+			}
+		}
+		return propertyList;
+	}
+
+	public List<Property> getGroupPropertyList() throws InterfaceException {
+		List<Property> propertyList = new LinkedList<Property>();
+		int order = 1;
+		for(GroupEntry entry:groupEntries){
+			AggregatedProperty property = getAggregatedProperty(entry,order);
+			if(property!=null){
+				propertyList.add(property);
 			}
 		}
 		return propertyList;
@@ -637,7 +668,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			SortedMap<EntityInfo, Character> entities,
 			final String separator) throws InterfaceException {
 		int order = 1;
-		for(InformationProperty property:getInformationProperties()){
+		for(InformationProperty property:getInformationPropertyList()){
 			InformationPropertyInfo pInfo = property.getInformationProperty();
 			if(order == 1 && groupPolicy == GroupPolicy.DONT_GROUP){
 				addPrimaryKeyFieldDesc(statement, pInfo.getEntityInfo(), separator, getEntityAlias(entities, pInfo));

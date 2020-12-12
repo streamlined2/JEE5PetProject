@@ -191,7 +191,7 @@ public class Agent implements AgentRemote {
 		return query;
 	}
 	
-	private String getOrderClause(String prefix, Ordering ordering) {
+	private String getOrderClause(String prefix, Ordering ordering) throws InterfaceException {
 		final String LIST_SEPARATOR = ",";
 		StringBuilder clause=new StringBuilder();
 		if(formOrderClause(ordering)){
@@ -248,7 +248,7 @@ public class Agent implements AgentRemote {
 		return true;
 	}
 
-	private String getFilterCondition(String prefix, Filter filter) {
+	private String getFilterCondition(String prefix, Filter filter) throws InterfaceException {
 		StringBuilder condition=new StringBuilder();
 		if(formFilterCondition(filter)){
 

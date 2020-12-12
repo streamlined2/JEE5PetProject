@@ -11,6 +11,6 @@ import com.project.interfacebuilder.http.actions.HTTPAction;
 public interface ListIterable<ItemType> extends Iterable<ItemType> {
 
 	public ItemType createItem(HTTPController controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<HTTPAction> actions) throws InterfaceException;
-	public void addItem(ItemType item);
+	public void addItem(ItemType item) throws InterfaceException;
 	
 }

@@ -97,7 +97,7 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		infoProperties.put(pInfo.getPropertyName(), pInfo);
 	}
 	
-	public static class EntityData implements Serializable {
+	public static class EntityData implements Serializable, SelectionViewItem {
 
 		private static final long serialVersionUID = -2491192263978555306L;
 		private Object primaryKey;
@@ -114,6 +114,21 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 
 		public Object[] getInfoData() {
 			return infoData;
+		}
+
+		@Override
+		public String getItemID() {
+			return EntityInspector.convertToString(primaryKey);
+		}
+
+		@Override
+		public String getItemName() {
+			return getItemID();
+		}
+
+		@Override
+		public String getItemDescripion() {
+			return getItemID();
 		}
 		
 	}

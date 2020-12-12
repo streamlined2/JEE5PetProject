@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import com.project.Helpers;
 import com.project.inspection.OrderingItem.SortOrderType;
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.actions.HTTPAction;
@@ -87,7 +88,7 @@ public class Ordering implements Serializable, ListIterable<OrderingItem>{
 	}
 
 	@Override
-	public void addItem(OrderingItem item) {
+	public void addItem(OrderingItem item) throws InterfaceException {
 		map.put(item.getPropertyInfo(), item);
 	}
 

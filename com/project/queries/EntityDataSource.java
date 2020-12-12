@@ -57,4 +57,9 @@ public class EntityDataSource extends DataSource {
 		return new PropertyList(entityInfo);
 	}
 
+	@Override
+	public boolean isModifiable() {
+		return true;
+	}
+
 }

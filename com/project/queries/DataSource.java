@@ -12,6 +12,8 @@ import com.project.interfacebuilder.InterfaceException;
 
 public abstract class DataSource {
 	
+	public abstract boolean isModifiable();
+	
 	public abstract List<EntityData> get() throws InterfaceException;
 	
 	public abstract List<InformationPropertyInfo> getInformationProperties() throws InterfaceException;
