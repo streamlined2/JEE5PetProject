@@ -54,8 +54,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 	public AggregatedProperty getAggregatedProperty(GroupEntry entry,int order) throws InterfaceException{
 		InformationProperty dataProperty = new InformationProperty(entry.getDataPropertyEntityType(), entry.getDataPropertyAlias(), entry.getAlias(), order);
-		InformationPropertyInfo pInfo = dataProperty.getInformationProperty();
-		if(pInfo!=null){
+		if(dataProperty.getInformationProperty()!=null){
 			switch(entry.getOperation()){
 			case AVERAGE:
 				return new AverageSumProperty(dataProperty,entry.getAlias(),order);

@@ -75,7 +75,7 @@ public abstract class PropertyInfo implements Serializable, Comparable<PropertyI
 
 	@Override
 	public int hashCode() {
-		return entityInfo.hashCode()*31+propertyName.hashCode();
+		return entityInfo.hashCode()*31+propertyName.toUpperCase().hashCode();
 	}
 
 	@Override

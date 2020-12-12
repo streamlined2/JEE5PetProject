@@ -55,7 +55,7 @@ public class QueryDataSource extends DataSource {
 		return new PropertyList(this);
 	}
 
-	//TODO may be changed later depending on query result properties
+	//TODO subject to be changed later to support live query results
 	@Override
 	public boolean isModifiable() {
 		return false;

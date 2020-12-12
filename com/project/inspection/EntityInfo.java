@@ -90,11 +90,7 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 
 	public void setSelector(InformationPropertyInfo propertyInfo, Selector selector) {
 		propertyInfo.setSelector(selector);
-		InformationPropertyInfo pInfo=infoProperties.get((propertyInfo.getPropertyName()));
-		if(pInfo.isInformation()){
-			((InformationPropertyInfo)pInfo).setSelector(selector);
-		}
-		infoProperties.put(pInfo.getPropertyName(), pInfo);
+		infoProperties.put(propertyInfo.getPropertyName(), propertyInfo);
 	}
 	
 	public static class EntityData implements Serializable, SelectionViewItem {

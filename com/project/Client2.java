@@ -75,7 +75,7 @@ public class Client2 {
 		for(InformationPropertyInfo e:info.getInfoFields()){
 			System.out.println(
 					"property: "+e.getPropertyName()+
-					" ("+e.getDisplayName()+"), "+e.getDesc()+
+					" ("+e.getDisplayName()+"), "+e.getDescription()+
 					"; type="+e.getType().getName()+
 					"; order type="+e.getOrderType().toString()+
 					"; finite type="+e.getFiniteType().toString()

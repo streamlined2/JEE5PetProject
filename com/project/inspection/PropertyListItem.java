@@ -33,7 +33,10 @@ public class PropertyListItem extends ListItem {
 	public boolean equals(Object another){
 		if(!(another instanceof PropertyListItem)) return false;
 		PropertyListItem item = (PropertyListItem) another;
-		return super.equals(item) && property.equals(item.property) && order==item.order;
+		return 
+			super.equals(item) && 
+			property.equals(item.property) && 
+			order==item.order;
 	}
 	
 	@Override

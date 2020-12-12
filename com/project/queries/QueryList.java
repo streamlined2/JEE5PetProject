@@ -4,12 +4,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class QueryList implements Iterable<QueryDefinition>{
 	
-	private TreeMap<String,QueryDefinition> list=new TreeMap<String,QueryDefinition>();
+	private SortedMap<String,QueryDefinition> list=new TreeMap<String,QueryDefinition>();
 	
 	public QueryList(){
 	}

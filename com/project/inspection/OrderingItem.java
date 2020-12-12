@@ -57,7 +57,11 @@ public class OrderingItem extends ListItem {
 	public boolean equals(Object another){
 		if(!(another instanceof OrderingItem)) return false;
 		OrderingItem item = (OrderingItem) another;
-		return super.equals(item) && property.equals(item.property) && order==item.order && sortOrderType==item.sortOrderType;
+		return 
+			super.equals(item) && 
+			property.equals(item.property) && 
+			order==item.order && 
+			sortOrderType==item.sortOrderType;
 	}
 	
 	@Override

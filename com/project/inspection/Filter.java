@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.project.inspection.property.InformationPropertyInfo;
@@ -22,7 +23,7 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 
 	public enum FilterRangeBoundary { START, FINISH };
 	
-	private TreeMap<PropertyInfo,FilterItem> map=new TreeMap<PropertyInfo,FilterItem>();
+	private SortedMap<PropertyInfo,FilterItem> map=new TreeMap<PropertyInfo,FilterItem>();
 	
 	public int size(){
 		return map.size();

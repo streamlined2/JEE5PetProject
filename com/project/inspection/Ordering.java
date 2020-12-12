@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -25,7 +27,7 @@ public class Ordering implements Serializable, ListIterable<OrderingItem>{
 	 */
 	private static final long serialVersionUID = -8069092787682328055L;
 	
-	private TreeMap<PropertyInfo,OrderingItem> map=new TreeMap<PropertyInfo,OrderingItem>();
+	private SortedMap<PropertyInfo,OrderingItem> map=new TreeMap<PropertyInfo,OrderingItem>();
 	
 	public int size(){
 		return map.size();
@@ -35,9 +37,9 @@ public class Ordering implements Serializable, ListIterable<OrderingItem>{
 		return map.get(pInfo);
 	}
 	
-	public TreeSet<OrderingItem> getOrderedSet(){
+	public SortedSet<OrderingItem> getOrderedSet(){
 		
-		TreeSet<OrderingItem> set=new TreeSet<OrderingItem>(new Comparator<OrderingItem>(){
+		SortedSet<OrderingItem> set=new TreeSet<OrderingItem>(new Comparator<OrderingItem>(){
 			@Override
 			public int compare(OrderingItem a, OrderingItem b) {
 				return a.new OrderKey().compareTo(b.new OrderKey());
@@ -79,7 +81,8 @@ public class Ordering implements Serializable, ListIterable<OrderingItem>{
 	}
 
 	@Override
-	public OrderingItem createItem(HTTPController controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<HTTPAction> actions) {
+	public OrderingItem createItem(
+			HTTPController controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<HTTPAction> actions) {
 		String orderPriorityParameterName=pInfo.getPropertyName();
 		String orderPriorityParameterStringValue=
 			HTTPControllerSupport.findParameterValue(parameters,orderPriorityParameterName);

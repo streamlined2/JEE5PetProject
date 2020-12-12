@@ -12,7 +12,7 @@ public class InformationPropertyInfo extends PropertyInfo {
 	private static final long serialVersionUID = -1180150741234444727L;
 	
 	private String displayName;
-	private String desc;
+	private String description;
 	private OrderType orderType;
 	private FiniteType finiteType;
 	private MultipleType multipleType;
@@ -22,7 +22,7 @@ public class InformationPropertyInfo extends PropertyInfo {
 	private int width;
 
 	public InformationPropertyInfo(EntityInfo eInfo, String propertyName,
-			String displayName, String desc, Class<?> type, int width,
+			String displayName, String description, Class<?> type, int width,
 			OrderType orderType, FiniteType finiteType,
 			MultipleType multipleType, int cardinality, AlignType alignType,
 			String readMethod, String writeMethod) {
@@ -34,7 +34,7 @@ public class InformationPropertyInfo extends PropertyInfo {
 		this.multipleType = multipleType;
 		this.cardinality = cardinality;
 		this.alignType = alignType;
-		this.setDesc(desc); 
+		this.setDesc(description); 
 		this.width = width; 
 	}
 
@@ -79,11 +79,11 @@ public class InformationPropertyInfo extends PropertyInfo {
 	}
 
 	public void setDesc(String desc) {
-		this.desc = desc;
+		this.description = desc;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class InformationPropertyInfo extends PropertyInfo {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("InformationPropertyInfo [displayName=")
-				.append(displayName).append(", desc=").append(desc).append("]");
+				.append(displayName).append(", desc=").append(description).append("]");
 		return builder.toString();
 	}
 

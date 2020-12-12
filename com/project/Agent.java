@@ -344,13 +344,11 @@ public class Agent implements AgentRemote {
 	
 	//persistence provider-specific methods (OpenJPA)
 	private DatabaseMetaData getDatabaseMetaData() throws SQLException{
-		Connection con = getConnection();
-		return con.getMetaData();
+		return getConnection().getMetaData();
 	}
 	
 	private String getCatalogName() throws SQLException{
-		Connection con = getConnection();
-		return con.getCatalog();
+		return getConnection().getCatalog();
 	}
 
 /*	@Resource(name=ContextBootstrap.DATA_SOURCE)

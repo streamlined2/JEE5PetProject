@@ -37,8 +37,7 @@ public abstract class EntityClass implements EntityType {
 			}
 		});
 		for(Class<EntityClass> e:entities){
-			EntityInfo eInfo = EntityInspector.getEntityInfo(e);
-			sortedSet.add(eInfo);
+			sortedSet.add(EntityInspector.getEntityInfo(e));
 		}
 		return Collections.unmodifiableSet(sortedSet);
 	}

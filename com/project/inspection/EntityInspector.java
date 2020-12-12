@@ -79,39 +79,39 @@ public final class EntityInspector {
 		@SuppressWarnings("unchecked")
 		Class<? extends EntityType> entityClass = (Class<? extends EntityType>) eClass;
 
-		EntityInfo entityInfo = null;
+		EntityInfo entityInfo = entityPool.getEntity(entityClass.getName());
 		
-		if((entityInfo = entityPool.getEntity(entityClass.getName())) == null){
+		if(entityInfo == null){
 			
 			try{
 				
 				BeanInfo info=Introspector.getBeanInfo(entityClass,Object.class);//,Introspector.IGNORE_ALL_BEANINFO
 				
-				PropertyDescriptor[] pd=info.getPropertyDescriptors();
+				PropertyDescriptor[] propertyDescriptors=info.getPropertyDescriptors();
 				
 				entityInfo=new EntityInfo(entityClass);
 				
-				for(PropertyDescriptor p:pd){
+				for(PropertyDescriptor propertyDescriptor:propertyDescriptors){
 					
-					Class<?> pClass=p.getPropertyType();
+					Class<?> pClass=propertyDescriptor.getPropertyType();
 					
 					try {
 						
-						Method readMethod=p.getReadMethod();
-						Method writeMethod=p.getWriteMethod();
+						Method readMethod=propertyDescriptor.getReadMethod();
+						Method writeMethod=propertyDescriptor.getWriteMethod();
 						
-						Field field=entityClass.getDeclaredField(p.getName());
+						Field field=entityClass.getDeclaredField(propertyDescriptor.getName());
 		
 						if(isPrimaryKeyField(readMethod) || isPrimaryKeyField(field)){
 						
 							entityInfo.setPrimaryKeyProperty(new PrimaryKeyPropertyInfo(
-									entityInfo, p.getName(), pClass, 
+									entityInfo, propertyDescriptor.getName(), pClass, 
 									readMethod.getName(), writeMethod.getName()));
 							
 						}else if(isForeignKeyField(readMethod) || isForeignKeyField(field)){
 		
 							entityInfo.addForeignKeyProperty(new ForeignKeyPropertyInfo(
-									entityInfo, p.getName(), pClass,
+									entityInfo, propertyDescriptor.getName(), pClass,
 									readMethod.getName(), writeMethod.getName(), 
 									getMasterType(readMethod, field)));
 						
@@ -120,7 +120,7 @@ public final class EntityInspector {
 							if(constructEntityCollectionProperties){
 								
 								entityInfo.addEntityCollectionProperty(new EntityCollectionPropertyInfo(
-										entityInfo, p.getName(), pClass, 
+										entityInfo, propertyDescriptor.getName(), pClass, 
 										readMethod.getName(), writeMethod.getName(), 
 										getMappedByForeignKey(entityInfo.getEntityClass(),readMethod,field)));
 
@@ -130,11 +130,11 @@ public final class EntityInspector {
 							
 							entityInfo.addInformationProperty(new InformationPropertyInfo(
 									entityInfo,
-									p.getName(), 
-									getPropertyDisplayName(entityInfo, p), 
-									p.getShortDescription(), 
+									propertyDescriptor.getName(), 
+									getPropertyDisplayName(entityInfo, propertyDescriptor), 
+									propertyDescriptor.getShortDescription(), 
 									pClass, 
-									getFieldWidth(entityInfo.getEntityClass(),pClass,p.getName()), 
+									getFieldWidth(entityInfo.getEntityClass(),pClass,propertyDescriptor.getName()), 
 									getOrderType(pClass), 
 									getFiniteType(pClass), 
 									getMultipleType(pClass),
@@ -167,7 +167,8 @@ public final class EntityInspector {
 	}
 	
 	private static ForeignKeyPropertyInfo getMappedByForeignKey(
-			Class<? extends EntityType> masterEntityClass, Method readMethod, Field field) throws InterfaceException {
+						Class<? extends EntityType> masterEntityClass, 
+						Method readMethod, Field field) throws InterfaceException {
 		ForeignKeyPropertyInfo foreignKey = null;
 		if((foreignKey = getMappedByForeignKey(masterEntityClass,readMethod))==null){
 			foreignKey = getMappedByForeignKey(masterEntityClass,field);
@@ -179,9 +180,9 @@ public final class EntityInspector {
 	private static ForeignKeyPropertyInfo getMappedByForeignKey(
 			Class<? extends EntityType> masterEntityClass, AccessibleObject object) throws InterfaceException {
 		
-		Annotation annotation;
+		Annotation annotation = object.getAnnotation(OneToMany.class);
 		
-		if((annotation = object.getAnnotation(OneToMany.class))!=null){
+		if(annotation != null){
 			
 			String foreignKeyName = ((OneToMany)annotation).mappedBy();
 			Class<? extends EntityClass> targetEntityClass = ((OneToMany)annotation).targetEntity();
@@ -302,52 +303,39 @@ public final class EntityInspector {
 	}
 
 	private static int getCardinality(Class<?> pClass, FiniteType finiteType) {
-		if(finiteType==FiniteType.FINITE){
-			return values(pClass).length;
-		}
-		return 0;
+		return 
+			(finiteType==FiniteType.FINITE)?
+					values(pClass).length:
+					0;
 	}
 
 	private static AlignType getAlignType(Class<?> pClass) {
-		AlignType type=PropertyInfo.AlignType.LEFT;
-		if(
-			isNumeric(pClass) || isCurrency(pClass) || isDateTime(pClass)
-		){
-			type=PropertyInfo.AlignType.RIGHT;
-		}else if(
-			isCharacter(pClass)
-		){
-			type=PropertyInfo.AlignType.LEFT;
-		}
-		return type;
+		return 
+			(isNumeric(pClass) || isCurrency(pClass) || isDateTime(pClass))?
+					PropertyInfo.AlignType.RIGHT:
+					PropertyInfo.AlignType.LEFT;
 	}
 
 	private static FiniteType getFiniteType(Class<?> pClass) {
-		FiniteType type=PropertyInfo.FiniteType.FINITE;
-		if(
-				isNumeric(pClass)||
-				isCurrency(pClass) ||
-				isString(pClass) ||
-				isDateTime(pClass)
-		){
-			type=PropertyInfo.FiniteType.INFINITE;
-		}
-		return type;
+		return (
+				isNumeric(pClass) || 
+				isCurrency(pClass) || 
+				isString(pClass) || 
+				isDateTime(pClass))?
+					PropertyInfo.FiniteType.INFINITE:
+					PropertyInfo.FiniteType.FINITE;
 	}
 
 	private static OrderType getOrderType(Class<?> pClass) {
-		OrderType type=OrderType.UNORDERED;
-		if(
-			isNumeric(pClass)||
-			isCharacter(pClass)||
-			isCurrency(pClass) ||
-			isString(pClass) ||
-			isDateTime(pClass)||
-			isComparable(pClass)
-		){
-			type=OrderType.ORDERED;
-		}
-		return type;
+		return (
+				isNumeric(pClass) ||
+				isCharacter(pClass) ||
+				isCurrency(pClass) ||
+				isString(pClass) ||
+				isDateTime(pClass) ||
+				isComparable(pClass))?
+					OrderType.ORDERED:
+					OrderType.UNORDERED;
 	}
 
 	public static Object convertFromString(String pValue, Class<?> propertyType) {
@@ -358,35 +346,25 @@ public final class EntityInspector {
 		try{
 		
 			if(isInteger(propertyType)){
-				NumberFormat f=NumberFormat.getIntegerInstance();
-				return f.parse(pValue).intValue();
+				return NumberFormat.getIntegerInstance().parse(pValue).intValue();
 			}else if(isLong(propertyType)){
-				NumberFormat f=NumberFormat.getIntegerInstance();
-				return f.parse(pValue);
+				return NumberFormat.getIntegerInstance().parse(pValue);
 			}else if(isFloatPoint(propertyType)){
-				NumberFormat f=NumberFormat.getNumberInstance();
-				return f.parse(pValue);
+				return NumberFormat.getNumberInstance().parse(pValue);
 			}else if(isCurrency(propertyType)){
-				NumberFormat f=NumberFormat.getCurrencyInstance();
-				return f.parse(pValue);
+				return NumberFormat.getCurrencyInstance().parse(pValue);
 			}else if(isNumber(propertyType)){
-				NumberFormat f=NumberFormat.getInstance();
-				return f.parse(pValue);
+				return NumberFormat.getInstance().parse(pValue);
 			}else if(isTime(propertyType)){
-				DateFormat f=DateFormat.getDateTimeInstance();
-				Date date=f.parse(pValue);
-				return new Time(date.getTime());
+				return new Time(DateFormat.getDateTimeInstance().parse(pValue).getTime());
 			}else if(isTimestamp(propertyType)){
-				DateFormat f=DateFormat.getDateTimeInstance();
-				Date date=f.parse(pValue);
+				Date date=DateFormat.getDateTimeInstance().parse(pValue);
 				return new Timestamp(date.getTime());
 			}else if(isDate(propertyType)){
-				DateFormat f=DateFormat.getDateInstance();
-				return f.parse(pValue);
+				return DateFormat.getDateInstance().parse(pValue);
 			}else if(propertyType.isEnum()){
-				Method valueOfMethod;
 				try {
-					valueOfMethod = propertyType.getDeclaredMethod("valueOf", new Class<?>[]{String.class});
+					Method valueOfMethod = propertyType.getDeclaredMethod("valueOf", new Class<?>[]{String.class});
 					return valueOfMethod.invoke(null, new Object[]{pValue});
 				} catch (SecurityException e) {
 					e.printStackTrace();
@@ -399,6 +377,7 @@ public final class EntityInspector {
 				} catch (InvocationTargetException e) {
 					e.printStackTrace();
 				}
+				return null;
 			}else if(isBoolean(propertyType)){
 				return Boolean.valueOf(pValue);
 			}else if(isString(propertyType)){
@@ -436,23 +415,17 @@ public final class EntityInspector {
 			Class<?> c=value.getClass();
 			
 			if(isInteger(c)){
-				NumberFormat f=NumberFormat.getIntegerInstance();
-				s=f.format(value);
+				s=NumberFormat.getIntegerInstance().format(value);
 			}else if(isCurrency(c)){
-				NumberFormat f=NumberFormat.getCurrencyInstance();
-				s=f.format(value);
+				s=NumberFormat.getCurrencyInstance().format(value);
 			}else if(isFloatPoint(c)){
-				NumberFormat f=NumberFormat.getInstance();
-				s=f.format(value);
+				s=NumberFormat.getInstance().format(value);
 			}else if(isNumber(c)){
-				NumberFormat f=NumberFormat.getInstance();
-				s=f.format(value);
+				s=NumberFormat.getInstance().format(value);
 			}else if(isTime(c)){
-				DateFormat f=DateFormat.getDateTimeInstance();
-				s=f.format(value);
+				s=DateFormat.getDateTimeInstance().format(value);
 			}else if(isDate(c)){
-				DateFormat f=DateFormat.getDateInstance();
-				s=f.format(value);
+				s=DateFormat.getDateInstance().format(value);
 			}else if(c.isEnum()){
 				String valueName = getValueDisplayName(s, c);
 				String firstChar=valueName.substring(0,1).toUpperCase();
@@ -588,8 +561,7 @@ public final class EntityInspector {
 	
 	public static int getValuesMaxWidth(Class<?> pClass){
 		int maxLength=0;
-		Object[] values=values(pClass);
-		for(Object v:values){
+		for(Object v:values(pClass)){
 			maxLength=Math.max(maxLength, EntityInspector.convertToString(v).length());
 		}
 		return maxLength;
@@ -599,24 +571,19 @@ public final class EntityInspector {
 		if(pClass.isEnum()){
 			try {
 				Method vMethod=pClass.getMethod("values", new Class[]{});
-				Object[] v=(Object[])vMethod.invoke(null, new Object[]{});
-				return v;
+				return (Object[])vMethod.invoke(null, new Object[]{});
 			} catch (SecurityException e) {
 				e.printStackTrace();
-				return null;
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
-				return null;
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
-				return null;
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
-				return null;
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
-				return null;
 			}
+			return null;
 		}else if(isBoolean(pClass)){
 			return new Boolean[]{Boolean.TRUE,Boolean.FALSE};
 		}
@@ -653,9 +620,7 @@ public final class EntityInspector {
 
 		}
 		
-		Object[] data=dataList.toArray();
-		
-		return new EntityData(null,data,new PropertyList(dataSource.getInformationProperties()));
+		return new EntityData(null,dataList.toArray(),new PropertyList(dataSource.getInformationProperties()));
 	
 	}
 	
@@ -718,8 +683,7 @@ public final class EntityInspector {
 
 		Class<?> entityType = pInfo.getEntityInfo().getEntityClass();
 		Method readMethod = entityType.getMethod(pInfo.getReadMethod(), new Class[]{});
-		Object value=readMethod.invoke(entity, new Object[]{});
-		return value;
+		return readMethod.invoke(entity, new Object[]{});
 	}
 
 	private static int getFieldWidth(Class<?> entityType,Class<?> propertyType, String fieldName) throws InterfaceException {

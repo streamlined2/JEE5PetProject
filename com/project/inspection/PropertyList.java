@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -27,7 +28,7 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 	 */
 	private static final long serialVersionUID = 5060808322150957060L;
 	
-	private TreeMap<InformationPropertyInfo,PropertyListItem> map=new TreeMap<InformationPropertyInfo,PropertyListItem>();
+	private SortedMap<InformationPropertyInfo,PropertyListItem> map=new TreeMap<InformationPropertyInfo,PropertyListItem>();
 	
 	public PropertyList(){
 	}
@@ -114,7 +115,8 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 		
 	}
 
-	public PropertyListItem createItem(HTTPController controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<HTTPAction> actions) {
+	public PropertyListItem createItem(
+			HTTPController controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<HTTPAction> actions) {
 		String orderParameterName=pInfo.getPropertyName();
 		String orderParameterStringValue=
 			HTTPControllerSupport.findParameterValue(parameters,orderParameterName);
