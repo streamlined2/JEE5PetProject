@@ -6,6 +6,11 @@ import com.project.queries.QueryDefinition.Property;
 
 public class OrderingItem extends ListItem {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8475169307808520325L;
+
 	public enum SortOrderType { ASCENDING, DESCENDING };
 
 	private int order;

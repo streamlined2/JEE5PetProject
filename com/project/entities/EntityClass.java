@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -13,6 +12,11 @@ import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.InterfaceException;
 
 public abstract class EntityClass implements EntityType {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4756534033339779087L;
 	
 	@SuppressWarnings("unchecked")
 	private static Class<EntityClass>[] entities = (Class<EntityClass>[]) new Class<?>[]{

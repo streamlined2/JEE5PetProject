@@ -1,10 +1,7 @@
 package com.project;
 
-
 import java.util.ResourceBundle;
-
 import com.project.inspection.PropertyInfo.AlignType;
-
 
 public final class Helpers {
 	
@@ -19,11 +16,7 @@ public final class Helpers {
 	
 	//generic method
 	public static <T> T getValue(T value,T defaultValue){
-		if(value==null){
-			return defaultValue;
-		}else{
-			return value;
-		}
+		return (value==null)?defaultValue:value;
 	}
 
 	public static String padString(
@@ -63,7 +56,7 @@ public final class Helpers {
 		return b.toString();
 	}
 	
-	private static String localizationPackageName="com.project.i18n";
+	private final static String localizationPackageName="com.project.i18n";
 	
 	public static String getLocalizationBundleFullName(String bundleName){
 		return localizationPackageName+"."+bundleName; 
@@ -83,7 +76,7 @@ public final class Helpers {
 		return localizedName;
 	}
 	
-	private static String entitiesPackageName="com.project.entities";
+	private final static String entitiesPackageName="com.project.entities";
 	
 	public static String getEntityFullClassName(String entityName){
 		return entitiesPackageName+"."+entityName; 

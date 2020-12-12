@@ -24,6 +24,7 @@ import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
 import org.apache.openjpa.persistence.OpenJPAPersistence;
 
+import com.project.datasource.EntityDataSource;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.Filter;
@@ -35,7 +36,6 @@ import com.project.inspection.OrderingItem.SortOrderType;
 import com.project.inspection.PropertyInfo;
 import com.project.inspection.PropertyList;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.queries.EntityDataSource;
 import com.project.queries.QueryDefinition;
 
 /**
@@ -126,10 +126,6 @@ public class Agent implements AgentRemote {
 		
 	}
 
-	private static EntityData getEntityData(Object[] o,PropertyList propertyList, QueryDefinition queryDefinition) {
-		return getEntityData(o,propertyList, queryDefinition.hasPrimaryKey());
-	}
-	
 	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
 
 		Query query=getQuery(dataSource,primaryKey);
@@ -194,7 +190,7 @@ public class Agent implements AgentRemote {
 	private String getOrderClause(String prefix, Ordering ordering) throws InterfaceException {
 		final String LIST_SEPARATOR = ",";
 		StringBuilder clause=new StringBuilder();
-		if(formOrderClause(ordering)){
+		if(doFormOrderClause(ordering)){
 			clause.append("order by ");
 			int itemIndex=1;
 			for(OrderingItem item:ordering.getOrderedSet()){
@@ -215,7 +211,7 @@ public class Agent implements AgentRemote {
 		return clause.toString();
 	}
 
-	private boolean formOrderClause(Ordering ordering){
+	private boolean doFormOrderClause(Ordering ordering){
 		if(ordering==null || ordering.size()==0) return false;
 		return true;
 	}
@@ -238,7 +234,7 @@ public class Agent implements AgentRemote {
 		return FilterKind.RANGE; 
 	}
 	
-	private boolean formFilterCondition(Filter filter){
+	private boolean doFormFilterCondition(Filter filter){
 		if(filter==null || filter.size()==0) return false;
 		int validCount=0;
 		for(FilterItem item:filter){
@@ -250,7 +246,7 @@ public class Agent implements AgentRemote {
 
 	private String getFilterCondition(String prefix, Filter filter) throws InterfaceException {
 		StringBuilder condition=new StringBuilder();
-		if(formFilterCondition(filter)){
+		if(doFormFilterCondition(filter)){
 
 			condition.append("where ");
 			int itemIndex=1;
@@ -301,11 +297,10 @@ public class Agent implements AgentRemote {
 
 		int parameterIndex=1;
 		
-		if(formFilterCondition(filter)){
+		if(doFormFilterCondition(filter)){
 
 			for(FilterItem item:filter){
-				FilterKind kind=getFilterKind(item);
-				switch(kind){
+				switch(getFilterKind(item)){
 				case EQUALITY_BY_MIN_VALUE:
 					query.setParameter(parameterIndex++, item.getMinValue());
 					break;
@@ -350,14 +345,12 @@ public class Agent implements AgentRemote {
 	//persistence provider-specific methods (OpenJPA)
 	private DatabaseMetaData getDatabaseMetaData() throws SQLException{
 		Connection con = getConnection();
-		DatabaseMetaData metaData=con.getMetaData();
-		return metaData;
+		return con.getMetaData();
 	}
 	
 	private String getCatalogName() throws SQLException{
 		Connection con = getConnection();
-		String catalog=con.getCatalog();
-		return catalog;
+		return con.getCatalog();
 	}
 
 /*	@Resource(name=ContextBootstrap.DATA_SOURCE)
@@ -365,20 +358,16 @@ public class Agent implements AgentRemote {
 	
 */	private Connection getConnection() throws SQLException {
 		OpenJPAEntityManager em=OpenJPAPersistence.cast(manager);
-		Connection con=(Connection)em.getConnection();
-		return con;
+		return (Connection)em.getConnection();
 		//return dataSource.getConnection();
 	}
 	
 	private int getColumnSize(String tableName, String columnName) throws SQLException{
 		DatabaseMetaData metaData=getDatabaseMetaData();
-		String catalog=getCatalogName();
-		ResultSet r=metaData.getColumns(catalog, null, tableName, columnName);
+		ResultSet r=metaData.getColumns(getCatalogName(), null, tableName, columnName);
 		while(r.next()){
-			String fieldName=r.getString("COLUMN_NAME");
-			if(fieldName.equalsIgnoreCase(columnName)){
-				int fieldSize=r.getInt("COLUMN_SIZE");
-				return fieldSize;
+			if(r.getString("COLUMN_NAME").equalsIgnoreCase(columnName)){
+				return r.getInt("COLUMN_SIZE");
 			}
 		};
 		return -1;
@@ -392,25 +381,20 @@ public class Agent implements AgentRemote {
 		MappingRepository mappingRepository=(MappingRepository)repository;
 		ClassMapping classMapping=mappingRepository.getMapping(type, null, true);
 		FieldMapping fieldMapping=classMapping.getFieldMapping(fieldName);
-		Column column=fieldMapping.getColumns()[0];
-		return column;
+		return fieldMapping.getColumns()[0];
 	}
 	
 	private String getColumnTable(Class<?> type,String fieldName){
-		Column column = getColumn(type, fieldName);
-		return column.getTable().getFullName().toUpperCase();
+		return getColumn(type, fieldName).getTable().getFullName().toUpperCase();
 	}
 
 	private String getColumnName(Class<?> type,String fieldName){
-		Column column = getColumn(type, fieldName);
-		return column.getName().toUpperCase();
+		return getColumn(type, fieldName).getName().toUpperCase();
 	}
 
 	public int getColumnSize(Class<?> type,String fieldName){
 		try {
-			String tableName = getColumnTable(type,fieldName);
-			String columnName = getColumnName(type,fieldName);
-			return getColumnSize(tableName, columnName);
+			return getColumnSize(getColumnTable(type,fieldName), getColumnName(type,fieldName));
 		} catch (SQLException e) {
 		} catch(NullPointerException e2){
 		}

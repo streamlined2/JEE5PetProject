@@ -8,6 +8,11 @@ import com.project.queries.QueryDefinition;
 
 public abstract class ListItem implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4787905024213893323L;
+	
 	protected InformationPropertyInfo propertyInfo = null;
 	
 	public ListItem(InformationPropertyInfo propertyInfo){

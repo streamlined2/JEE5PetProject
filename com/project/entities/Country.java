@@ -2,7 +2,6 @@ package com.project.entities;
 
 import java.util.Date;
 
-import javax.ejb.Timeout;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,6 +10,11 @@ import javax.persistence.TemporalType;
 
 @Entity
 public class Country extends EntityClass {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -165685783582607785L;
 	
 	private Integer id;
 	private String name;

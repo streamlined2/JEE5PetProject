@@ -7,7 +7,7 @@ import javax.ejb.Remote;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.queries.EntityDataSource;
+import com.project.datasource.EntityDataSource;
 import com.project.queries.QueryDefinition;
 
 @Remote

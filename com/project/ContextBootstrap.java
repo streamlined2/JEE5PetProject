@@ -29,8 +29,12 @@ public final class ContextBootstrap {
 			return defValue;
 		}
 	}
+	
+	private static Context initialContext = null;
 
 	public static Context getInitialContext(String[] args) throws NamingException{
+		
+		if(initialContext!=null) return initialContext;
 
 		String factory=getValue(args,0,INITIAL_CONTEXT_FACTORY);
 		String url=getValue(args,1,PROVIDER_URL);
@@ -43,18 +47,19 @@ public final class ContextBootstrap {
 		p.setProperty(Context.SECURITY_PRINCIPAL, principal);
 		p.setProperty(Context.SECURITY_CREDENTIALS, password);
 	
-		return new InitialContext(p);
+		return (initialContext = new InitialContext(p));
 	
 	}
 	
 	//helper method
 	public static AgentRemote getAgentReference(Context con) throws NamingException{
 		if(con==null){
-			con=ContextBootstrap.getInitialContext(new String[]{});
+			con=ContextBootstrap.getInitialContext(null);
 		}
-		Object ref=con.lookup("Agent#com.project.AgentRemote");
-		AgentRemote agent=(AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
-		return agent;
+		if(con!=null){
+			Object ref=con.lookup("Agent#com.project.AgentRemote");
+			return (AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
+		}else throw new NamingException("can\'t get hold of context instance");
 	}
 
 }

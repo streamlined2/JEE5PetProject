@@ -46,7 +46,7 @@ import com.project.inspection.property.ForeignKeyPropertyInfo;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PrimaryKeyPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.queries.DataSource;
+import com.project.datasource.DataSource;
 
 public final class EntityInspector {
 	

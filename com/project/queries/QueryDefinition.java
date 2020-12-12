@@ -31,6 +31,11 @@ import com.project.queries.QueryDefinition.OrderByEntry.SortOrder;
 
 public class QueryDefinition implements Serializable, SelectionViewItem, Comparable<QueryDefinition> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6281065723667190950L;
+
 	public enum GroupPolicy { DONT_GROUP, GROUP };
 	public enum GroupOperation { COUNT, TOTAL, AVERAGE };
 	
@@ -65,6 +70,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public abstract class Property implements Serializable, Comparable<Property> {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3229399257410937276L;
+		
 		private String alias;
 		protected int order;
 		
@@ -96,8 +106,14 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public class InformationProperty extends Property {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -36199791544939390L;
+		
 		private String propertyName;
 		private Class<? extends EntityType> entityClass;
+		
 		protected InformationProperty(Class<? extends EntityType> entityClass, String propertyName, String alias, int order){
 			super(alias,order);
 			this.entityClass = entityClass;
@@ -137,6 +153,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public abstract class AggregatedProperty extends Property {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8290209885349421913L;
+		
 		private InformationProperty dataProperty;
 		
 		protected AggregatedProperty(InformationProperty dataProperty, String alias, int order) {
@@ -168,6 +189,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public class AverageSumProperty extends AggregatedProperty {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5043913274803273260L;
+
 		public AverageSumProperty(InformationProperty dataProperty, String alias, int order) {
 			super(dataProperty,alias,order);
 		}
@@ -197,6 +223,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public class TotalSumProperty extends AggregatedProperty {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2025243733642085329L;
+
 		public TotalSumProperty(InformationProperty dataProperty, String alias, int order) {
 			super(dataProperty,alias,order);
 		}
@@ -225,6 +256,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	}
 	
 	public class CountProperty extends AggregatedProperty {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2689856981073582801L;
 
 		public CountProperty(InformationProperty dataProperty, String alias, int order) {
 			super(dataProperty,alias,order);
@@ -255,6 +291,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 	public static final class PropertyEntry implements Serializable {
 	
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 3819182058886911338L;
+		
 		private String propertyName;
 		private Class<? extends EntityType> entityClass;
 		private String alias;
@@ -288,6 +329,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public static final class OrderByEntry implements Serializable {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8034627485094186252L;
+
 		public enum SortOrder {ASCENDING, DESCENDING};
 		
 		private String alias;
@@ -311,6 +357,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public static final class FilterEntry implements Serializable {
 	
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 691079013285763091L;
+
 		public enum Relation { EQUAL_TO, LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, CHOICE };
 		
 		private String alias;
@@ -339,6 +390,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	}
 	
 	public static final class GroupEntry implements Serializable {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6155683174088768628L;
 		
 		private Class<? extends EntityType> dataPropertyEntityType;
 		private String dataPropertyAlias;

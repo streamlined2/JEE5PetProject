@@ -17,7 +17,7 @@ import com.project.inspection.Range;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.selectors.HTTPSelector;
 import com.project.interfacebuilder.http.selectors.SelectorFactory;
-import com.project.queries.EntityDataSource;
+import com.project.datasource.EntityDataSource;
 
 public class Client2 {
 

@@ -7,6 +7,11 @@ import com.project.queries.QueryDefinition.Property;
 //immutable filter item class
 public class FilterItem extends ListItem {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2445893979584491678L;
+	
 	private Object minValue;
 	private Object maxValue;
 	private QueryDefinition.InformationProperty property;

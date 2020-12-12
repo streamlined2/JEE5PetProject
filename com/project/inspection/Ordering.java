@@ -20,6 +20,11 @@ import com.project.interfacebuilder.http.forms.HTTPOrderForm;
 
 public class Ordering implements Serializable, ListIterable<OrderingItem>{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8069092787682328055L;
+	
 	private TreeMap<PropertyInfo,OrderingItem> map=new TreeMap<PropertyInfo,OrderingItem>();
 	
 	public int size(){

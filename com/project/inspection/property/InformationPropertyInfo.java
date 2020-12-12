@@ -2,14 +2,15 @@ package com.project.inspection.property;
 
 import com.project.inspection.EntityInfo;
 import com.project.inspection.PropertyInfo;
-import com.project.inspection.PropertyInfo.AlignType;
-import com.project.inspection.PropertyInfo.FiniteType;
-import com.project.inspection.PropertyInfo.MultipleType;
-import com.project.inspection.PropertyInfo.OrderType;
 import com.project.interfacebuilder.Selector;
 
 public class InformationPropertyInfo extends PropertyInfo {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1180150741234444727L;
+	
 	private String displayName;
 	private String desc;
 	private OrderType orderType;

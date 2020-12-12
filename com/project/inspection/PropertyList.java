@@ -12,18 +12,21 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.project.Helpers;
+import com.project.datasource.QueryDataSource;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.actions.HTTPAction;
-import com.project.queries.QueryDataSource;
-import com.project.queries.QueryDefinition;
-import com.project.queries.QueryDefinition.InformationProperty;
 import com.project.queries.QueryDefinition.Property;
 
 public class PropertyList implements Serializable, ListIterable<PropertyListItem> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5060808322150957060L;
+	
 	private TreeMap<InformationPropertyInfo,PropertyListItem> map=new TreeMap<InformationPropertyInfo,PropertyListItem>();
 	
 	public PropertyList(){

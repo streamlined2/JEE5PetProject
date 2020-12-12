@@ -7,17 +7,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import com.project.Helpers;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
-import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.actions.HTTPAction;
-
 
 //Iterable implementation for Java 5 loop iteration
 public class Filter implements Serializable, ListIterable<FilterItem> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -729480478609313439L;
+
 	public enum FilterRangeBoundary { START, FINISH };
 	
 	private TreeMap<PropertyInfo,FilterItem> map=new TreeMap<PropertyInfo,FilterItem>();

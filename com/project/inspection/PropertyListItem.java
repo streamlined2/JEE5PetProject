@@ -6,6 +6,11 @@ import com.project.queries.QueryDefinition.Property;
 
 public class PropertyListItem extends ListItem {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5036246889621861506L;
+	
 	private int order;
 	private QueryDefinition.Property property;
 	
