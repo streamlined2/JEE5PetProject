@@ -6,8 +6,8 @@ import com.project.Helpers;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.EntityInspector;
-import com.project.inspection.InformationPropertyInfo;
 import com.project.inspection.PropertyInfo.AlignType;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.PropertyListItem;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
@@ -40,26 +40,27 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		StringBuilder buffer=new StringBuilder();
 
 		Integer browseId=getNextControlId();
-		buffer.append("<label for=\"");
-		buffer.append(browseId);
-		buffer.append("\" ");
-		buffer.append(">");
+		buffer
+			.append("<label for=\"")
+			.append(browseId)
+			.append("\" ")
+			.append(">")
 		
-		buffer.append("<pre ").append(getStyle()).append(" >");
-		buffer.append(formListTitle());
-		buffer.append("</pre>");
+			.append("<pre ").append(getStyle()).append(" >")
+			.append(formListTitle())
+			.append("</pre>")
 
-		buffer.append(" ");
-		buffer.append("</label>");
+			.append(" ")
+			.append("</label>")
 		
-		buffer.append("<select name=\"");
-		buffer.append(HTTPController.PRIMARY_KEY_ATTRIBUTE);
-		buffer.append("\" ");
-		buffer.append("id=\"").append(browseId).append("\"");
-		buffer.append(getStyle());
-		buffer.append("size=").append(getVisibleLines()).append(" ");
-		buffer.append(">");
-		
+			.append("<select name=\"")
+			.append(HTTPController.PRIMARY_KEY_ATTRIBUTE)
+			.append("\" ")
+			.append("id=\"").append(browseId).append("\"")
+			.append(getStyle())
+			.append("size=").append(getVisibleLines()).append(" ")
+			.append(">");
+			
 		int columnCount=0;
 		
 		int row=getStart();
@@ -121,7 +122,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 	
 	private static final int COUNTER_WIDTH=3;
 	
-	private String formListValue(int row, EntityInfo.EntityData d) {
+	private String formListValue(int row, EntityInfo.EntityData d) throws InterfaceException {
 		StringBuilder b=new StringBuilder();
 		b.append(Helpers.padString(AlignType.RIGHT, COUNTER_WIDTH, Integer.toString(row), Helpers.NON_BREAKING_SPACE)).append(Helpers.COLUMN_SEPARATOR);
 		int k=0;
@@ -137,7 +138,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		return b.toString();
 	}
 
-	private Object formBlankListValue(int columnCount) {
+	private Object formBlankListValue(int columnCount) throws InterfaceException {
 		StringBuilder b=new StringBuilder();
 		b.append(Helpers.padString(AlignType.RIGHT, COUNTER_WIDTH, "", Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
 		int k=0;

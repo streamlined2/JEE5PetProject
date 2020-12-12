@@ -32,13 +32,7 @@ public abstract class ActionSupport implements Action {
 	
 	protected String getLocalizedName(String key){
 		return Helpers.getLocalizedDisplayName("ActionNamesBundle", "", key, key);
-/*		String name=key;
-		ResourceBundle bundle=ListResourceBundle.getBundle(Helpers.getLocalizationBundleFullName("ActionNamesBundle"));
-		if(bundle!=null && bundle.containsKey(key)){
-			name=bundle.getString(key);
-		}
-		return name;
-*/	}
+	}
 	
 	@Override
 	public int hashCode(){

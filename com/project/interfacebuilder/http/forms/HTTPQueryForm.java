@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.List;
 
 import com.project.inspection.EntityInfo.EntityData;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.EntityInspector;
-import com.project.inspection.InformationPropertyInfo;
 import com.project.inspection.PropertyInfo;
 import com.project.inspection.PropertyListItem;
 import com.project.interfacebuilder.InterfaceException;

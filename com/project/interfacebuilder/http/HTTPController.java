@@ -25,6 +25,7 @@ public interface HTTPController extends Controller {
 	public static final String FILTER_RANGE_FINISH = "filterRangeFinish";
 	public static final String FILTER_RANGE_GROUP = "filterRangeGroup";
 	public static final String WRAPPED_EXCEPTION = "wrappedException";
+	public static final String INTERFACE_EXCEPTION_MESSAGE = "exceptionMessage";
 	
 	public Object getAttribute(String name);
 	public void setAttribute(String name,Object value);

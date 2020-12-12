@@ -1,6 +1,7 @@
 package com.project.interfacebuilder.http;
 
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,8 @@ import com.project.Helpers;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.Filter.FilterRangeBoundary;
-import com.project.inspection.InformationPropertyInfo;
-import com.project.inspection.PrimaryKeyPropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PrimaryKeyPropertyInfo;
 import com.project.inspection.PropertyInfo;
 import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.ConfirmAction;
@@ -34,6 +35,7 @@ import com.project.interfacebuilder.http.actions.HTTPAction;
 import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.DataSource;
 import com.project.queries.EntityDataSource;
+import com.sun.org.apache.bcel.internal.generic.UnconditionalBranch;
 
 public class HTTPControllerSupport extends ControllerSupport implements HTTPController {
 	
@@ -47,6 +49,22 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	
 	public HTTPControllerSupport() throws InterfaceException{
 		super();
+		
+		Thread.currentThread().setUncaughtExceptionHandler(new UncaughtExceptionHandler(){
+
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				if(e instanceof Exception){
+					try {
+						errorPage((Exception)e);
+					} catch (InterfaceException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			
+		});
+		
 	}
 	
 	private void setSession(HttpSession session){
@@ -383,6 +401,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	protected void errorPage(Exception e) throws InterfaceException {
 		RequestDispatcher dispatcher=context.getRequestDispatcher("/WEB-INF/errorPage.jsp");
 		request.setAttribute(HTTPController.WRAPPED_EXCEPTION, getWrappedException(e));
+		request.setAttribute(HTTPController.INTERFACE_EXCEPTION_MESSAGE, e.getLocalizedMessage());
 		try {
 			dispatcher.forward(request, response);
 		} catch (ServletException exc) {

@@ -15,8 +15,15 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	private static final int QUERY_NAME_WIDTH = 10;
 	private static final int QUERY_DESC_WIDTH = 60;
 	
-	private QueryList queries=QueryListBuilder.createQueryList();
+	private QueryList queries = null;
 	
+	public QueryList getQueries() throws InterfaceException {
+		if(queries == null){
+			queries = QueryListBuilder.createQueryList();
+		}
+		return queries;
+	}
+
 	public HTTPQuerySelectionForm() throws InterfaceException {
 		super();
 
@@ -25,7 +32,7 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	}
 
 	protected Set<QueryDefinition> getItemSet() throws InterfaceException {
-		return queries.getQuerySet();
+		return getQueries().getQuerySet();
 	}
 
 	@Override
@@ -54,10 +61,10 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	}
 
 	@Override
-	public int getSelectedItemIndex() {
+	public int getSelectedItemIndex() throws InterfaceException {
 		String id = getSelectedItemID();
 		int index=0;
-		for(QueryDefinition def:queries){
+		for(QueryDefinition def:getQueries()){
 			index++;
 			if(def.getItemID().equals(id)){
 				return index;
@@ -67,9 +74,9 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	}
 
 	@Override
-	public QueryDefinition getSelectedItem() {
+	public QueryDefinition getSelectedItem() throws InterfaceException {
 		String id = getSelectedItemID();
-		for(QueryDefinition def:queries){
+		for(QueryDefinition def:getQueries()){
 			if(def.getItemID().equals(id)){
 				return def;
 			}

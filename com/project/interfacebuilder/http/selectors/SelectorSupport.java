@@ -2,7 +2,7 @@ package com.project.interfacebuilder.http.selectors;
 
 import java.awt.Font;
 
-import com.project.inspection.InformationPropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.Helpers;

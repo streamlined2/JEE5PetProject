@@ -3,7 +3,7 @@ package com.project.interfacebuilder.http.forms;
 import java.util.List;
 
 import com.project.inspection.EntityInfo.EntityData;
-import com.project.inspection.InformationPropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
@@ -13,7 +13,7 @@ import com.project.interfacebuilder.http.actions.HTTPPropertyListAction;
 import com.project.interfacebuilder.http.actions.HTTPRangeAction;
 import com.project.queries.DataSource;
 
-public abstract class HTTPDataRangeForm extends HTTPQueryAwareForm {
+public abstract class HTTPDataRangeForm extends HTTPDataAwareForm {
 
 	public static final Integer RANGE_UNDEFINED = -1;
 	protected Integer start = RANGE_UNDEFINED;

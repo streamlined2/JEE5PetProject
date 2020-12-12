@@ -19,6 +19,7 @@ import com.project.interfacebuilder.http.actions.HTTPQueryAction;
 import com.project.interfacebuilder.http.actions.HTTPRangeAction;
 import com.project.interfacebuilder.http.actions.HTTPRunQueryAction;
 import com.project.interfacebuilder.http.actions.HTTPSaveChangesAction;
+import com.project.interfacebuilder.http.actions.HTTPSelectMenuItemAction;
 import com.project.interfacebuilder.http.forms.HTTPBrowseForm;
 import com.project.interfacebuilder.http.forms.HTTPEditForm;
 import com.project.interfacebuilder.http.forms.HTTPEntitySelectionForm;
@@ -51,6 +52,7 @@ public final class HTTPInterfaceBuilder {
 	private HTTPCancelAction cancelAction;
 	private HTTPRangeAction rangeAction;
 	private HTTPProceedAction proceedAction;
+	private HTTPSelectMenuItemAction selectMenuItemAction;
 	private HTTPFilterAction filterAction;
 	private HTTPApplyFilterAction applyFilterAction;
 	private HTTPOrderAction orderAction;
@@ -108,6 +110,7 @@ public final class HTTPInterfaceBuilder {
 		cancelAction=new HTTPCancelAction();
 		rangeAction=new HTTPRangeAction();
 		proceedAction=new HTTPProceedAction();
+		selectMenuItemAction=new HTTPSelectMenuItemAction();
 		filterAction=new HTTPFilterAction();
 		applyFilterAction=new HTTPApplyFilterAction();
 		orderAction=new HTTPOrderAction();
@@ -139,8 +142,8 @@ public final class HTTPInterfaceBuilder {
 	private void defineTransitionRules(){
 	
 	//top level menu selection
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,topLevelMenuSelectionForm,proceedAction,entitySelectionForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.queryPerformanceUseCase,topLevelMenuSelectionForm,proceedAction,querySelectionForm));
+		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,topLevelMenuSelectionForm,selectMenuItemAction,entitySelectionForm));
+		useCase.addRule(new TransitionRule(InterfaceContext.queryPerformanceUseCase,topLevelMenuSelectionForm,selectMenuItemAction,querySelectionForm));
 
 	//run query form
 		useCase.addRule(new TransitionRule(InterfaceContext.queryPerformanceUseCase,querySelectionForm,runQueryAction,queryResultBrowseForm));

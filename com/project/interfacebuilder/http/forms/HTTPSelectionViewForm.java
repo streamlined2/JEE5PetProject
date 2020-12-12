@@ -135,8 +135,8 @@ public abstract class HTTPSelectionViewForm <ItemType extends SelectionViewItem>
 	}
 	
 	public abstract String getSelectedItemName();
-	public abstract int getSelectedItemIndex();
-	public abstract ItemType getSelectedItem();
+	public abstract int getSelectedItemIndex() throws InterfaceException;
+	public abstract ItemType getSelectedItem() throws InterfaceException;
 	protected abstract Set<ItemType> getItemSet() throws InterfaceException;
 
 	protected abstract int getItemNameWidth(); 

@@ -3,10 +3,10 @@ package com.project.interfacebuilder.http.selectors;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.project.inspection.InformationPropertyInfo;
 import com.project.inspection.PropertyInfo.FiniteType;
 import com.project.inspection.PropertyInfo.MultipleType;
 import com.project.inspection.PropertyInfo.OrderType;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.Selector.CardinalityPolicy;
 import com.project.interfacebuilder.Selector.MultiplePolicy;

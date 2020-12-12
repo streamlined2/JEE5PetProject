@@ -31,13 +31,12 @@ public abstract class HTTPBrowseActionSupport extends HTTPActionSupport {
 			
 			Class<?> entityClass=Class.forName(Helpers.getEntityFullClassName(selectedEntityName));
 			EntityInfo entityInfo=EntityInspector.getEntityInfo(entityClass);
-			dataRangeForm.setDataSource(new EntityDataSource(entityInfo));
+			EntityDataSource dataSource = new EntityDataSource(entityInfo); 
+			dataRangeForm.setDataSource(dataSource);
 
-			controller.setAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE, new EntityDataSource(entityInfo));
+			controller.setAttribute(HTTPController.DATA_SOURCE_ATTRIBUTE, dataSource);
 		
 		} catch (ClassNotFoundException e) {
-			throw new InterfaceException(e);
-		} catch (IntrospectionException e) {
 			throw new InterfaceException(e);
 		}
 		

@@ -1,14 +1,14 @@
 package com.project.interfacebuilder.http.forms;
 
 import com.project.Helpers;
-import com.project.inspection.InformationPropertyInfo;
 import com.project.inspection.PropertyInfo;
 import com.project.inspection.PropertyListItem;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPApplyPropertyListAction;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
 
-public class HTTPPropertyListForm extends HTTPQueryAwareForm {
+public class HTTPPropertyListForm extends HTTPDataAwareForm {
 	
 	public HTTPPropertyListForm() throws InterfaceException {
 		super();
@@ -94,7 +94,7 @@ public class HTTPPropertyListForm extends HTTPQueryAwareForm {
 	
 	}
 	
-	private void addOrderField(InformationPropertyInfo pInfo, int order) {
+	private void addOrderField(InformationPropertyInfo pInfo, int order) throws InterfaceException {
 		
 		out.print("<input type=\"text\" ");
 		out.print(getStyle());
@@ -119,7 +119,7 @@ public class HTTPPropertyListForm extends HTTPQueryAwareForm {
 
 	}
 
-	private void addUsePropertyFlag(PropertyInfo pInfo, Integer id) {
+	private void addUsePropertyFlag(PropertyInfo pInfo, Integer id) throws InterfaceException {
 
 		out.print("<input type=\"checkbox\" ");
 		out.print(getStyle());

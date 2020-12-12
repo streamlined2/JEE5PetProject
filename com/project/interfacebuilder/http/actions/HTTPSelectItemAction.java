@@ -6,7 +6,11 @@ import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
 import com.project.interfacebuilder.http.forms.HTTPSelectionViewForm;
 
-public class HTTPSelectItemAction <ItemType extends SelectionViewItem> extends HTTPProceedAction {
+public class HTTPSelectItemAction <ItemType extends SelectionViewItem> extends HTTPActionSupport {
+	
+	public HTTPSelectItemAction(String actionName){
+		super(actionName);
+	}
 
 	@Override
 	public void perform() throws InterfaceException {

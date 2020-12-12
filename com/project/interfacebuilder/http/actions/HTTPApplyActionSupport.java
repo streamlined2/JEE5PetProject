@@ -4,10 +4,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.project.inspection.InformationPropertyInfo;
 import com.project.inspection.ListItem;
 import com.project.inspection.ListIterable;
 import com.project.inspection.PropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.forms.HTTPForm;

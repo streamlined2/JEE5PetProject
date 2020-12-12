@@ -3,7 +3,7 @@ package com.project.interfacebuilder.http.actions;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
-import com.project.interfacebuilder.http.forms.HTTPQueryAwareForm;
+import com.project.interfacebuilder.http.forms.HTTPDataAwareForm;
 import com.project.interfacebuilder.http.forms.HTTPPropertyListForm;
 
 public class HTTPPropertyListAction extends HTTPActionSupport {
@@ -24,7 +24,7 @@ public class HTTPPropertyListAction extends HTTPActionSupport {
 
 		if(!(targetForm instanceof HTTPPropertyListForm)) throw new InterfaceException("target form must be an instance of HTTPPropertyListForm");
 		
-		HTTPQueryAwareForm dst = (HTTPQueryAwareForm)targetForm;
+		HTTPDataAwareForm dst = (HTTPDataAwareForm)targetForm;
 		
 		dst.setDataSource(src.getDataSource());
 		

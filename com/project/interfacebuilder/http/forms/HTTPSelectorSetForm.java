@@ -3,7 +3,7 @@ package com.project.interfacebuilder.http.forms;
 import java.util.ArrayList;
 
 import com.project.inspection.EntityInfo.EntityData;
-import com.project.inspection.InformationPropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.PropertyInfo;
 import com.project.inspection.PropertyList;
 import com.project.interfacebuilder.InterfaceException;
@@ -13,7 +13,7 @@ import com.project.interfacebuilder.http.selectors.SelectorFactory;
 import com.project.queries.DataSource;
 import com.project.queries.EntityDataSource;
 
-public abstract class HTTPSelectorSetForm extends HTTPQueryAwareForm {
+public abstract class HTTPSelectorSetForm extends HTTPDataAwareForm {
 
 	private java.util.List<HTTPSelector> selectors = new ArrayList<HTTPSelector>();
 	protected EntityData entityData;

@@ -8,6 +8,14 @@ import com.project.interfacebuilder.menu.MenuItem;
 
 public class HTTPSelectMenuItemAction extends HTTPSelectItemAction<MenuItem> {
 
+	public HTTPSelectMenuItemAction(String actionName) {
+		super(actionName);
+	}
+
+	public HTTPSelectMenuItemAction() {
+		super("MenuSelect");
+	}
+
 	@Override
 	public FormContextItem findTarget(Form sourceForm) throws InterfaceException {
 		
