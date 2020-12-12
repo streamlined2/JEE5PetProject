@@ -6,6 +6,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import com.project.ContextBootstrap;
+import com.project.Helpers;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.PropertyList;
 import com.project.inspection.property.InformationPropertyInfo;
@@ -30,11 +31,7 @@ public class QueryDataSource extends DataSource {
 	
 	@Override
 	public List<EntityData> get() throws InterfaceException {
-		try {
-			return ContextBootstrap.getAgentReference(null).runQuery(queryDefinition);
-		} catch (NamingException e) {
-			throw new InterfaceException(e);
-		}
+		return Helpers.getAgent().runQuery(queryDefinition);
 	}
 
 	@Override

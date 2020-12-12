@@ -15,6 +15,7 @@ public interface ListIterable<ItemType> extends Iterable<ItemType> {
 				InformationPropertyInfo pInfo,
 				Map<String, String[]> parameters, 
 				List<HTTPAction> actions) throws InterfaceException;
+	
 	public void addItem(ItemType item) throws InterfaceException;
 	
 }

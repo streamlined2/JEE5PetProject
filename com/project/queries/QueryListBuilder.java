@@ -6,8 +6,8 @@ import com.project.entities.Phone;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.queries.QueryDefinition.FilterEntry;
 import com.project.queries.QueryDefinition.GroupEntry;
-import com.project.queries.QueryDefinition.GroupOperation;
-import com.project.queries.QueryDefinition.GroupPolicy;
+import com.project.queries.QueryDefinition.AggregationOperation;
+import com.project.queries.QueryDefinition.AggregationPolicy;
 import com.project.queries.QueryDefinition.FilterEntry.Relation;
 import com.project.queries.QueryDefinition.OrderByEntry;
 import com.project.queries.QueryDefinition.OrderByEntry.SortOrder;
@@ -108,9 +108,9 @@ public final class QueryListBuilder {
 				null,
 				new OrderByEntry[]{
 					new OrderByEntry("address")}, 
-				GroupPolicy.GROUP,
+				AggregationPolicy.AGGREGATE,
 				new GroupEntry[]{
-					new GroupEntry(Customer.class,"rating",GroupOperation.TOTAL,"ratings")}
+					new GroupEntry(Customer.class,"rating",AggregationOperation.TOTAL,"ratings")}
 			)
 		);
 
@@ -123,9 +123,9 @@ public final class QueryListBuilder {
 				null,
 				new OrderByEntry[]{
 					new OrderByEntry("address")}, 
-				GroupPolicy.GROUP,
+				AggregationPolicy.AGGREGATE,
 				new GroupEntry[]{
-					new GroupEntry(Customer.class,"rating",GroupOperation.AVERAGE,"ratings")}
+					new GroupEntry(Customer.class,"rating",AggregationOperation.AVERAGE,"ratings")}
 			)
 		);
 
@@ -138,9 +138,9 @@ public final class QueryListBuilder {
 				null,
 				new OrderByEntry[]{
 					new OrderByEntry("address")}, 
-				GroupPolicy.GROUP,
+				AggregationPolicy.AGGREGATE,
 				new GroupEntry[]{
-					new GroupEntry(Customer.class,"rating",GroupOperation.COUNT,"ratings")}
+					new GroupEntry(Customer.class,"rating",AggregationOperation.COUNT,"ratings")}
 			)
 		);
 

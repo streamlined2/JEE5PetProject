@@ -215,7 +215,9 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		public boolean equals(Object obj){
 			if(!(obj instanceof LinkCountKey)) return false;
 			LinkCountKey key = (LinkCountKey) obj;
-			return getCount() == key.getCount() && getEntityInfo().equals(key.getEntityInfo());
+			return 
+				getCount() == key.getCount() && 
+				getEntityInfo().equals(key.getEntityInfo());
 		}
 		
 		private EntityInfo getEntityInfo() {

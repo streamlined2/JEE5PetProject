@@ -13,9 +13,6 @@ import com.project.interfacebuilder.InterfaceException;
 
 public abstract class EntityClass implements EntityType {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4756534033339779087L;
 	
 	@SuppressWarnings("unchecked")

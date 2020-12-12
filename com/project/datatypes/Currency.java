@@ -7,9 +7,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Currency extends Number implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3264674721725127161L;
 	
 	private Integer major;

@@ -9,8 +9,8 @@ import javax.rmi.PortableRemoteObject;
 import com.project.entities.Customer;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
+import com.project.inspection.property.PropertyInfo;
 import com.project.inspection.EntityInspector;
-import com.project.inspection.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.datasource.EntityDataSource;
 

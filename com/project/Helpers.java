@@ -1,7 +1,11 @@
 package com.project;
 
 import java.util.ResourceBundle;
-import com.project.inspection.PropertyInfo.AlignType;
+
+import javax.naming.NamingException;
+
+import com.project.inspection.property.PropertyInfo.AlignType;
+import com.project.interfacebuilder.InterfaceException;
 
 public final class Helpers {
 	
@@ -76,10 +80,29 @@ public final class Helpers {
 		return localizedName;
 	}
 	
-	private final static String entitiesPackageName="com.project.entities";
+	private final static String ENTITIES_PACKAGE_NAME="com.project.entities";
 	
 	public static String getEntityFullClassName(String entityName){
-		return entitiesPackageName+"."+entityName; 
+		return ENTITIES_PACKAGE_NAME+"."+entityName; 
 	}
 	
+	//helper method to provide reference to agent
+	public static AgentRemote getAgent() throws InterfaceException{
+		try {
+			return ContextBootstrap.getAgentReference(null);
+		} catch (NamingException e) {
+			throw new InterfaceException(e);
+		}
+	}
+
+	public static String getValue(String[] args,int index,String defValue){
+		if(args!=null && index>=0 && index<args.length){
+			String v=args[index];
+			if(v.isEmpty()) return defValue;
+			else return v;
+		}else{
+			return defValue;
+		}
+	}
+
 }

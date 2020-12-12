@@ -6,9 +6,6 @@ import com.project.queries.QueryDefinition.Property;
 
 public class PropertyListItem extends ListItem {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5036246889621861506L;
 	
 	private int order;
@@ -46,15 +43,15 @@ public class PropertyListItem extends ListItem {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PropertyListItem [order=");
-		builder.append(order);
-		builder.append(", property = ");
-		builder.append(property.toString());
-		builder.append(", toString()=");
-		builder.append(super.toString());
-		builder.append("]");
-		return builder.toString();
+		return new StringBuilder().
+			append("PropertyListItem [order=").
+			append(order).
+			append(", property = ").
+			append(property.toString()).
+			append(", toString()=").
+			append(super.toString()).
+			append("]").
+		toString();
 	}
 
 	@Override

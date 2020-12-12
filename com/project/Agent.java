@@ -33,7 +33,7 @@ import com.project.inspection.ListItem;
 import com.project.inspection.Ordering;
 import com.project.inspection.OrderingItem;
 import com.project.inspection.OrderingItem.SortOrderType;
-import com.project.inspection.PropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.inspection.PropertyList;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.queries.QueryDefinition;
@@ -122,15 +122,13 @@ public class Agent implements AgentRemote {
 		}
 		EntityData d=new EntityData(primaryKeyValue,infoFieldValues,propertyList);
 		return d;
-		
-		
 	}
 
 	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
 
 		Query query=getQuery(dataSource,primaryKey);
 
-		return getEntityData((Object[]) query.getSingleResult(),new PropertyList(dataSource.getEntityInfo()),true);
+		return getEntityData((Object[])query.getSingleResult(),new PropertyList(dataSource.getEntityInfo()),true);
 	}
 
 
@@ -138,8 +136,7 @@ public class Agent implements AgentRemote {
 
 		final String prefix="a";
 		
-		StringBuilder q=new StringBuilder();
-		q.
+		return new StringBuilder().
 			append("select ").
 			append(getPKInfoFieldList(prefix,dataSource)).
 			append(" from ").
@@ -150,9 +147,8 @@ public class Agent implements AgentRemote {
 			append(prefix).
 			append(".").
 			append(dataSource.getEntityInfo().getPrimaryKeyInfo().getPropertyName()).
-			append("=?1");
-		
-		return q.toString();
+			append("=?1").
+		toString();
 	}
 	
 	private Query getQuery(EntityDataSource dataSource, Object primaryKey) throws InterfaceException {
@@ -169,8 +165,7 @@ public class Agent implements AgentRemote {
 		
 		final String prefix="a";
 		
-		StringBuilder q=new StringBuilder();
-		q.
+		StringBuilder q=new StringBuilder().
 			append("select ").
 			append(getPKInfoFieldList(prefix,dataSource)).
 			append(" from ").
@@ -188,10 +183,15 @@ public class Agent implements AgentRemote {
 	}
 	
 	private String getOrderClause(String prefix, Ordering ordering) throws InterfaceException {
+		
 		final String LIST_SEPARATOR = ",";
+		
 		StringBuilder clause=new StringBuilder();
+		
 		if(doFormOrderClause(ordering)){
+			
 			clause.append("order by ");
+			
 			int itemIndex=1;
 			for(OrderingItem item:ordering.getOrderedSet()){
 				PropertyInfo pInfo=item.getPropertyInfo();
@@ -304,13 +304,16 @@ public class Agent implements AgentRemote {
 				case EQUALITY_BY_MIN_VALUE:
 					query.setParameter(parameterIndex++, item.getMinValue());
 					break;
+				
 				case EQUALITY_BY_MAX_VALUE:
 					query.setParameter(parameterIndex++, item.getMaxValue());
 					break;
+				
 				case RANGE:
 					query.setParameter(parameterIndex++, item.getMinValue());
 					query.setParameter(parameterIndex++, item.getMaxValue());
 					break;
+				
 				default:
 				}
 			}
@@ -322,14 +325,14 @@ public class Agent implements AgentRemote {
 	private StringBuilder getPKInfoFieldList(
 			String prefix,EntityDataSource dataSource) throws InterfaceException{
 		
-		StringBuilder buffer=new StringBuilder();
-		
 		final String listSeparator=",";
-		buffer.
+
+		StringBuilder buffer=new StringBuilder().
 			append(prefix).
 			append(".").
 			append(dataSource.getEntityInfo().getPrimaryKeyInfo().getPropertyName()).
 			append(listSeparator);
+
 		for(ListItem i:dataSource.getPropertyList().getOrderedSet()){
 			buffer.
 				append(prefix).
@@ -337,6 +340,7 @@ public class Agent implements AgentRemote {
 				append(i.getPropertyInfo().getPropertyName()).
 				append(listSeparator);
 		}
+
 		buffer.delete(buffer.length()-listSeparator.length(), buffer.length());
 		
 		return buffer;

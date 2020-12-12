@@ -3,14 +3,10 @@ package com.project.inspection.property;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInspector;
-import com.project.inspection.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 
 public class ForeignKeyPropertyInfo extends PropertyInfo {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3732865077315687504L;
 	
 	private Class<? extends EntityType> masterType;

@@ -11,9 +11,6 @@ import javax.persistence.TemporalType;
 @Entity
 public class Country extends EntityClass {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -165685783582607785L;
 	
 	private Integer id;

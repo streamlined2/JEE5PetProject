@@ -9,9 +9,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Phone extends EntityClass {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5541725130459526114L;
 
 	public enum Kind {CELLULAR, FIXED};

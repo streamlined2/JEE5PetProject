@@ -1,14 +1,10 @@
 package com.project.inspection.property;
 
 import com.project.inspection.EntityInfo;
-import com.project.inspection.PropertyInfo;
 import com.project.interfacebuilder.Selector;
 
 public class InformationPropertyInfo extends PropertyInfo {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1180150741234444727L;
 	
 	private String displayName;
@@ -93,10 +89,10 @@ public class InformationPropertyInfo extends PropertyInfo {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("InformationPropertyInfo [displayName=")
-				.append(displayName).append(", desc=").append(description).append("]");
-		return builder.toString();
+		return new StringBuilder().
+			append("InformationPropertyInfo [displayName=").
+			append(displayName).append(", desc=").append(description).append("]").
+		toString();
 	}
 
 }

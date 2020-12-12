@@ -6,9 +6,6 @@ import com.project.queries.QueryDefinition.Property;
 
 public class OrderingItem extends ListItem {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8475169307808520325L;
 
 	public enum SortOrderType { ASCENDING, DESCENDING };
@@ -76,17 +73,17 @@ public class OrderingItem extends ListItem {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("FilterItem [order=");
-		builder.append(order);
-		builder.append(", sortOrderType = ");
-		builder.append(sortOrderType.toString());
-		builder.append(", property = ");
-		builder.append(property.toString());
-		builder.append(", toString()=");
-		builder.append(super.toString());
-		builder.append("]");
-		return builder.toString();
+		return new StringBuilder().
+			append("FilterItem [order=").
+			append(order).
+			append(", sortOrderType = ").
+			append(sortOrderType.toString()).
+			append(", property = ").
+			append(property.toString()).
+			append(", toString()=").
+			append(super.toString()).
+			append("]").
+		toString();
 	}
 
 }

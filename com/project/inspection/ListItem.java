@@ -8,9 +8,6 @@ import com.project.queries.QueryDefinition;
 
 public abstract class ListItem implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4787905024213893323L;
 	
 	protected InformationPropertyInfo propertyInfo = null;
@@ -32,13 +29,13 @@ public abstract class ListItem implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ListItem [property=");
-		builder.append(getProperty().toString());
-		builder.append(", propertyInfo=");
-		builder.append(propertyInfo.toString());
-		builder.append("]");
-		return builder.toString();
+		return new StringBuilder().
+			append("ListItem [property=").
+			append(getProperty().toString()).
+			append(", propertyInfo=").
+			append(propertyInfo.toString()).
+			append("]").
+		toString();
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import com.project.ContextBootstrap;
+import com.project.Helpers;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.PropertyList;
@@ -26,11 +27,7 @@ public class EntityDataSource extends DataSource {
 
 	@Override
 	public List<EntityData> get() throws InterfaceException {
-		try {
-			return ContextBootstrap.getAgentReference(null).fetchEntities(this);
-		} catch (NamingException e) {
-			throw new InterfaceException(e);
-		}
+		return Helpers.getAgent().fetchEntities(this);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPAction;
@@ -16,9 +17,6 @@ import com.project.interfacebuilder.http.actions.HTTPAction;
 //Iterable implementation for Java 5 loop iteration
 public class Filter implements Serializable, ListIterable<FilterItem> {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -729480478609313439L;
 
 	public enum FilterRangeBoundary { START, FINISH };
@@ -63,8 +61,11 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 	}
 
 	@Override
-	public FilterItem createItem(HTTPController controller,InformationPropertyInfo pInfo,
-			Map<String, String[]> parameters, List<HTTPAction> actions) throws InterfaceException {
+	public FilterItem createItem(
+			HTTPController controller,
+			InformationPropertyInfo pInfo,
+			Map<String, String[]> parameters, 
+			List<HTTPAction> actions) throws InterfaceException {
 
 		FilterItem item=map.get(pInfo);
 		Object minValue=null;

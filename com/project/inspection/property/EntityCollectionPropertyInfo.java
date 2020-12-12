@@ -1,13 +1,9 @@
 package com.project.inspection.property;
 
 import com.project.inspection.EntityInfo;
-import com.project.inspection.PropertyInfo;
 
 public class EntityCollectionPropertyInfo extends PropertyInfo {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7504906445376837444L;
 	
 	private ForeignKeyPropertyInfo mappedByForeignKey;

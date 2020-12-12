@@ -14,9 +14,6 @@ import javax.persistence.OneToMany;
 @Entity
 public class Customer extends EntityClass {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8581575444676033350L;
 
 	public enum Kind {PERSON, ORGANIZATION};

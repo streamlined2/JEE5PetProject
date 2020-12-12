@@ -20,10 +20,10 @@ import com.project.Helpers;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInspector;
-import com.project.inspection.PropertyInfo;
 import com.project.inspection.property.ForeignKeyPropertyInfo;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PrimaryKeyPropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
 import com.project.queries.QueryDefinition.FilterEntry.Relation;
@@ -31,20 +31,17 @@ import com.project.queries.QueryDefinition.OrderByEntry.SortOrder;
 
 public class QueryDefinition implements Serializable, SelectionViewItem, Comparable<QueryDefinition> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6281065723667190950L;
 
-	public enum GroupPolicy { DONT_GROUP, GROUP };
-	public enum GroupOperation { COUNT, TOTAL, AVERAGE };
+	public enum AggregationPolicy { DONT_AGGREGATE, AGGREGATE };
+	public enum AggregationOperation { COUNT, TOTAL, AVERAGE };
 	
 	private String name;
 	private String description;
 	private Map<String,InformationProperty> properties = new HashMap<String,InformationProperty>();
 	private List<OrderByEntry> orderAliases = new ArrayList<OrderByEntry>();
 	private Set<FilterEntry> filterEntries = new HashSet<FilterEntry>();
-	private GroupPolicy groupPolicy = GroupPolicy.DONT_GROUP;
+	private AggregationPolicy groupPolicy = AggregationPolicy.DONT_AGGREGATE;
 	private Set<GroupEntry> groupEntries = new HashSet<GroupEntry>();
 	private boolean hasPrimaryKey = true;
 	
@@ -53,15 +50,16 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	}
 
 	public AggregatedProperty getAggregatedProperty(GroupEntry entry,int order) throws InterfaceException{
-		InformationProperty dataProperty = new InformationProperty(entry.getDataPropertyEntityType(), entry.getDataPropertyAlias(), entry.getAlias(), order);
+		InformationProperty dataProperty = new InformationProperty(
+				entry.getDataPropertyEntityType(), entry.getDataPropertyAlias(), entry.getAlias(), order);
 		if(dataProperty.getInformationProperty()!=null){
 			switch(entry.getOperation()){
 			case AVERAGE:
-				return new AverageSumProperty(dataProperty,entry.getAlias(),order);
+				return new AverageProperty(dataProperty,entry.getAlias(),order);
 			case COUNT:
 				return new CountProperty(dataProperty,entry.getAlias(),order);
 			case TOTAL:
-				return new TotalSumProperty(dataProperty,entry.getAlias(),order);
+				return new TotalProperty(dataProperty,entry.getAlias(),order);
 			}
 		}
 		return null;
@@ -69,9 +67,6 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public abstract class Property implements Serializable, Comparable<Property> {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -3229399257410937276L;
 		
 		private String alias;
@@ -105,9 +100,6 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public class InformationProperty extends Property {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -36199791544939390L;
 		
 		private String propertyName;
@@ -121,8 +113,8 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 		public InformationPropertyInfo getInformationProperty() throws InterfaceException {
 			EntityInfo entityInfo = EntityInspector.getEntityInfo(getEntityClass());
-			PropertyInfo propertyInfo = null;
-			if((propertyInfo = entityInfo.getInformationProperty(propertyName))!=null && propertyInfo.isInformation()){
+			PropertyInfo propertyInfo = entityInfo.getInformationProperty(propertyName);
+			if(propertyInfo !=null && propertyInfo.isInformation()){
 				return (InformationPropertyInfo)propertyInfo;
 			}else throw new InterfaceException("property "+propertyName+" not found for given entity "+entityInfo.getEntityName());
 		}
@@ -152,9 +144,6 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public abstract class AggregatedProperty extends Property {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 8290209885349421913L;
 		
 		private InformationProperty dataProperty;
@@ -168,7 +157,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			return dataProperty;
 		}
 		
-		public abstract GroupOperation getGroupOperation();
+		public abstract AggregationOperation getAggregationOperation();
 
 		@Override
 		public String getDisplayName() throws InterfaceException {
@@ -181,19 +170,16 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		private String getQueryPropertyPrefixKey() {
-			return EntityInspector.convertToString(getGroupOperation());
+			return EntityInspector.convertToString(getAggregationOperation());
 		}
 		
 	}
 	
-	public class AverageSumProperty extends AggregatedProperty {
+	public class AverageProperty extends AggregatedProperty {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -5043913274803273260L;
 
-		public AverageSumProperty(InformationProperty dataProperty, String alias, int order) {
+		public AverageProperty(InformationProperty dataProperty, String alias, int order) {
 			super(dataProperty,alias,order);
 		}
 		
@@ -214,20 +200,17 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		@Override
-		public GroupOperation getGroupOperation() {
-			return GroupOperation.AVERAGE;
+		public AggregationOperation getAggregationOperation() {
+			return AggregationOperation.AVERAGE;
 		}
 		
 	}
 	
-	public class TotalSumProperty extends AggregatedProperty {
+	public class TotalProperty extends AggregatedProperty {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -2025243733642085329L;
 
-		public TotalSumProperty(InformationProperty dataProperty, String alias, int order) {
+		public TotalProperty(InformationProperty dataProperty, String alias, int order) {
 			super(dataProperty,alias,order);
 		}
 
@@ -248,17 +231,14 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		@Override
-		public GroupOperation getGroupOperation() {
-			return GroupOperation.TOTAL;
+		public AggregationOperation getAggregationOperation() {
+			return AggregationOperation.TOTAL;
 		}
 		
 	}
 	
 	public class CountProperty extends AggregatedProperty {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -2689856981073582801L;
 
 		public CountProperty(InformationProperty dataProperty, String alias, int order) {
@@ -282,17 +262,14 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		@Override
-		public GroupOperation getGroupOperation() {
-			return GroupOperation.COUNT;
+		public AggregationOperation getAggregationOperation() {
+			return AggregationOperation.COUNT;
 		}
 		
 	}
 
 	public static final class PropertyEntry implements Serializable {
 	
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 3819182058886911338L;
 		
 		private String propertyName;
@@ -328,9 +305,6 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public static final class OrderByEntry implements Serializable {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 8034627485094186252L;
 
 		public enum SortOrder {ASCENDING, DESCENDING};
@@ -356,9 +330,6 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public static final class FilterEntry implements Serializable {
 	
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 691079013285763091L;
 
 		public enum Relation { EQUAL_TO, LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL, CHOICE };
@@ -390,17 +361,14 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	public static final class GroupEntry implements Serializable {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -6155683174088768628L;
 		
 		private Class<? extends EntityType> dataPropertyEntityType;
 		private String dataPropertyAlias;
-		private GroupOperation operation;
+		private AggregationOperation operation;
 		private String alias;
 		
-		public GroupEntry(Class<? extends EntityType> dataPropertyEntityType,String dataPropertyAlias,GroupOperation operation,String alias){
+		public GroupEntry(Class<? extends EntityType> dataPropertyEntityType,String dataPropertyAlias,AggregationOperation operation,String alias){
 			this.dataPropertyEntityType = dataPropertyEntityType;
 			this.dataPropertyAlias = dataPropertyAlias;
 			this.operation = operation;
@@ -415,7 +383,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			return dataPropertyAlias;
 		}
 
-		public GroupOperation getOperation() {
+		public AggregationOperation getOperation() {
 			return operation;
 		}
 
@@ -455,7 +423,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			OrderByEntry[] orderAliases
 			) throws InterfaceException{
 		
-		this(name, description, properties, filterEntries, orderAliases, GroupPolicy.DONT_GROUP);
+		this(name, description, properties, filterEntries, orderAliases, AggregationPolicy.DONT_AGGREGATE);
 
 	}
 	
@@ -465,7 +433,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			PropertyEntry[] properties,
 			FilterEntry[] filterEntries,
 			OrderByEntry[] orderAliases,
-			GroupPolicy groupPolicy
+			AggregationPolicy groupPolicy
 			) throws InterfaceException{
 
 		this(name, description, properties, filterEntries, orderAliases, groupPolicy, null);
@@ -478,7 +446,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			PropertyEntry[] properties,
 			FilterEntry[] filterEntries,
 			OrderByEntry[] orderAliases,
-			GroupPolicy groupPolicy,
+			AggregationPolicy groupPolicy,
 			GroupEntry[] groupEntries
 			) throws InterfaceException{
 
@@ -491,7 +459,11 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			for(PropertyEntry property:properties) 
 				this.properties.put(
 					property.getAlias(), 
-					new InformationProperty(property.getEntityClass(), property.getPropertyName(), property.getAlias(), order++));
+					new InformationProperty(
+							property.getEntityClass(), 
+							property.getPropertyName(), 
+							property.getAlias(), 
+							order++));
 		} 
 		
 		if(filterEntries!=null) 
@@ -541,7 +513,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	private void addGroupByClause(StringBuilder statement,
 			SortedMap<EntityInfo, Character> entities, String separator) throws InterfaceException {
 		
-		if(!properties.isEmpty() && groupPolicy == GroupPolicy.GROUP){
+		if(!properties.isEmpty() && groupPolicy == AggregationPolicy.AGGREGATE){
 
 			statement.append(" group by ");
 
@@ -614,8 +586,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		for(GroupEntry entry:groupEntries){
 			AggregatedProperty property = getAggregatedProperty(entry,order);
 			if(property!=null && property.getDataProperty()!=null){
-				InformationProperty infoProperty = property.getDataProperty();
-				propertyList.add(infoProperty.getInformationProperty());
+				propertyList.add(property.getDataProperty().getInformationProperty());
 			}
 		}
 		return propertyList;
@@ -709,13 +680,10 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			Character slaveAlias, 
 			Character masterAlias) throws InterfaceException{
 		
-		StringBuilder expression = new StringBuilder();
-		expression.append(" ").append("inner join").append(" ");
-		expression.
+		return new StringBuilder().
+			append(" ").append("inner join").append(" ").
 			append(slaveAlias).append(".").append(foreignKeyProperty.getPropertyName()).
 			append(" as ").append(masterAlias);
-
-		return expression;
 	}
 	
 	private void addQueryPropertyList(
@@ -725,7 +693,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		int order = 1;
 		for(InformationProperty property:getInformationPropertyList()){
 			InformationPropertyInfo pInfo = property.getInformationProperty();
-			if(order == 1 && groupPolicy == GroupPolicy.DONT_GROUP){
+			if(order == 1 && groupPolicy == AggregationPolicy.DONT_AGGREGATE){
 				addPrimaryKeyFieldDesc(statement, pInfo.getEntityInfo(), separator, getEntityAlias(entities, pInfo));
 			}
 			addFieldDesc(statement, property, separator, getEntityAlias(entities, pInfo));
@@ -775,7 +743,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	private void addPrimaryKeyFieldDesc(
 			StringBuilder statement,
 			EntityInfo entity,
-			String separator, Character alias){
+			final String separator, final Character alias){
 		statement
 			.append(alias)
 			.append(".")
@@ -786,7 +754,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	private void addFieldDesc(
 			StringBuilder statement,
 			Property property,
-			String separator, Character alias){
+			final String separator, final Character alias){
 		statement
 			.append(property.getPropertyExpression(alias))
 			.append(separator);
@@ -796,8 +764,8 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			StringBuilder statement,
 			String propertyName,
 			SortOrder order,
-			String separator,
-			Character alias){
+			final String separator,
+			final Character alias){
 		statement
 			.append(alias)
 			.append('.')
@@ -811,8 +779,8 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			String propertyName,
 			Relation relation,
 			Object operand,
-			String separator,
-			String listSeparator, Character alias){
+			final String separator,
+			final String listSeparator, final Character alias){
 		
 		statement
 			.append(alias)
