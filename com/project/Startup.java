@@ -1,5 +1,6 @@
 package com.project;
 
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.naming.Context;
@@ -24,6 +25,8 @@ public final class Startup {
 	//persistent context unit name for annotation
 	public static final String UNIT_NAME="unit";
 	public static final String DATA_SOURCE="datasource";
+	
+	public final static Locale DEFAULT_LOCALE = Locale.ENGLISH;
 	
 	private Startup(){}
 	

@@ -16,40 +16,43 @@ import com.project.Helpers;
 import com.project.datasource.QueryDataSource;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PropertyInfo;
+import com.project.interfacebuilder.Action;
+import com.project.interfacebuilder.Controller;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
-import com.project.interfacebuilder.http.actions.HTTPAction;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.QueryDefinition.Property;
 
 public class PropertyList implements Serializable, ListIterable<PropertyListItem> {
 
 	private static final long serialVersionUID = 5060808322150957060L;
 	
+	private HTTPForm form;
+	
 	private SortedMap<InformationPropertyInfo,PropertyListItem> map=new TreeMap<InformationPropertyInfo,PropertyListItem>();
 	
-	public PropertyList(){
-	}
-	
-	public PropertyList(List<InformationPropertyInfo> infoProperties){
+	public PropertyList(HTTPForm form,List<InformationPropertyInfo> infoProperties){
+		this.form = form;
 		int k=1;
 		for(InformationPropertyInfo pInfo:infoProperties){
-			map.put(pInfo, new PropertyListItem(pInfo, k++));
+			map.put(pInfo, new PropertyListItem(form,pInfo, k++));
 		}
 	}
 	
-	public PropertyList(QueryDataSource queryDataSource) throws InterfaceException{
+	public PropertyList(HTTPForm form,QueryDataSource queryDataSource) throws InterfaceException{
+		this.form = form;
 		int k=1;
 		for(Property property:queryDataSource.getQueryDefinition().getInfoGroupProperties()){
-			PropertyListItem item = new PropertyListItem(property, k++);
+			PropertyListItem item = new PropertyListItem(form,property, k++);
 			map.put(item.getPropertyInfo(), item);
 		}
 	}
 	
-	public PropertyList(EntityInfo eInfo){
+	public PropertyList(HTTPForm form,EntityInfo eInfo){
+		this.form = form;
 		int k=1;
 		for(InformationPropertyInfo pInfo:eInfo.getInfoFields()){
-			map.put(pInfo, new PropertyListItem(pInfo, k++));
+			map.put(pInfo, new PropertyListItem(form,pInfo, k++));
 		}
 	}
 	
@@ -113,8 +116,9 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 		
 	}
 
+	@Override
 	public PropertyListItem createItem(
-			HTTPController controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<HTTPAction> actions) {
+			Controller controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<Action> actions) {
 		
 		String orderParameterName=pInfo.getPropertyName();
 		
@@ -125,7 +129,7 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 			Helpers.getValue(orderParameterStringValue,"1")
 		);
 		
-		return new PropertyListItem(pInfo,order);
+		return new PropertyListItem(form,pInfo,order);
 	}
 
 	@Override
@@ -136,5 +140,5 @@ public class PropertyList implements Serializable, ListIterable<PropertyListItem
 	public void add(PropertyList list){
 		map.putAll(list.map);
 	}
-	
+
 }

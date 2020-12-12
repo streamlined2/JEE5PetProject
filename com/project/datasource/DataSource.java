@@ -1,6 +1,7 @@
 package com.project.datasource;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.Filter;
@@ -9,6 +10,7 @@ import com.project.inspection.PropertyList;
 import com.project.inspection.Range;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 
 //basic behavior for data source determined by this abstract class
 public abstract class DataSource {
@@ -19,7 +21,13 @@ public abstract class DataSource {
 	
 	public abstract List<InformationPropertyInfo> getInformationProperties() throws InterfaceException;
 	
+	protected HTTPForm form;
+	
 	private Range range=null;
+	
+	public DataSource(HTTPForm form){
+		this.form = form;
+	}
 
 	public Range getRange() {
 		if(range==null){
@@ -36,7 +44,7 @@ public abstract class DataSource {
 
 	public Ordering getOrdering() {
 		if(ordering==null){
-			ordering=new Ordering();
+			ordering=new Ordering(form);
 		}
 		return ordering;
 	}
@@ -68,12 +76,12 @@ public abstract class DataSource {
 	
 	public Filter getFilter(){
 		if(filter==null){
-			filter=new Filter();
+			filter=new Filter(form);
 		}
 		return filter;
 	}
 	
-	public abstract String getDisplayName();
+	public abstract String getDisplayName(Locale locale);
 
 	public final List<InformationPropertyInfo> getSelectedInformationProperties() throws InterfaceException{
 		return getPropertyList().getSelectedInformationProperties(getInformationProperties());

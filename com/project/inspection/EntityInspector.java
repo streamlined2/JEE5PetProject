@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -46,6 +47,7 @@ import com.project.inspection.property.PropertyInfo.FiniteType;
 import com.project.inspection.property.PropertyInfo.MultipleType;
 import com.project.inspection.property.PropertyInfo.OrderType;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public final class EntityInspector {
 	
@@ -71,11 +73,11 @@ public final class EntityInspector {
 	// singleton object design pattern
 	private static EntityInfoPool entityPool = new EntityInfoPool();
 	
-	public static EntityInfo getEntityInfo(Class<?> eClass) throws InterfaceException {
-		return getEntityInfo(eClass,true);
+	public static EntityInfo getEntityInfo(Class<?> eClass,Locale locale) throws InterfaceException {
+		return getEntityInfo(eClass,locale,true);
 	}
 	
-	public static EntityInfo getEntityInfo(Class<?> eClass,boolean constructEntityCollectionProperties) throws InterfaceException {
+	public static EntityInfo getEntityInfo(Class<?> eClass,Locale locale,boolean constructEntityCollectionProperties) throws InterfaceException {
 		
 		if(!EntityType.class.isAssignableFrom(eClass)) throw new InterfaceException("parameter must be ancestor of interface EntityType");
 			
@@ -127,7 +129,7 @@ public final class EntityInspector {
 								entityInfo.addEntityCollectionProperty(new EntityCollectionPropertyInfo(
 										entityInfo, propertyDescriptor.getName(), pClass, 
 										readMethod.getName(), writeMethod.getName(), 
-										getMappedByForeignKey(entityInfo.getEntityClass(),readMethod,field)));
+										getMappedByForeignKey(entityInfo.getEntityClass(),readMethod,field,locale)));
 
 							}
 	
@@ -136,10 +138,10 @@ public final class EntityInspector {
 							entityInfo.addInformationProperty(new InformationPropertyInfo(
 									entityInfo,
 									propertyDescriptor.getName(), 
-									getPropertyDisplayName(entityInfo, propertyDescriptor), 
+									getPropertyDisplayName(entityInfo, locale, propertyDescriptor), 
 									propertyDescriptor.getShortDescription(), 
 									pClass, 
-									Startup.getAgent().getFieldWidth(entityInfo.getEntityClass(),pClass,propertyDescriptor.getName()), 
+									Startup.getAgent().getFieldWidth(entityInfo.getEntityClass(),pClass,propertyDescriptor.getName(),locale), 
 									getOrderType(pClass), 
 									getFiniteType(pClass), 
 									getMultipleType(pClass),
@@ -173,19 +175,19 @@ public final class EntityInspector {
 	
 	private static ForeignKeyPropertyInfo getMappedByForeignKey(
 						Class<? extends EntityType> masterEntityClass, 
-						Method readMethod, Field field) throws InterfaceException {
+						Method readMethod, Field field, Locale locale) throws InterfaceException {
 		
 		//either getter or field may be marked by annotation 
-		ForeignKeyPropertyInfo foreignKey = getMappedByForeignKey(masterEntityClass,readMethod);
+		ForeignKeyPropertyInfo foreignKey = getMappedByForeignKey(masterEntityClass,readMethod,locale);
 		if(foreignKey == null){
-			foreignKey = getMappedByForeignKey(masterEntityClass,field);
+			foreignKey = getMappedByForeignKey(masterEntityClass,field,locale);
 		}
 		return foreignKey;
 	}
 
 	@SuppressWarnings("unchecked")
 	private static ForeignKeyPropertyInfo getMappedByForeignKey(
-			Class<? extends EntityType> masterEntityClass, AccessibleObject object) throws InterfaceException {
+			Class<? extends EntityType> masterEntityClass, AccessibleObject object, Locale locale) throws InterfaceException {
 		
 		Annotation annotation = object.getAnnotation(OneToMany.class);//use Java Reflection API to check if relation 1:M annotation present
 		
@@ -202,7 +204,7 @@ public final class EntityInspector {
 					
 					if(!slave.equals(masterEntityClass.getClass())){
 						
-						EntityInfo slaveInfo = EntityInspector.getEntityInfo(slave,false);
+						EntityInfo slaveInfo = EntityInspector.getEntityInfo(slave,locale,false);
 						ForeignKeyPropertyInfo foreignKey = slaveInfo.getForeignKeyFor(masterEntityClass);
 						
 						if(
@@ -220,7 +222,7 @@ public final class EntityInspector {
 				}
 			}else{
 				
-				EntityInfo slaveEntity = EntityInspector.getEntityInfo(targetEntityClass);
+				EntityInfo slaveEntity = EntityInspector.getEntityInfo(targetEntityClass,locale);
 				
 				if(foreignKeyName!=null) 
 					foreignKeyPropertyCandidates.add(slaveEntity.getForeignKeyFor(foreignKeyName));
@@ -307,9 +309,9 @@ public final class EntityInspector {
 			object.isAnnotationPresent(Id.class);
 	}
 
-	private static String getPropertyDisplayName(EntityInfo entityInfo, PropertyDescriptor p) {
+	private static String getPropertyDisplayName(EntityInfo entityInfo, Locale locale, PropertyDescriptor p) {
 		//call helper method to localize property name
-		return Helpers.getLocalizedDisplayName("PropertyNamesBundle", entityInfo.getEntityName(), p.getName(), p.getDisplayName());
+		return Helpers.getLocalizedDisplayName("PropertyNamesBundle", locale, entityInfo.getEntityName(), p.getName(), p.getDisplayName());
 	}
 	
 	/* following are methods to determine given type's features and map entity properties to interface elements (selectors) later
@@ -434,8 +436,11 @@ public final class EntityInspector {
 		return decorated.toString();
 	}
 	
-	//convert object value to string according to it's type
 	public static String convertToString(Object value){
+		return convertToString(value,Startup.DEFAULT_LOCALE);
+	}
+	//convert object value to string according to it's type
+	public static String convertToString(Object value, Locale locale){
 		
 		if(value==null){
 			return "";
@@ -445,31 +450,31 @@ public final class EntityInspector {
 			Class<?> c=value.getClass();
 			
 			if(isInteger(c)){
-				s = NumberFormat.getIntegerInstance().format(value);
+				s = NumberFormat.getIntegerInstance(locale).format(value);
 			
 			}else if(isCurrency(c)){
-				s = NumberFormat.getCurrencyInstance().format(value);
+				s = NumberFormat.getCurrencyInstance(locale).format(value);
 			
 			}else if(isFloatPoint(c)){
-				s = NumberFormat.getInstance().format(value);
+				s = NumberFormat.getInstance(locale).format(value);
 			
 			}else if(isNumber(c)){
-				s = NumberFormat.getInstance().format(value);
+				s = NumberFormat.getInstance(locale).format(value);
 			
 			}else if(isTime(c)){
-				s = DateFormat.getDateTimeInstance().format(value);
+				s = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT,locale).format(value);
 			
 			}else if(isDate(c)){
-				s = DateFormat.getDateInstance().format(value);
+				s = DateFormat.getDateInstance(DateFormat.DEFAULT,locale).format(value);
 			
 			}else if(c.isEnum()){
-				String valueName = getValueDisplayName(s, c);
+				String valueName = getValueDisplayName(s, locale, c);
 				String firstChar = valueName.substring(0,1).toUpperCase();
 				String rest = valueName.substring(1).toLowerCase();
 				s = firstChar+rest;
 			
 			}else if(isBoolean(c)){
-				s = getValueDisplayName(s, c);
+				s = getValueDisplayName(s, locale, c);
 			
 			}
 			return s;
@@ -477,8 +482,8 @@ public final class EntityInspector {
 		}
 	}
 
-	private static String getValueDisplayName(String propertyValue, Class<?> propertyClass) {
-		return Helpers.getLocalizedDisplayName("TypeValuesBundle", getClassName(propertyClass), propertyValue);
+	private static String getValueDisplayName(String propertyValue, Locale locale, Class<?> propertyClass) {
+		return Helpers.getLocalizedDisplayName("TypeValuesBundle", locale, getClassName(propertyClass), propertyValue);
 	}
 	
 	public static String getClassName(Class<?> propertyClass) {
@@ -605,12 +610,12 @@ public final class EntityInspector {
 		return values(pClass)[index];
 	}
 	
-	public static int getValuesMaxWidth(Class<?> pClass){
+	public static int getValuesMaxWidth(Class<?> pClass,Locale locale){
 		int maxLength=0;
 		for(Object v:values(pClass)){
 			maxLength=Math.max(
 						maxLength, 
-						EntityInspector.convertToString(v).length()
+						EntityInspector.convertToString(v,locale).length()
 					);
 		}
 		return maxLength;
@@ -645,11 +650,11 @@ public final class EntityInspector {
 		return (EntityType)eInfo.getEntityClass().newInstance();
 	}
 
-	public static EntityData initializeEntityData(DataSource dataSource) throws InterfaceException {
-		return initializeEntityData(dataSource,FilterRangeBoundary.START);
+	public static EntityData initializeEntityData(HTTPForm form,DataSource dataSource) throws InterfaceException {
+		return initializeEntityData(form,dataSource,FilterRangeBoundary.START);
 	}
 	
-	public static EntityData initializeEntityData(DataSource dataSource,FilterRangeBoundary boundaryKind) throws InterfaceException {
+	public static EntityData initializeEntityData(HTTPForm form,DataSource dataSource,FilterRangeBoundary boundaryKind) throws InterfaceException {
 		
 		List<InformationPropertyInfo> infoList=dataSource.getSelectedInformationProperties();
 		
@@ -670,7 +675,7 @@ public final class EntityInspector {
 
 		}
 		
-		return new EntityData(null,dataList.toArray(),new PropertyList(dataSource.getInformationProperties()));
+		return new EntityData(null,dataList.toArray(),new PropertyList(form,dataSource.getInformationProperties()));
 	
 	}
 	
@@ -766,7 +771,7 @@ public final class EntityInspector {
 	}
 	
 	public static int getDefaultFieldWidth(
-			Class<?> propertyType, int columnSize){
+			Class<?> propertyType, int columnSize, Locale locale){
 
 		if(isCharacter(propertyType)){
 			return 1;
@@ -787,10 +792,10 @@ public final class EntityInspector {
 			return getWidthValue(columnSize,15);
 		
 		}else if(isDate(propertyType) || isTime(propertyType) || isTimestamp(propertyType)){
-			return EntityInspector.convertToString(initialValueForType(propertyType)).length();
+			return EntityInspector.convertToString(initialValueForType(propertyType),locale).length();
 		
 		}else if(isBoolean(propertyType) || propertyType.isEnum()){
-			return getValuesMaxWidth(propertyType);
+			return getValuesMaxWidth(propertyType,locale);
 		}
 		return 0;
 		

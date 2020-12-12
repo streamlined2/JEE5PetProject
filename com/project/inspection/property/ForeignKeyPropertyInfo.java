@@ -1,5 +1,7 @@
 package com.project.inspection.property;
 
+import java.util.Locale;
+
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInspector;
@@ -24,9 +26,9 @@ public class ForeignKeyPropertyInfo extends PropertyInfo {
 		return masterType;
 	}
 
-	public EntityInfo getMasterEntity() throws InterfaceException {
+	public EntityInfo getMasterEntity(Locale locale) throws InterfaceException {
 		if(masterEntity==null){ // lazily instantiate EntityInfo instance if in need
-			masterEntity = EntityInspector.getEntityInfo(masterType);
+			masterEntity = EntityInspector.getEntityInfo(masterType,locale);
 		}
 		return masterEntity;
 	}

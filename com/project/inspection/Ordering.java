@@ -15,10 +15,11 @@ import com.project.Helpers;
 import com.project.inspection.OrderingItem.SortOrderType;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PropertyInfo;
+import com.project.interfacebuilder.Action;
+import com.project.interfacebuilder.Controller;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
-import com.project.interfacebuilder.http.actions.HTTPAction;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.interfacebuilder.http.forms.HTTPOrderForm;
 
 public class Ordering implements Serializable, ListIterable<OrderingItem>{
@@ -26,6 +27,12 @@ public class Ordering implements Serializable, ListIterable<OrderingItem>{
 	private static final long serialVersionUID = -8069092787682328055L;
 	
 	private SortedMap<PropertyInfo,OrderingItem> map=new TreeMap<PropertyInfo,OrderingItem>();
+	
+	private HTTPForm form;
+	
+	public Ordering(HTTPForm form){
+		this.form = form;
+	}
 	
 	public int size(){
 		return map.size();
@@ -79,7 +86,7 @@ public class Ordering implements Serializable, ListIterable<OrderingItem>{
 
 	@Override
 	public OrderingItem createItem(
-			HTTPController controller,InformationPropertyInfo pInfo,Map<String, String[]> parameters, List<HTTPAction> actions) {
+			Controller controller, InformationPropertyInfo pInfo, Map<String, String[]> parameters, List<Action> actions) {
 		
 		String orderPriorityParameterName=pInfo.getPropertyName();
 		
@@ -95,7 +102,7 @@ public class Ordering implements Serializable, ListIterable<OrderingItem>{
 		
 		SortOrderType orderKind=OrderingItem.SortOrderType.valueOf(orderKindParameterStringValue);
 		
-		return new OrderingItem(pInfo,orderPriority,orderKind);
+		return new OrderingItem(form,pInfo,orderPriority,orderKind);
 	}
 
 	@Override

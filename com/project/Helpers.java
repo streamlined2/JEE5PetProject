@@ -1,7 +1,7 @@
 package com.project;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
-
 
 import com.project.inspection.property.PropertyInfo.AlignType;
 
@@ -68,13 +68,13 @@ public final class Helpers {
 		return localizationPackageName+"."+bundleName; 
 	}
 	
-	public static String getLocalizedDisplayName(String bundleName,String prefix,String suffix) {
-		return getLocalizedDisplayName(bundleName,prefix,suffix,suffix);
+	public static String getLocalizedDisplayName(String bundleName,Locale locale,String prefix,String suffix) {
+		return getLocalizedDisplayName(bundleName,locale,prefix,suffix,suffix);
 	}
 
 	// convenient method to stick to standard localization behavior  
-	public static String getLocalizedDisplayName(String bundleName,String prefix,String suffix,String defaultName) {
-		ResourceBundle bundle=ResourceBundle.getBundle(Helpers.getLocalizationBundleFullName(bundleName));
+	public static String getLocalizedDisplayName(String bundleName,Locale locale,String prefix,String suffix,String defaultName) {
+		ResourceBundle bundle=ResourceBundle.getBundle(Helpers.getLocalizationBundleFullName(bundleName),locale);
 		String localizedName=defaultName;
 		String nameKey=(prefix==null || prefix.isEmpty())?suffix:prefix+"."+suffix;
 		if(bundle!=null && bundle.containsKey(nameKey)){
@@ -87,14 +87,4 @@ public final class Helpers {
 		return ENTITIES_PACKAGE_NAME+"."+entityName; 
 	}
 	
-/*	public static String getValue(String[] args,int index,String defValue){
-		if(args!=null && index>=0 && index<args.length){
-			String v=args[index];
-			if(v.isEmpty()) return defValue;
-			else return v;
-		}else{
-			return defValue;
-		}
-	}
-*/
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -26,6 +27,7 @@ import com.project.inspection.property.PrimaryKeyPropertyInfo;
 import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.QueryDefinition.FilterEntry.Relation;
 import com.project.queries.QueryDefinition.OrderByEntry.SortOrder;
 
@@ -37,6 +39,8 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 	public enum AggregationPolicy { DONT_AGGREGATE, AGGREGATE };
 	public enum AggregationOperation { COUNT, TOTAL, AVERAGE };
+	
+	private HTTPForm form;
 	
 	private String name;
 	private String description;
@@ -90,7 +94,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 		public abstract StringBuilder getPropertyExpression(Character alias);
 		
-		public abstract String getDisplayName() throws InterfaceException;
+		public abstract String getDisplayName(Locale locale) throws InterfaceException;
 		
 		public abstract InformationPropertyInfo getReferencedProperty() throws InterfaceException;
 		
@@ -115,7 +119,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		public InformationPropertyInfo getInformationProperty() throws InterfaceException {
-			EntityInfo entityInfo = EntityInspector.getEntityInfo(getEntityClass());
+			EntityInfo entityInfo = EntityInspector.getEntityInfo(getEntityClass(),form.getSelectedLocale());
 			PropertyInfo propertyInfo = entityInfo.getInformationProperty(propertyName);
 			if(propertyInfo !=null && propertyInfo.isInformation()){
 				return (InformationPropertyInfo)propertyInfo;
@@ -135,7 +139,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		@Override
-		public String getDisplayName() throws InterfaceException {
+		public String getDisplayName(Locale locale) throws InterfaceException {
 			return getInformationProperty().getDisplayName();
 		}
 
@@ -164,9 +168,9 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		public abstract AggregationOperation getAggregationOperation();
 
 		@Override
-		public String getDisplayName() throws InterfaceException {
+		public String getDisplayName(Locale locale) throws InterfaceException {
 			StringBuilder builder = new StringBuilder().
-				append(Helpers.getLocalizedDisplayName("QueryPropertyPrefixBundle", "", getQueryPropertyPrefixKey(), getQueryPropertyPrefixKey())).
+				append(Helpers.getLocalizedDisplayName("QueryPropertyPrefixBundle", locale, "", getQueryPropertyPrefixKey(), getQueryPropertyPrefixKey())).
 				append("(").
 				append(getDataProperty().getInformationProperty().getDisplayName().toLowerCase()).
 				append(")");
@@ -401,27 +405,30 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	// chain of constructor calls to implement various parameter set: extend parameter set by calling previously defined narrow parameter set constructor 
 	public QueryDefinition(
+			HTTPForm form,
 			String name,
 			String description,
 			PropertyEntry[] properties
 			) throws InterfaceException{
 	
-		this(name, description, properties, null);
+		this(form, name, description, properties, null);
 			
 	}
 		
 	public QueryDefinition(
+			HTTPForm form,
 			String name,
 			String description,
 			PropertyEntry[] properties,
 			FilterEntry[] filterEntries
 			) throws InterfaceException{
 	
-		this(name, description, properties, filterEntries, null);
+		this(form, name, description, properties, filterEntries, null);
 			
 	}
 		
 	public QueryDefinition(
+			HTTPForm form,
 			String name,
 			String description,
 			PropertyEntry[] properties,
@@ -429,11 +436,12 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			OrderByEntry[] orderAliases
 			) throws InterfaceException{
 		
-		this(name, description, properties, filterEntries, orderAliases, AggregationPolicy.DONT_AGGREGATE);
+		this(form, name, description, properties, filterEntries, orderAliases, AggregationPolicy.DONT_AGGREGATE);
 
 	}
 	
 	public QueryDefinition(
+			HTTPForm form,
 			String name,
 			String description,
 			PropertyEntry[] properties,
@@ -442,11 +450,12 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			AggregationPolicy groupPolicy
 			) throws InterfaceException{
 
-		this(name, description, properties, filterEntries, orderAliases, groupPolicy, null);
+		this(form, name, description, properties, filterEntries, orderAliases, groupPolicy, null);
 
 	}
 
 	public QueryDefinition(
+			HTTPForm form,
 			String name,
 			String description,
 			PropertyEntry[] properties,
@@ -456,6 +465,8 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 			GroupEntry[] groupEntries
 			) throws InterfaceException{
 
+		this.form = form;
+		
 		this.name = name;
 		
 		this.description = description;
@@ -641,7 +652,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 
 		statement.append(" from ");
 		
-		SortedMap<EntityInfo.LinkCountKey,EntityInfo> countKeys = EntityInfo.getLinkCountKeys(entities.keySet());
+		SortedMap<EntityInfo.LinkCountKey,EntityInfo> countKeys = EntityInfo.getLinkCountKeys(entities.keySet(),form.getSelectedLocale());
 		
 		for(Map.Entry<EntityInfo.LinkCountKey, EntityInfo> entry:countKeys.entrySet()){
 			
@@ -847,18 +858,22 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	}
 
 	@Override
-	public String getItemName() {
-		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", name, "name");
+	public String getItemName(Locale locale) {
+		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", locale, name, "name");
 	}
 	
 	@Override
-	public String getItemDescripion() {
-		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", name, "desc");
+	public String getItemDescripion(Locale locale) {
+		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", locale, name, "desc");
 	}
 
 	@Override
 	public int compareTo(QueryDefinition o) {
-		return getItemName().compareTo(o.getItemName());
+		return getItemName(getSelectedLocale()).compareTo(o.getItemName(getSelectedLocale()));
+	}
+
+	public final Locale getSelectedLocale() {
+		return form.getSelectedLocale();
 	}
 
 }

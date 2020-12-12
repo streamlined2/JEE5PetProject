@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -28,6 +29,7 @@ import com.project.inspection.OrderingItem;
 import com.project.inspection.OrderingItem.SortOrderType;
 import com.project.inspection.PropertyList;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.platform.persistence.ApacheOpenJPA;
 import com.project.platform.persistence.JPAProvider;
 import com.project.platform.persistence.OracleTopLink;
@@ -123,11 +125,11 @@ public class Agent implements AgentRemote {
 	}
 
 	@Override //fetch single entity by primary key
-	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
+	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey, HTTPForm form) throws InterfaceException{
 
 		Query query=prepareQueryForSingleEntity(dataSource,primaryKey);
 
-		return getEntityData((Object[])query.getSingleResult(),new PropertyList(dataSource.getEntityInfo()),true);
+		return getEntityData((Object[])query.getSingleResult(),new PropertyList(form, dataSource.getEntityInfo()),true);
 	}
 
 
@@ -404,11 +406,11 @@ public class Agent implements AgentRemote {
 		return selectedProvider;
 	}
 	
-	public int getFieldWidth(Class<?> entityType, Class<?> propertyType, String fieldName) throws InterfaceException {
+	public int getFieldWidth(Class<?> entityType, Class<?> propertyType, String fieldName, Locale locale) throws InterfaceException {
 		
 		int columnSize = getJPAProvider().getColumnSize(entityType,fieldName);
 
-		return EntityInspector.getDefaultFieldWidth(propertyType, columnSize);
+		return EntityInspector.getDefaultFieldWidth(propertyType, columnSize, locale);
 
 	}
 	

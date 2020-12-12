@@ -1,6 +1,7 @@
 package com.project.inspection;
 
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.QueryDefinition;
 import com.project.queries.QueryDefinition.Property;
 
@@ -11,14 +12,14 @@ public class PropertyListItem extends ListItem {
 	private int order;
 	private QueryDefinition.Property property;
 	
-	public PropertyListItem(QueryDefinition.Property property, int order) {
-		super(null);
+	public PropertyListItem(HTTPForm form,QueryDefinition.Property property, int order) {
+		super(form,null);
 		this.property = property;
 		this.order = order;
 	}
 
-	public PropertyListItem(InformationPropertyInfo propertyInfo, int order) {
-		super(propertyInfo);
+	public PropertyListItem(HTTPForm form,InformationPropertyInfo propertyInfo, int order) {
+		super(form,propertyInfo);
 		this.order = order;
 	}
 

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -22,7 +23,7 @@ import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
 import com.project.interfacebuilder.Selector;
 
-public class EntityInfo implements Serializable, SelectionViewItem, Comparable<EntityInfo> {
+public class EntityInfo implements Serializable, SelectionViewItem, Comparable<EntityInfo> { 
 	
 	private static final long serialVersionUID = -2103351979119508358L;
 
@@ -40,16 +41,16 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		return entityClass.getSimpleName();
 	}
 	
-	public String getDisplayName(){
-		return getDisplayProperty("name");
+	public String getDisplayName(Locale locale){
+		return getDisplayProperty(locale, "name");
 	}
 
-	public String getDescription(){
-		return getDisplayProperty("desc");
+	public String getDescription(Locale locale){
+		return getDisplayProperty(locale, "desc");
 	}
 	
-	private String getDisplayProperty(String propertyName) {
-		return Helpers.getLocalizedDisplayName("EntityNamesBundle", getEntityName(), propertyName);
+	private String getDisplayProperty(Locale locale, String propertyName) {
+		return Helpers.getLocalizedDisplayName("EntityNamesBundle", locale, getEntityName(), propertyName);
 	}
 	
 	public int getInfoPropertyCount(){
@@ -118,25 +119,25 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		}
 
 		@Override
-		public String getItemName() {
+		public String getItemName(Locale locale) {
 			return getItemID();
 		}
 
 		@Override
-		public String getItemDescripion() {
+		public String getItemDescripion(Locale locale) {
 			return getItemID();
 		}
 		
 	}
 
 	@Override
-	public String getItemDescripion() {
-		return getDescription();
+	public String getItemDescripion(Locale locale) {
+		return getDescription(locale);
 	}
 
 	@Override
-	public String getItemName() {
-		return getDisplayName();
+	public String getItemName(Locale locale) {
+		return getDisplayName(locale);
 	}
 
 	@Override
@@ -146,7 +147,7 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 
 	@Override
 	public int compareTo(EntityInfo o) {
-		return getItemName().compareTo(o.getItemName());
+		return getItemID().compareTo(o.getItemID());
 	}
 	
 	@Override
@@ -238,14 +239,14 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		
 	}
 	
-	private static LinkCountKey getLinkCountKey(EntityInfo entityForKey, Collection<EntityInfo> collection) throws InterfaceException{
+	private static LinkCountKey getLinkCountKey(EntityInfo entityForKey, Collection<EntityInfo> collection, Locale locale) throws InterfaceException{
 		
 		LinkCountKey countKey = entityForKey.new LinkCountKey();
 		
 		for(EntityInfo entity:collection){
 			if(!entity.equals(entityForKey)){
 				for(ForeignKeyPropertyInfo foreignKey:entity.getForeignKeys()){
-					if(foreignKey.getMasterEntity().equals(entityForKey)) countKey.addLink(foreignKey);
+					if(foreignKey.getMasterEntity(locale).equals(entityForKey)) countKey.addLink(foreignKey);
 				}
 			}
 		}
@@ -253,10 +254,10 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 		return countKey;
 	}
 	
-	public static SortedMap<LinkCountKey,EntityInfo> getLinkCountKeys(Collection<EntityInfo> collection) throws InterfaceException{
+	public static SortedMap<LinkCountKey,EntityInfo> getLinkCountKeys(Collection<EntityInfo> collection,Locale locale) throws InterfaceException{
 		SortedMap<LinkCountKey,EntityInfo> linkCountKeyMap = new TreeMap<LinkCountKey,EntityInfo>();
 		for(EntityInfo entity:collection){
-			linkCountKeyMap.put(getLinkCountKey(entity,collection), entity);
+			linkCountKeyMap.put(getLinkCountKey(entity,collection,locale), entity);
 		}
 		return linkCountKeyMap;
 	}

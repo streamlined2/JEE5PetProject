@@ -4,6 +4,7 @@ import com.project.entities.Country;
 import com.project.entities.Customer;
 import com.project.entities.Phone;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.QueryDefinition.FilterEntry;
 import com.project.queries.QueryDefinition.GroupEntry;
 import com.project.queries.QueryDefinition.AggregationOperation;
@@ -17,10 +18,11 @@ public final class QueryListBuilder {
 	
 	private QueryListBuilder(){}
 	
-	public static QueryList createQueryList() throws InterfaceException{
+	public static QueryList createQueryList(HTTPForm form) throws InterfaceException{
 		QueryList queries=new QueryList();
 
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Countries", 
 				"List of countries for population greater than 40 million and square greater or equal to 20 million sorted by population", 
 				new PropertyEntry[]{
@@ -40,6 +42,7 @@ public final class QueryListBuilder {
 				)
 		);
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Customers", 
 				"All known customers sorted by address,name", 
 				new PropertyEntry[]{
@@ -59,6 +62,7 @@ public final class QueryListBuilder {
 				)
 		);
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Phones", 
 				"All known phones by number", 
 				new PropertyEntry[]{
@@ -71,6 +75,7 @@ public final class QueryListBuilder {
 		);
 
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Customers_Phones", 
 				"All known phones of customers by number,name", 
 				new PropertyEntry[]{
@@ -86,6 +91,7 @@ public final class QueryListBuilder {
 		);
 
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Country_Customers", 
 				"All known customers for each country", 
 				new PropertyEntry[]{
@@ -100,6 +106,7 @@ public final class QueryListBuilder {
 		);
 
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Customers_Rating", 
 				"Ratings of customers", 
 				new PropertyEntry[]{
@@ -115,6 +122,7 @@ public final class QueryListBuilder {
 		);
 
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Customers_Average_Rating", 
 				"Average Ratings of customers", 
 				new PropertyEntry[]{
@@ -130,6 +138,7 @@ public final class QueryListBuilder {
 		);
 
 		queries.addQuery(new QueryDefinition(
+				form,
 				"Customers_Count_Rating", 
 				"Count Ratings of customers", 
 				new PropertyEntry[]{

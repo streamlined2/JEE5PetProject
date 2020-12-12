@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -28,15 +29,15 @@ public abstract class EntityClass implements EntityType {
 		return Collections.unmodifiableSet(new HashSet<Class<? extends EntityClass>>(Arrays.asList(entities)));
 	}
 	
-	public static Set<EntityInfo> getEntitySet() throws InterfaceException {
+	public static Set<EntityInfo> getEntitySet(final Locale locale) throws InterfaceException {
 		TreeSet<EntityInfo> sortedSet=new TreeSet<EntityInfo>(new Comparator<EntityInfo>(){
 			@Override
 			public int compare(EntityInfo o1,EntityInfo o2) {
-				return o1.getDisplayName().compareTo(o2.getDisplayName());
+				return o1.getDisplayName(locale).compareTo(o2.getDisplayName(locale));
 			}
 		});
 		for(Class<EntityClass> e:entities){
-			sortedSet.add(EntityInspector.getEntityInfo(e));
+			sortedSet.add(EntityInspector.getEntityInfo(e,locale));
 		}
 		return Collections.unmodifiableSet(sortedSet);
 	}

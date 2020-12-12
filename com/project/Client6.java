@@ -20,8 +20,8 @@ public class Client6 {
 	}
 
 	public static void printEntities(PrintStream out) throws InterfaceException{
-		for(EntityInfo e:EntityClass.getEntitySet()){
-			out.println(e.getDisplayName());
+		for(EntityInfo e:EntityClass.getEntitySet(Startup.DEFAULT_LOCALE)){
+			out.println(e.getDisplayName(Startup.DEFAULT_LOCALE));
 		}
 	}
 

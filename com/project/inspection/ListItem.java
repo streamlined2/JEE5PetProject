@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.QueryDefinition;
 
 public abstract class ListItem implements Serializable {
@@ -12,7 +13,10 @@ public abstract class ListItem implements Serializable {
 	
 	protected InformationPropertyInfo propertyInfo = null;
 	
-	public ListItem(InformationPropertyInfo propertyInfo){
+	protected HTTPForm form;
+	
+	public ListItem(HTTPForm form, InformationPropertyInfo propertyInfo){
+		this.form = form;
 		this.propertyInfo = propertyInfo;
 	}
 	
@@ -57,9 +61,9 @@ public abstract class ListItem implements Serializable {
 			return -1;
 		}
 	}
-
+	
 	public final String getDisplayName() throws InterfaceException {
-		if(getProperty()!=null) return getProperty().getDisplayName();
+		if(getProperty()!=null) return getProperty().getDisplayName(form.getSelectedLocale());
 		else if(propertyInfo!=null) return propertyInfo.getDisplayName();
 		return "";
 	}

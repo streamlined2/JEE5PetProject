@@ -25,12 +25,13 @@ public class Customer extends EntityClass {
 	private String address;
 	private Kind kind;
 	private Date creationDate;
-	private Set<Phone> phones = new HashSet<Phone>();
-	private Country country;
-	
+
 	private int rating;
 	private boolean creditAvailable;
 	private Timestamp lastTransactionTime;
+	
+	private Set<Phone> phones = new HashSet<Phone>();
+	private Country country;
 	
 	public Customer() {
 	}

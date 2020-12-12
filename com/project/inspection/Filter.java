@@ -10,9 +10,10 @@ import java.util.TreeMap;
 
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PropertyInfo;
+import com.project.interfacebuilder.Action;
+import com.project.interfacebuilder.Controller;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.interfacebuilder.http.HTTPController;
-import com.project.interfacebuilder.http.actions.HTTPAction;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 
 //Iterable implementation for Java 5 foreach loop
 public class Filter implements Serializable, ListIterable<FilterItem> {
@@ -22,6 +23,12 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 	public enum FilterRangeBoundary { START, FINISH };
 	
 	private SortedMap<PropertyInfo,FilterItem> map=new TreeMap<PropertyInfo,FilterItem>();
+	
+	private HTTPForm form;
+	
+	public Filter(HTTPForm form){
+		this.form = form;
+	}
 	
 	public int size(){
 		return map.size();
@@ -62,10 +69,10 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 
 	@Override
 	public FilterItem createItem(
-			HTTPController controller,
+			Controller controller,
 			InformationPropertyInfo pInfo,
 			Map<String, String[]> parameters, 
-			List<HTTPAction> actions) throws InterfaceException {
+			List<Action> actions) throws InterfaceException {
 
 		FilterItem item=map.get(pInfo);
 		Object minValue=null;
@@ -87,7 +94,7 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 		}else if(boundary==FilterRangeBoundary.FINISH){
 			maxValue=value;
 		}
-		return new FilterItem(pInfo, minValue, maxValue);
+		return new FilterItem(form, pInfo, minValue, maxValue);
 	}
 
 	@Override

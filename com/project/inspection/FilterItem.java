@@ -1,6 +1,7 @@
 package com.project.inspection;
 
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.QueryDefinition;
 import com.project.queries.QueryDefinition.Property;
 
@@ -13,15 +14,15 @@ public class FilterItem extends ListItem {
 	private Object maxValue;
 	private QueryDefinition.InformationProperty property;
 	
-	public FilterItem(QueryDefinition.InformationProperty property,Object minValue,Object maxValue){
-		super(null);
+	public FilterItem(HTTPForm form,QueryDefinition.InformationProperty property,Object minValue,Object maxValue){
+		super(form,null);
 		this.property = property;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 	}
 	
-	public FilterItem(InformationPropertyInfo propertyInfo,Object minValue,Object maxValue){
-		super(propertyInfo);
+	public FilterItem(HTTPForm form,InformationPropertyInfo propertyInfo,Object minValue,Object maxValue){
+		super(form,propertyInfo);
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 	}

@@ -1,8 +1,7 @@
 package com.project.datasource;
 
 import java.util.List;
-
-import javax.naming.NamingException;
+import java.util.Locale;
 
 import com.project.Startup;
 import com.project.inspection.EntityInfo;
@@ -11,13 +10,15 @@ import com.project.inspection.PropertyList;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PrimaryKeyPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.interfacebuilder.http.forms.HTTPForm;
 
 //descendant classes (EntityDataSource, QueryDataSource) overrides virtual methods of ancestor (DataSource) to pinpoint default or blank behavior
 public class EntityDataSource extends DataSource {
 	
 	private EntityInfo entityInfo;
 	
-	public EntityDataSource(EntityInfo eInfo){
+	public EntityDataSource(HTTPForm form,EntityInfo eInfo){
+		super(form);
 		entityInfo = eInfo;
 	}
 
@@ -31,8 +32,8 @@ public class EntityDataSource extends DataSource {
 	}
 
 	@Override
-	public String getDisplayName() {
-		return getEntityInfo().getDisplayName();
+	public String getDisplayName(Locale locale) {
+		return getEntityInfo().getDisplayName(locale);
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class EntityDataSource extends DataSource {
 
 	@Override
 	public PropertyList getDefaultPropertyList() {
-		return new PropertyList(entityInfo);
+		return new PropertyList(form,entityInfo);
 	}
 
 	@Override

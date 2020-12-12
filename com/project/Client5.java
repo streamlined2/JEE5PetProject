@@ -7,8 +7,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
-import com.project.entities.Customer;
-
 public class Client5 {
 
 	/**

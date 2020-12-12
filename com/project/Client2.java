@@ -35,9 +35,9 @@ public class Client2 {
 		Object ref=con.lookup("Agent#com.project.AgentRemote");
 		AgentRemote agent=(AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
 		
-		EntityInfo info=EntityInspector.getEntityInfo(Customer.class);
+		EntityInfo info=EntityInspector.getEntityInfo(Customer.class,Startup.DEFAULT_LOCALE);
 		
-		EntityDataSource dataSource = new EntityDataSource(info);
+		EntityDataSource dataSource = new EntityDataSource(null,info);//first parameter must be reference to actual host form
 		
 		System.out.println("entity info:");
 		
@@ -85,7 +85,7 @@ public class Client2 {
 	
 	public static void printEntityList(Class<?> entityClass,List<EntityData> list) throws InterfaceException {
 		
-		EntityInfo info=EntityInspector.getEntityInfo(entityClass);
+		EntityInfo info=EntityInspector.getEntityInfo(entityClass,Startup.DEFAULT_LOCALE);
 		
 		StringBuilder buffer=new StringBuilder();
 		
@@ -112,7 +112,7 @@ public class Client2 {
 
 	public static void printEntitySelectors(Class<?> entityClass) throws IntrospectionException, InterfaceException {
 		
-		EntityInfo info=EntityInspector.getEntityInfo(entityClass);
+		EntityInfo info=EntityInspector.getEntityInfo(entityClass,Startup.DEFAULT_LOCALE);
 		
 		StringBuilder buffer=new StringBuilder();
 		
