@@ -84,6 +84,8 @@ public class RadioButtonGroup extends SelectorSupport {
 	@Override
 	public void place(Form form) throws InterfaceException {
 
+		super.place(form);
+
 		String propName=getPropertyInfo().getPropertyName();
 
 		StringBuilder b=new StringBuilder();
@@ -101,7 +103,7 @@ public class RadioButtonGroup extends SelectorSupport {
 			
 			b.append(" />");
 
-			b.append(EntityInspector.convertToString(value));
+			b.append(EntityInspector.convertToString(value,getSelectedLocale()));
 			
 		}
 		

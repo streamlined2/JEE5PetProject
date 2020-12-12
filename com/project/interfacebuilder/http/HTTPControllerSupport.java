@@ -58,7 +58,6 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	private List<Locale> supportedLocales = new ArrayList<Locale>();
 	{
 		supportedLocales.add(Locale.forLanguageTag("uk-UA"));
-		supportedLocales.add(Locale.forLanguageTag("ru-RU"));
 		supportedLocales.add(Locale.US);
 		supportedLocales.add(Locale.ENGLISH);
 		supportedLocales.add(Locale.UK);
@@ -449,15 +448,13 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		private Locale locale;
 		private int rank;
 		private int level;
+		private int order;
 		
-		LocaleHolder(Locale locale,int level,int rank){
+		LocaleHolder(Locale locale,int level,int rank,int order){
 			this.locale = locale;
 			this.level = level;
 			this.rank = rank;
-		}
-		
-		Locale getLocale(){
-			return locale;
+			this.order = order;
 		}
 		
 		@Override public int hashCode(){
@@ -471,7 +468,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		}
 		
 		@Override public String toString(){
-			return "name="+locale.toString()+",rank="+rank+",level="+level;
+			return "name="+locale.toString()+",level="+level+",rank="+rank+",order="+order;
 		}
 
 		@Override
@@ -479,42 +476,106 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 			return locale.hashCode()-other.locale.hashCode();
 		}
 
+		public Locale getLocale() {
+			return locale;
+		}
+
 	}
 	
-	private Set<LocaleHolder> deriveLocaleSet(List<Locale> list){
+	private SortedSet<LocaleHolder> buildLocaleTree(List<Locale> list, Set<LocaleHolder> rankReferenceTree){
 
 		ResourceBundle.Control control = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_DEFAULT);
 
-		Set<LocaleHolder> set = new TreeSet<LocaleHolder>();
+		SortedSet<LocaleHolder> set = new TreeSet<LocaleHolder>();
+		
+		List<Locale> source = new ArrayList<Locale>(list);
 
 		int rank = 0;
-		for(Locale locale:list){
+		if(rankReferenceTree!=null){
 
-			List<Locale> candidates = control.getCandidateLocales("", locale);
-			
-			int parentIndex = candidates.size()-2;
-			if(parentIndex>=0){
-
-				Locale parent = candidates.get(parentIndex);
-				LocaleHolder parentHolder = findLocaleHolder(set, parent);
-				int level = 0;
-				for(Locale candidate:candidates){
-					if(!candidate.equals(Locale.ROOT)){
-						LocaleHolder holder = new LocaleHolder(candidate,level++,((parentHolder!=null)? parentHolder.rank: rank));
-						set.add(holder);
-					}
+			for(Iterator<Locale> i=source.iterator();i.hasNext();){
+				
+				Locale locale = i.next();
+				
+				int familyRank = findFamilyRank(control, rankReferenceTree, locale);
+				if(familyRank!=-1){
+					
+					addLocaleHolder(control, set, familyRank, locale);
+					rank = Math.max(rank, familyRank);
+					
+					i.remove();
 				}
-			}
 
-			rank++;
+			}
 		
 		}
+		
+		for(Locale locale:source){
+			
+			addLocaleHolder(control, set, ++rank, locale);
+		
+		}
+
 		return set;
 	}
 
-	private LocaleHolder findLocaleHolder(Set<LocaleHolder> set, Locale parent) {
+	private int findFamilyRank(ResourceBundle.Control control,Set<LocaleHolder> rankReferenceTree,Locale locale) {
+		
+		List<Locale> candidates = control.getCandidateLocales("", locale);
+		
+		for(Locale candidate:candidates){
+
+			if(!candidate.equals(Locale.ROOT)){
+
+				LocaleHolder holder = findLocaleHolder(rankReferenceTree,candidate);
+				if(holder!=null){
+					return holder.rank;
+				}
+
+			}
+
+		}
+	
+		return -1;
+	}
+
+	private void addLocaleHolder(ResourceBundle.Control control,
+			SortedSet<LocaleHolder> set, int rank, Locale locale) {
+		
+		List<Locale> candidates = control.getCandidateLocales("", locale);
+		
+		int parentIndex = candidates.size()-2;
+		if(parentIndex>=0){
+
+			Locale parent = candidates.get(parentIndex);
+			LocaleHolder parentHolder = findLocaleHolder(set, parent);
+			
+			int level = 0;
+			for(Locale candidate:candidates){
+				if(!candidate.equals(Locale.ROOT)){
+					int applyRank = ((parentHolder!=null)? parentHolder.rank: rank);
+					int order = countOneLevelAndRankHolders(set,level,applyRank)+1;
+					LocaleHolder holder = new LocaleHolder(candidate,level++,applyRank,order);
+					set.add(holder);
+				}
+			}
+		
+		}
+	
+	}
+
+	private int countOneLevelAndRankHolders(SortedSet<LocaleHolder> set,
+			int level, int applyRank) {
+		int count = 0;
+		for(LocaleHolder holder:set){
+			if(holder.rank==applyRank && holder.level==level) count++;
+		}
+		return count;
+	}
+
+	private LocaleHolder findLocaleHolder(Set<LocaleHolder> set, Locale lookFor) {
 		for(LocaleHolder localeHolder:set){
-			if(parent.equals(localeHolder.locale)){
+			if(lookFor.equals(localeHolder.locale)){
 				return localeHolder;
 			}
 		}
@@ -523,17 +584,19 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	
 	private SortedSet<LocaleHolder> getActiveLocaleHolders(List<Locale> requestLocales){
 		
-		Set<LocaleHolder> supportedLocaleSet = deriveLocaleSet(supportedLocales);
-		Set<LocaleHolder> requestLocaleSet = appendLocaleSet(requestLocales,supportedLocaleSet);
+		Set<LocaleHolder> referenceLocaleTree = buildLocaleTree(requestLocales,null);
+		Set<LocaleHolder> supportedLocaleTree = buildLocaleTree(supportedLocales,referenceLocaleTree);
+		Set<LocaleHolder> requestLocaleTree = appendLocaleSet(requestLocales,supportedLocaleTree);
 
-		requestLocaleSet.retainAll(supportedLocaleSet);
+		requestLocaleTree.retainAll(supportedLocaleTree);
 		
-		SortedSet<LocaleHolder> setByRank = new TreeSet<LocaleHolder>(new Comparator<LocaleHolder>(){
+		SortedSet<LocaleHolder> sortedByRankSet = new TreeSet<LocaleHolder>(new Comparator<LocaleHolder>(){
 			
 			private final static int MAX_RANKS = 100;
+			private final static int MAX_ORDERS = 10;
 			
 			private int orderIndex(LocaleHolder a){
-				return a.level*MAX_RANKS+a.rank;
+				return (a.level*MAX_RANKS+a.rank)*MAX_ORDERS+a.order;
 			}
 
 			@Override
@@ -543,9 +606,9 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 			
 		});
 		
-		setByRank.addAll(requestLocaleSet);
+		sortedByRankSet.addAll(requestLocaleTree);
 		
-		return setByRank;
+		return sortedByRankSet;
 	}
 	
 	private Set<LocaleHolder> appendLocaleSet(

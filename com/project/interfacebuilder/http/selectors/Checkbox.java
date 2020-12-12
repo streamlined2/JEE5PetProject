@@ -64,6 +64,8 @@ public class Checkbox extends SelectorSupport {
 	@Override
 	public void place(Form form) throws InterfaceException {
 
+		super.place(form);
+
 		StringBuilder b=new StringBuilder();
 		b
 			.append("<input type=\"checkbox\" ")
@@ -78,6 +80,7 @@ public class Checkbox extends SelectorSupport {
 		b.append(" />");
 		
 		getHTTPForm(form).getOut().print(b.toString());
+		
 	}
 
 	public String mapStateToValue(String state) throws InterfaceException{

@@ -38,7 +38,12 @@ public interface Selector extends Serializable {
 	
 	public void place(Form form) throws InterfaceException;
 	
+	public Form getForm();
+	
 	public Font getRenderFont();
 	public void setRenderFont(Font font);
+	
+	public Integer getId();
+	public void setId(Integer id);
 	
 }

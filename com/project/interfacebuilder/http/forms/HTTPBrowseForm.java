@@ -100,7 +100,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 
 	private void addRow(Object primaryKey, StringBuilder buffer, int row,
 			EntityInfo.EntityData data) throws InterfaceException {
-		String primaryKeyValue=EntityInspector.convertToString(data.getPrimaryKey());
+		String primaryKeyValue=EntityInspector.convertToString(data.getPrimaryKey(),getSelectedLocale());
 		buffer
 			.append("<option value=\"")
 			.append(primaryKeyValue)
@@ -140,7 +140,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		Object[] data=d.getInfoData();
 		for(ListItem pItem:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=pItem.getPropertyInfo();
-			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo,pItem), EntityInspector.convertToString(data[k++]), Helpers.NON_BREAKING_SPACE));
+			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo,pItem), EntityInspector.convertToString(data[k++],getSelectedLocale()), Helpers.NON_BREAKING_SPACE));
 			if(k<data.length){
 				b.append(Helpers.COLUMN_SEPARATOR);
 			}

@@ -61,8 +61,8 @@ public class List extends Combobox {
 
 	@Override
 	public void place(Form form) throws InterfaceException {
-		setVisibleLines(Math.max(getVisibleLines(), 2));
 		super.place(form);
+		setVisibleLines(Math.max(getVisibleLines(), 2));
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.project.interfacebuilder.http.selectors;
 
 import com.project.interfacebuilder.Form;
+import com.project.interfacebuilder.InterfaceException;
 
 public class TextArea extends SelectorSupport {
 
@@ -59,7 +60,8 @@ public class TextArea extends SelectorSupport {
 	}
 
 	@Override
-	public void place(Form form) {
+	public void place(Form form) throws InterfaceException {
+		super.place(form);
 		//TODO not implemented yet, not used either
 	}
 

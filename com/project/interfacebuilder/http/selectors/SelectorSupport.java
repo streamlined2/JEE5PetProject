@@ -1,6 +1,7 @@
 package com.project.interfacebuilder.http.selectors;
 
 import java.awt.Font;
+import java.util.Locale;
 
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.Form;
@@ -17,6 +18,8 @@ public abstract class SelectorSupport implements HTTPSelector {
 	private InformationPropertyInfo propertyInfo;
 	private Integer id;
 	private Font renderFont;
+	
+	private Form form;
 	
 	protected SelectorSupport(){
 	}
@@ -82,6 +85,21 @@ public abstract class SelectorSupport implements HTTPSelector {
 	protected HTTPForm getHTTPForm(Form form) throws InterfaceException{
 		if(!(form instanceof HTTPForm)) throw new InterfaceException("HTTPSelector must be placed on HTTPForm");
 		return (HTTPForm)form;
+	}
+	
+	@Override public void place(Form form) throws InterfaceException{
+		this.form = form;
+	}
+	
+	@Override public Form getForm(){
+		return form;
+	}
+	
+	public Locale getSelectedLocale() throws InterfaceException {
+		Form form = getForm();
+		if(!(form instanceof HTTPForm)) throw new InterfaceException("selector must be linked to instance of HTTPForm");
+		HTTPForm httpForm = (HTTPForm) form;
+		return httpForm.getSelectedLocale();
 	}
 	
 }

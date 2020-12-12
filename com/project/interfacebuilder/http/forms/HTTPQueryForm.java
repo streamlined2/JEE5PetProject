@@ -79,7 +79,7 @@ public class HTTPQueryForm extends HTTPDataRangeForm {
 					append("<td align=\"").
 					append(pInfo.getAlignType().toString()).
 					append("\">").
-					append(EntityInspector.convertToString(value)).
+					append(EntityInspector.convertToString(value,getSelectedLocale())).
 					append("</td>");
 			}
 			

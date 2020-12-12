@@ -90,6 +90,8 @@ public class TextLine extends SelectorSupport {
 	@Override
 	public void place(Form form) throws InterfaceException {
 		
+		super.place(form);
+		
 		HTTPForm f=getHTTPForm(form);
 
 		StringBuilder b=new StringBuilder();
@@ -97,7 +99,7 @@ public class TextLine extends SelectorSupport {
 		b.append(getStyle());
 		b.append("name=\"").append(getPropertyInfo().getPropertyName()).append("\" ");
 		b.append("id=\"").append(getId()).append("\" ");
-		b.append("value=\"").append(EntityInspector.convertToString(getValue())).append("\" ");
+		b.append("value=\"").append(EntityInspector.convertToString(getValue(),getSelectedLocale())).append("\" ");
 		b.append("size=\"").append(getSize()).append("\" ");
 		if(maxLength>0){
 			b.append("maxlength=\"").append(getMaxLength()).append("\" ");

@@ -76,6 +76,8 @@ public class Combobox extends SelectorSupport {
 	@Override
 	public void place(Form form) throws InterfaceException {
 
+		super.place(form);
+
 		StringBuilder b=new StringBuilder();
 		b
 			.append("<select ")
@@ -99,7 +101,7 @@ public class Combobox extends SelectorSupport {
 			}
 			b
 				.append(">")
-				.append(EntityInspector.convertToString(value))
+				.append(EntityInspector.convertToString(value,getSelectedLocale()))
 				.append("</option>");
 		}
 		b.append("</select>");
