@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.Form;
-import com.project.interfacebuilder.http.HTTPInterfaceBuilder.InterfaceContext;
+import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
 public final class TransitionRuleSet {
 	

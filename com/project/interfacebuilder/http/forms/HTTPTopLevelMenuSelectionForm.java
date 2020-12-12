@@ -1,9 +1,9 @@
 package com.project.interfacebuilder.http.forms;
 
 import com.project.interfacebuilder.InterfaceException;
-import com.project.interfacebuilder.http.HTTPInterfaceBuilder.InterfaceContext;
 import com.project.interfacebuilder.menu.Menu;
 import com.project.interfacebuilder.menu.MenuItem;
+import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
 public class HTTPTopLevelMenuSelectionForm extends HTTPMenuSelectionForm {
 	

@@ -1,7 +1,7 @@
 package com.project.interfacebuilder;
 
 import com.project.interfacebuilder.ControllerSupport.FormContextItem;
-import com.project.interfacebuilder.http.HTTPInterfaceBuilder.InterfaceContext;
+import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
 
 public interface Controller {

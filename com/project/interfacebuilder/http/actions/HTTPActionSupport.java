@@ -8,9 +8,9 @@ import com.project.interfacebuilder.ControllerSupport.FormContextItem;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
-import com.project.interfacebuilder.http.HTTPInterfaceBuilder;
 import com.project.interfacebuilder.http.Helpers;
 import com.project.interfacebuilder.http.forms.HTTPForm;
+import com.project.interfacebuilder.transition.Dispatcher;
 
 public abstract class HTTPActionSupport extends ActionSupport implements HTTPAction {
 	
@@ -66,11 +66,9 @@ public abstract class HTTPActionSupport extends ActionSupport implements HTTPAct
 	public FormContextItem findTarget(Form sourceForm) throws InterfaceException {
 		if(sourceForm==null) throw new IllegalStateException("sourceForm must be not null");
 		
-		HTTPInterfaceBuilder builder = HTTPInterfaceBuilder.getInterfaceBuilder();
+		controller.push(sourceForm,Dispatcher.getDispatcher().getCurrentContext());
 		
-		controller.push(sourceForm,builder.getCurrentContext());
-		
-		return builder.getTarget(sourceForm, this);
+		return Dispatcher.getDispatcher().getTarget(sourceForm, this);
 	}
 	
 }

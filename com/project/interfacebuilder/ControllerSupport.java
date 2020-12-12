@@ -3,8 +3,8 @@ package com.project.interfacebuilder;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.project.interfacebuilder.http.HTTPInterfaceBuilder;
-import com.project.interfacebuilder.http.HTTPInterfaceBuilder.InterfaceContext;
+import com.project.interfacebuilder.transition.Dispatcher;
+import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
 
 public abstract class ControllerSupport implements Controller {
@@ -47,8 +47,7 @@ public abstract class ControllerSupport implements Controller {
 		return chain.remove(0);
 	}
 	
-	//template method
-	@Override
+	@Override //template method
 	public final void service() throws InterfaceException{
 		
 		try{
@@ -73,7 +72,7 @@ public abstract class ControllerSupport implements Controller {
 					
 					targetForm = item.getForm();
 					item.getState().reset();
-					HTTPInterfaceBuilder.getInterfaceBuilder().setCurrentContext(item.getContext());
+					Dispatcher.getDispatcher().setCurrentContext(item.getContext());
 				
 					setUpActionTarget(action,targetForm);
 					performAction(action);

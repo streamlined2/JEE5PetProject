@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJBException;
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -16,9 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.project.AgentRemote;
-import com.project.ContextBootstrap;
 import com.project.Helpers;
+import com.project.Startup;
+import com.project.datasource.DataSource;
+import com.project.datasource.EntityDataSource;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.Filter.FilterRangeBoundary;
@@ -33,9 +33,9 @@ import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.Selector;
 import com.project.interfacebuilder.http.actions.HTTPAction;
 import com.project.interfacebuilder.http.forms.HTTPForm;
-import com.project.datasource.DataSource;
-import com.project.datasource.EntityDataSource;
+import com.project.interfacebuilder.transition.Dispatcher;
 
+// front controller delegate class
 public class HTTPControllerSupport extends ControllerSupport implements HTTPController {
 	
 	private static final int MAX_INACTIVE_INTERVAL = 1000;
@@ -262,7 +262,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 					
 					}
 					
-					entity = Helpers.getAgent().createUpdateEntity(entity, createNew);
+					entity = Startup.getAgent().createUpdateEntity(entity, createNew);
 					
 					primaryKey = entity.getId();
 
@@ -371,7 +371,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	//handy function call
 	@Override
 	protected final Form getDefaultForm() throws InterfaceException {
-		return HTTPInterfaceBuilder.getInterfaceBuilder().getDefaultForm();
+		return Dispatcher.getDispatcher().getInitialForm();
 	}
 
 	public static String findParameterValue(Map<String, String[]> parameters, String parameterKey){

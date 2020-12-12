@@ -10,7 +10,7 @@ import java.util.TreeMap;
 import javax.naming.NamingException;
 
 import com.project.AgentRemote;
-import com.project.ContextBootstrap;
+import com.project.Startup;
 
 public abstract class FormSupport implements Form {
 	
@@ -30,8 +30,8 @@ public abstract class FormSupport implements Form {
 	}
 	
 	public List<Action> getActions(){
-		//modify action list only by means of addAction
-		//avoid exposition of inner data structure?
+		//modify action list only by call of addAction
+		//do not expose inner data structure
 		return Collections.unmodifiableList(new ArrayList<Action>(actions.values()));
 	}
 	

@@ -18,7 +18,7 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	private QueryList queries = null;
 	
 	public QueryList getQueries() throws InterfaceException {
-		if(queries == null){
+		if(queries == null){ // lazy initialization
 			queries = QueryListBuilder.createQueryList();
 		}
 		return queries;

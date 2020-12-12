@@ -2,6 +2,7 @@ package com.project.interfacebuilder;
 
 import com.project.Helpers;
 
+//defines basic functionality of Action interface descendants
 public abstract class ActionSupport implements Action {
 	
 	private String name;

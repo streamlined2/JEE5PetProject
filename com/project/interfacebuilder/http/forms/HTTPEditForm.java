@@ -1,6 +1,6 @@
 package com.project.interfacebuilder.http.forms;
 
-import com.project.Helpers;
+import com.project.Startup;
 import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
@@ -36,7 +36,7 @@ public class HTTPEditForm extends HTTPSelectorSetForm {
 			entityData=EntityInspector.initializeEntityData(getDataSource());
 		}else{
 			if(primaryKey==null) throw new InterfaceException("primary key must be set before HTTPEditForm activation.");
-			entityData=Helpers.getAgent().fetchEntity((EntityDataSource)getDataSource(),primaryKey);
+			entityData=Startup.getAgent().fetchEntity((EntityDataSource)getDataSource(),primaryKey);
 		}
 
 		controller.setAttribute(HTTPController.CREATE_NEW_ATTRIBUTE, Boolean.valueOf(createNew));

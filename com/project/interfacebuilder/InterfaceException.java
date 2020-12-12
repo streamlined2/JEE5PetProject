@@ -1,5 +1,6 @@
 package com.project.interfacebuilder;
 
+// root application exception
 public class InterfaceException extends Exception {
 	
 	private static final long serialVersionUID = 7441525840317817809L;

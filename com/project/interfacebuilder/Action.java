@@ -2,6 +2,7 @@ package com.project.interfacebuilder;
 
 import com.project.interfacebuilder.ControllerSupport.FormContextItem;
 
+// Command/Action design pattern interface
 public interface Action {
 	
 	public String getName();

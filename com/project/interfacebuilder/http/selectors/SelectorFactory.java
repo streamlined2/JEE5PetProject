@@ -15,12 +15,11 @@ import com.project.interfacebuilder.Selector.OrientationType;
 
 public final class SelectorFactory {
 	
-	static{
+	static{// create map of suitable interface-specific list of property editors
 		map=new TreeMap<SelectorDataKey,HTTPSelector>();
 		prepareSelectorData();
 	}
 	
-	//interface-specific list of property value selectors
 	private static void prepareSelectorData() {
 		
 		putSelectorData(new Checkbox());
@@ -32,23 +31,11 @@ public final class SelectorFactory {
 		putSelectorData(new TextArea());
 		putSelectorData(new TextLine());
 		
-		/*printSelectorData();*/
-
 	}
 	
 	private static TreeMap<SelectorDataKey,HTTPSelector> map;
 	
-/*	private static void printSelectorData() {
-		for(SelectorDataKey key:map.keySet()){
-			HTTPSelector sel=map.get(key);
-			System.out.println(
-					key.getMultipleType()+","+
-					key.getFiniteType()+","+
-					key.getOrderType()+","+key.getMaxCardinality()+","+
-					sel.getClass().getName());
-		}
-	}*/
-
+	// the class represents property type features, such as cardinality, ordinality and multiplicity 
 	private static class SelectorDataKey implements Comparable<SelectorDataKey> {
 
 		private OrderType orderType;
@@ -82,7 +69,6 @@ public final class SelectorFactory {
 		@Override
 		public boolean equals(Object obj) {
 			if(!(obj instanceof SelectorDataKey)) return false;
-
 			return ((SelectorDataKey)obj).getKey().equals(getKey()); 
 		}
 
@@ -98,6 +84,8 @@ public final class SelectorFactory {
 
 	}
 	
+	/* following methods form map of acceptable property editors for each given property type 
+	 **/
 	private static void putSelectorData(HTTPSelector selector){
 		if(selector.getMultiplePolicy()==MultiplePolicy.MULTIPLE){
 			unfoldMultiplePolicy(selector,MultipleType.MULTIPLE);
@@ -138,6 +126,7 @@ public final class SelectorFactory {
 			);
 	}
 
+	// factory method: produce most suitable property editor according to given property type features  
 	public static HTTPSelector getSelector(InformationPropertyInfo type) throws InterfaceException{
 		
 		SelectorDataKey minKey=

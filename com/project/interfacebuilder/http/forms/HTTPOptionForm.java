@@ -92,6 +92,8 @@ public abstract class HTTPOptionForm <ItemType extends SelectionViewItem> extend
 		return selectedItemID;
 	}
 	
+	//use inner class to restrict accessible class namespace range and avoid further name collision
+	//implements Memento/Snapshot design pattern
 	public class SelectionFormState extends FormState {
 		
 		private int selectedItemIndex = -1;

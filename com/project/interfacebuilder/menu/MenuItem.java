@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.project.Helpers;
 import com.project.interfacebuilder.SelectionViewItem;
-import com.project.interfacebuilder.http.HTTPInterfaceBuilder.InterfaceContext;
+import com.project.interfacebuilder.transition.Dispatcher.InterfaceContext;
 
 public class MenuItem implements Serializable, SelectionViewItem, Comparable<MenuItem> {
 	
