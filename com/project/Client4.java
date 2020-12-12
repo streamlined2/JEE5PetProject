@@ -54,7 +54,7 @@ public class Client4 {
 				Object[] infoFieldValue=entityData.getInfoData();
 				Object value=infoFieldValue[count++];
 				String name=e.getPropertyName();
-				String s=EntityInspector.convertToString(value);
+				String s=EntityInspector.convertToString(value,Startup.DEFAULT_LOCALE);
 				buffer.
 					append(name).
 					append("=").

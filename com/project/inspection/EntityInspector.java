@@ -436,9 +436,6 @@ public final class EntityInspector {
 		return decorated.toString();
 	}
 	
-	public static String convertToString(Object value){
-		return convertToString(value,Startup.DEFAULT_LOCALE);
-	}
 	//convert object value to string according to it's type
 	public static String convertToString(Object value, Locale locale){
 		

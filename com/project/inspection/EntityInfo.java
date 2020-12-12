@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.project.Helpers;
+import com.project.Startup;
 import com.project.entities.EntityType;
 import com.project.inspection.property.EntityCollectionPropertyInfo;
 import com.project.inspection.property.ForeignKeyPropertyInfo;
@@ -115,7 +116,7 @@ public class EntityInfo implements Serializable, SelectionViewItem, Comparable<E
 
 		@Override
 		public String getItemID() {
-			return EntityInspector.convertToString(primaryKey);
+			return EntityInspector.convertToString(primaryKey,Startup.DEFAULT_LOCALE);
 		}
 
 		@Override

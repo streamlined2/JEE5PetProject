@@ -98,7 +98,7 @@ public class Client2 {
 				String name=e.getPropertyName();
 				Class<?> cl=e.getType();
 				Object value=infoData[count++];
-				String s=EntityInspector.convertToString(value);
+				String s=EntityInspector.convertToString(value,Startup.DEFAULT_LOCALE);
 				buffer.append(name).append("(").append(cl.getSimpleName()).append(")").append("=").append(s).append(";");
 			}
 			

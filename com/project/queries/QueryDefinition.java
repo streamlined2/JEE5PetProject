@@ -178,7 +178,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 
 		private String getQueryPropertyPrefixKey() {
-			return EntityInspector.convertToString(getAggregationOperation());
+			return EntityInspector.convertToString(getAggregationOperation(),form.getSelectedLocale());
 		}
 		
 	}
