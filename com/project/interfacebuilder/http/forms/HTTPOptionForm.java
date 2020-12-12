@@ -19,28 +19,30 @@ public abstract class HTTPOptionForm <ItemType extends SelectionViewItem> extend
 	protected void placeContent() throws InterfaceException {
 		StringBuilder buffer=new StringBuilder();
 		
-		buffer.append("<pre ").append(getStyle()).append(" >");
-		buffer.append(formListTitle());
-		buffer.append("</pre>");
-		
-		buffer.append("<select name=\"");
-		buffer.append(getSelectedItemName());
-		buffer.append("\" ");
-		buffer.append(getStyle());
-		buffer.append("size=").append(getVisibleLines()).append(" ");
-		buffer.append(">");
+		buffer
+			.append("<pre ").append(getStyle()).append(" >")
+			.append(formListTitle())
+			.append("</pre>")
+			.append("<select name=\"")
+			.append(getSelectedItemName())
+			.append("\" ")
+			.append(getStyle())
+			.append("size=").append(getVisibleLines()).append(" ")
+			.append(">");
 		
 		int row=1;
 		for(ItemType e:getItemSet()){
-			buffer.append("<option value=\"");
-			buffer.append(e.getItemID());
-			buffer.append("\" ");
+			buffer
+				.append("<option value=\"")
+				.append(e.getItemID())
+				.append("\" ");
 			if(isSelected(e,row++)){
 				buffer.append("selected");
 			}
-			buffer.append(">");
-			buffer.append(formListValue(e));
-			buffer.append("</option>");
+			buffer
+				.append(">")
+				.append(formListValue(e))
+				.append("</option>");
 		}
 		
 		buffer.append("</select>");

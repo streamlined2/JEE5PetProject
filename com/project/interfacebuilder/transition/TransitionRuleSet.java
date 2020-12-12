@@ -1,5 +1,6 @@
 package com.project.interfacebuilder.transition;
 
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.project.interfacebuilder.Action;
@@ -8,7 +9,8 @@ import com.project.interfacebuilder.http.HTTPInterfaceBuilder.InterfaceContext;
 
 public final class TransitionRuleSet {
 	
-	private TreeMap<TransitionRule.TransitionRuleKey,TransitionRule> map=new TreeMap<TransitionRule.TransitionRuleKey,TransitionRule>();
+	private SortedMap<TransitionRule.TransitionRuleKey,TransitionRule> map=
+		new TreeMap<TransitionRule.TransitionRuleKey,TransitionRule>();
 	
 	public TransitionRuleSet(){}
 	

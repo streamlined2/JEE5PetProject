@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.project.inspection.Filter.FilterRangeBoundary;
-import com.project.inspection.PropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.Controller;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPAction;

@@ -37,7 +37,7 @@ public class HTTPApplyFilterAction extends HTTPApplyActionSupport<FilterItem> {
 
 		dataRangeForm.setDataSource(dataSource);
 
-		syncValuesWithParameters(
+		synchronizeValuesAndParameters(
 				dataSource, dataSource.getFilter(),
 				requestParametersMap,actions);
 

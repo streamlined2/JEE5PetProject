@@ -35,9 +35,7 @@ public class HTTPQueryForm extends HTTPDataRangeForm {
 
 	private void addTableDefinition(List<EntityData> tableData) throws InterfaceException {
 		
-		StringBuilder buffer=new StringBuilder();
-		
-		buffer.
+		StringBuilder buffer=new StringBuilder().
 			append("<table border=\"").
 			append(border).
 			append("\" cellpadding=\"").
@@ -61,7 +59,10 @@ public class HTTPQueryForm extends HTTPDataRangeForm {
 			append(">");
 		
 		for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
-			buffer.append("<th align=\"center\">").append(item.getPropertyInfo().getDisplayName()).append("</th>");
+			buffer.
+				append("<th align=\"center\">").
+				append(item.getPropertyInfo().getDisplayName()).
+				append("</th>");
 		}
 
 		for(EntityData entityData:tableData){

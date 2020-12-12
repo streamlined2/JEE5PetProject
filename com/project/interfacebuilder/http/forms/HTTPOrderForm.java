@@ -5,7 +5,7 @@ import com.project.inspection.ListItem;
 import com.project.inspection.OrderingItem;
 import com.project.inspection.OrderingItem.SortOrderType;
 import com.project.inspection.property.InformationPropertyInfo;
-import com.project.inspection.PropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPApplyOrderAction;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
@@ -177,7 +177,7 @@ public class HTTPOrderForm extends HTTPDataAwareForm {
 
 	}
 
-	public static String getOrderTypeName(PropertyInfo pInfo) {
+	public final static String getOrderTypeName(PropertyInfo pInfo) {
 		return "_"+pInfo.getPropertyName();
 	}
 

@@ -7,9 +7,9 @@ import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.ListItem;
-import com.project.inspection.PropertyInfo.AlignType;
 import com.project.inspection.PropertyListItem;
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PropertyInfo.AlignType;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPAddNewAction;
@@ -46,10 +46,9 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		
 		Object primaryKey=controller.getAttribute(HTTPController.PRIMARY_KEY_ATTRIBUTE);
 
-		StringBuilder buffer=new StringBuilder();
-
 		Integer browseId=getNextControlId();
-		buffer
+
+		StringBuilder buffer=new StringBuilder()
 			.append("<label for=\"")
 			.append(browseId)
 			.append("\" ")
@@ -90,26 +89,29 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 	}
 
 	private void addBlankRow(StringBuilder buffer, int columnCount) throws InterfaceException {
-		buffer.append("<option value=\"");
-		buffer.append(-1);
-		buffer.append("\" ");
-		buffer.append(">");
-		buffer.append(formBlankListValue(columnCount));
-		buffer.append("</option>");
+		buffer
+			.append("<option value=\"")
+			.append(-1)
+			.append("\" ")
+			.append(">")
+			.append(formBlankListValue(columnCount))
+			.append("</option>");
 	}
 
 	private void addRow(Object primaryKey, StringBuilder buffer, int row,
 			EntityInfo.EntityData data) throws InterfaceException {
-		buffer.append("<option value=\"");
 		String primaryKeyValue=EntityInspector.convertToString(data.getPrimaryKey());
-		buffer.append(primaryKeyValue);
-		buffer.append("\" ");
+		buffer
+			.append("<option value=\"")
+			.append(primaryKeyValue)
+			.append("\" ");
 		if(isSelected(primaryKey, row, data)){
 			buffer.append("selected ");
 		}
-		buffer.append(">");
-		buffer.append(formListValue(row,data));
-		buffer.append("</option>");
+		buffer
+			.append(">")
+			.append(formListValue(row,data))
+			.append("</option>");
 	}
 
 	private boolean isSelected(Object primaryKey, int row,

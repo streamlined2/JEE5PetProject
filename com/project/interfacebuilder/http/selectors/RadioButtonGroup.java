@@ -8,9 +8,6 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class RadioButtonGroup extends SelectorSupport {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5584223794463079998L;
 
 	public RadioButtonGroup() {}
@@ -88,26 +85,28 @@ public class RadioButtonGroup extends SelectorSupport {
 	@Override
 	public void place(Form form) throws InterfaceException {
 
-		HTTPForm f=getHTTPForm(form);
-		
 		String propName=getPropertyInfo().getPropertyName();
 
 		StringBuilder b=new StringBuilder();
 		for(Object value:EntityInspector.values(getPropertyInfo().getType())){
-			b.append("<input type=\"radio\" ");
-			b.append(getStyle());
-			b.append("id=\"").append(getId()).append("\" ");
-			b.append("name=\"").append(propName).append("\" ");
-			b.append("value=\"").append(value).append("\" ");
+			b
+				.append("<input type=\"radio\" ")
+				.append(getStyle())
+				.append("id=\"").append(getId()).append("\" ")
+				.append("name=\"").append(propName).append("\" ")
+				.append("value=\"").append(value).append("\" ");
+			
 			if(value!=null && value.equals(getValue())){
 				b.append(" checked ");
 			}
+			
 			b.append(" />");
+
 			b.append(EntityInspector.convertToString(value));
 			
 		}
 		
-		f.getOut().print(b.toString());
+		getHTTPForm(form).getOut().print(b.toString());
 		
 	}
 

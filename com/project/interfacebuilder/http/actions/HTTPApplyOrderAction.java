@@ -36,7 +36,7 @@ public class HTTPApplyOrderAction extends HTTPApplyActionSupport<OrderingItem> {
 
 		dataRangeForm.setDataSource(dataSource);
 
-		syncValuesWithParameters(
+		synchronizeValuesAndParameters(
 				dataSource, dataSource.getOrdering(),
 				requestParametersMap,actions);
 

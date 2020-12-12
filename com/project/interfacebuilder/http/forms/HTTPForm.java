@@ -2,7 +2,7 @@ package com.project.interfacebuilder.http.forms;
 
 import java.awt.Dimension;
 
-import com.project.inspection.PropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
@@ -10,7 +10,7 @@ import com.project.interfacebuilder.http.HTTPController;
 
 public abstract class HTTPForm extends HTTPFormSupport implements Form {
 	
-	public static String getUseFlagName(PropertyInfo pInfo) {
+	public final static String getUseFlagName(PropertyInfo pInfo) {
 		return "$"+pInfo.getPropertyName();
 	}
 

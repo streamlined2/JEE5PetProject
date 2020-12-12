@@ -16,26 +16,24 @@ public abstract class HTTPSelectItemAction <ItemType extends SelectionViewItem> 
 	public FormContextItem findTarget(Form srcForm)
 			throws InterfaceException {
 
-		HTTPSelectionViewForm<ItemType> sourceForm = getSourceSVForm();
+		HTTPSelectionViewForm<ItemType> sourceForm = getSourceSelectionViewForm();
 		int itemIndex = sourceForm.getSelectedItemIndex();
 		sourceForm.setSelectedIndex(itemIndex);
 		
 		return super.findTarget(sourceForm);
 	}
 
-	protected HTTPSelectionViewForm<ItemType> getSourceSVForm() throws InterfaceException {
+	@SuppressWarnings("unchecked")
+	protected HTTPSelectionViewForm<ItemType> getSourceSelectionViewForm() throws InterfaceException {
 		
 		if(!(getSourceForm() instanceof HTTPSelectionViewForm<?>)) throw new InterfaceException("source form must be instance of an HTTPSelectionViewForm");
-		@SuppressWarnings("unchecked")
-		HTTPSelectionViewForm<ItemType> sourceForm = (HTTPSelectionViewForm<ItemType>)getSourceForm();
-		
-		return sourceForm;
+		return (HTTPSelectionViewForm<ItemType>)getSourceForm();
 		
 	}
 	
 	protected ItemType getSelectedItem() throws InterfaceException {
 		
-		HTTPSelectionViewForm<ItemType> sourceForm = getSourceSVForm();
+		HTTPSelectionViewForm<ItemType> sourceForm = getSourceSelectionViewForm();
 		
 		ItemType selectedItem = sourceForm.getSelectedItem();
 		if(selectedItem==null) throw new InterfaceException(sourceForm.getSelectedItemName()+" parameter must be set after HTTPSelectionViewForm submission");

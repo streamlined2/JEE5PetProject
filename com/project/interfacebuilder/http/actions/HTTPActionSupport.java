@@ -48,8 +48,7 @@ public abstract class HTTPActionSupport extends ActionSupport implements HTTPAct
 	
 	public void render(Form form) throws InterfaceException {
 		if(form instanceof HTTPForm){
-			HTTPForm f=(HTTPForm)form;
-			PrintWriter out=f.getOut();
+			PrintWriter out=((HTTPForm)form).getOut();
 			
 			out.print("<input ");
 			out.print("type=\"submit\" name=\"");
@@ -66,8 +65,11 @@ public abstract class HTTPActionSupport extends ActionSupport implements HTTPAct
 	@Override
 	public FormContextItem findTarget(Form sourceForm) throws InterfaceException {
 		if(sourceForm==null) throw new IllegalStateException("sourceForm must be not null");
+		
 		HTTPInterfaceBuilder builder = HTTPInterfaceBuilder.getInterfaceBuilder();
+		
 		controller.push(sourceForm,builder.getCurrentContext());
+		
 		return builder.getTarget(sourceForm, this);
 	}
 	

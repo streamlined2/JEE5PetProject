@@ -22,9 +22,9 @@ import com.project.Helpers;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.Filter.FilterRangeBoundary;
-import com.project.inspection.PropertyInfo;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PrimaryKeyPropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.ConfirmAction;
 import com.project.interfacebuilder.ControllerSupport;
@@ -127,8 +127,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	protected void activateTarget(Form form) throws InterfaceException {
 		
 		if(form instanceof HTTPForm){
-			HTTPForm targetForm=(HTTPForm)form;
-			targetForm.activate();
+			((HTTPForm)form).activate();
 		}
 		
 	}
@@ -136,9 +135,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	@Override
 	protected Form getSource() {
 		checkState();
-		HTTPForm sourceForm=
-			(HTTPForm)getAttribute(HTTPController.SOURCE_FORM_ATTRIBUTE);
-		return sourceForm;
+		return (HTTPForm)getAttribute(HTTPController.SOURCE_FORM_ATTRIBUTE);
 	}
 
 	@Override
@@ -156,8 +153,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	protected void setUpActionTarget(Action action, Form targetForm) {
 		
 		if(action instanceof HTTPAction){
-			HTTPAction a=(HTTPAction)action;
-			a.setTargetForm(targetForm);
+			((HTTPAction)action).setTargetForm(targetForm);
 		}
 		
 	}
@@ -205,7 +201,11 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		Object primaryKey=getAttribute(HTTPController.PRIMARY_KEY_ATTRIBUTE);
 		
 		saveChanges(
-				(EntityDataSource)dataSource,actions,requestParametersMap,createNew.booleanValue(),primaryKey);
+				(EntityDataSource)dataSource,
+				actions,
+				requestParametersMap,
+				createNew.booleanValue(),
+				primaryKey);
 		
 	}
 
@@ -213,7 +213,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 			EntityDataSource dataSource,
 			java.util.List<HTTPAction> actions, 
 			Map<String,String[]> requestParametersMap, 
-			boolean createNew, Object primaryKey) throws InterfaceException{
+			boolean createNew, 
+			Object primaryKey) throws InterfaceException{
 		
 		HTTPAction action=getActivatedAction(actions, requestParametersMap);
 		if(action instanceof ConfirmAction){
@@ -228,7 +229,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 			List<HTTPAction> actions, 
 			Map<String, String[]> map,
 			EntityDataSource dataSource, 
-			boolean createNew, Object primaryKey) throws InterfaceException {
+			boolean createNew, 
+			Object primaryKey) throws InterfaceException {
 	
 		if(dataSource!=null){
 			
@@ -260,24 +262,18 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 					
 					}
 					
-					try{
-						AgentRemote agent=ContextBootstrap.getAgentReference(null);
-						entity=agent.createUpdateEntity(entity, createNew);
-						
-						primaryKey=entity.getId();
-
-						setAttribute(HTTPController.PRIMARY_KEY_ATTRIBUTE, primaryKey);
-
-					}catch(NamingException e){
-						throw new InterfaceException(e);
-					}
+					entity = Helpers.getAgent().createUpdateEntity(entity, createNew);
 					
+					primaryKey = entity.getId();
+
+					setAttribute(HTTPController.PRIMARY_KEY_ATTRIBUTE, primaryKey);
+
 				}
 				
 			} catch (Exception e) {
 				throw new InterfaceException(e);
 			}finally{
-				entity=null;
+				entity = null;
 			}
 		}
 	
@@ -334,8 +330,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	private HTTPAction getActivatedAction(String parameterName,java.util.List<HTTPAction> actions){
 		if(parameterName!=null && !parameterName.isEmpty()){
 			if(actions!=null){
-				for(HTTPAction a:actions){
-					if(parameterName.trim().equals(a.getInnerName())) return a;
+				for(HTTPAction action:actions){
+					if(parameterName.trim().equals(action.getInnerName())) return action;
 				}
 			}
 		}
@@ -346,8 +342,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 			java.util.List<HTTPAction> actions, java.util.Map<String,String[]> requestParameters) {
 	
 		for(Iterator<String> keys=requestParameters.keySet().iterator();keys.hasNext();){
-			HTTPAction a=getActivatedAction(keys.next(),actions);
-			if(a!=null) return a;
+			HTTPAction action=getActivatedAction(keys.next(),actions);
+			if(action!=null) return action;
 		}
 	
 		return null;
@@ -374,7 +370,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	
 	//handy function call
 	@Override
-	protected Form getDefaultForm() throws InterfaceException {
+	protected final Form getDefaultForm() throws InterfaceException {
 		return HTTPInterfaceBuilder.getInterfaceBuilder().getDefaultForm();
 	}
 

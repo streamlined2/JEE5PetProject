@@ -3,10 +3,10 @@ package com.project.interfacebuilder.http.selectors;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.project.inspection.PropertyInfo.FiniteType;
-import com.project.inspection.PropertyInfo.MultipleType;
-import com.project.inspection.PropertyInfo.OrderType;
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PropertyInfo.FiniteType;
+import com.project.inspection.property.PropertyInfo.MultipleType;
+import com.project.inspection.property.PropertyInfo.OrderType;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.Selector.CardinalityPolicy;
 import com.project.interfacebuilder.Selector.MultiplePolicy;
@@ -70,22 +70,20 @@ public final class SelectorFactory {
 		}
 		
 		private String getKey(){
-			StringBuilder s=new StringBuilder();
-			s
+			return new StringBuilder()
 				.append(multipleType==MultipleType.SINGLE?"0":"1")
 				.append(finiteType==FiniteType.FINITE?"0":"1")
 				.append(Integer.toString(maxCardinality))
 				.append(orderType==OrderType.UNORDERED?"0":"1")
-				.append(selectorClassName);
-			return s.toString();
+				.append(selectorClassName)
+				.toString();
 		}
 
 		@Override
 		public boolean equals(Object obj) {
 			if(!(obj instanceof SelectorDataKey)) return false;
 
-			SelectorDataKey key=(SelectorDataKey)obj;
-			return key.getKey().equals(getKey()); 
+			return ((SelectorDataKey)obj).getKey().equals(getKey()); 
 		}
 
 		@Override
@@ -101,8 +99,7 @@ public final class SelectorFactory {
 	}
 	
 	private static void putSelectorData(HTTPSelector selector){
-		MultiplePolicy multiplePolicy=selector.getMultiplePolicy();
-		if(multiplePolicy==MultiplePolicy.MULTIPLE){
+		if(selector.getMultiplePolicy()==MultiplePolicy.MULTIPLE){
 			unfoldMultiplePolicy(selector,MultipleType.MULTIPLE);
 		}else{
 			unfoldMultiplePolicy(selector,MultipleType.SINGLE);
@@ -110,19 +107,16 @@ public final class SelectorFactory {
 	}
 	
 	private static void unfoldMultiplePolicy(HTTPSelector selector,MultipleType multiple){
-		OrderPolicy oPolicy=selector.getOrderPolicy();
 		unfoldOrderPolicy(selector,multiple,OrderType.UNORDERED);
-		if(oPolicy==OrderPolicy.SUPPORTS){
+		if(selector.getOrderPolicy()==OrderPolicy.SUPPORTS){
 			unfoldOrderPolicy(selector,multiple,OrderType.ORDERED);
 		}
 	}
 	
 	private static void unfoldOrderPolicy(HTTPSelector selector, MultipleType multipleType, OrderType ordered) {
-		CardinalityPolicy cPolicy=selector.getCardinalityPolicy();
-		if(cPolicy==CardinalityPolicy.FINITE){
-			int maxCardinality=selector.getMaxCardinality();
-			if(maxCardinality>0){
-				unfoldCardinalityPolicy(selector,multipleType,ordered,FiniteType.FINITE,maxCardinality);
+		if(selector.getCardinalityPolicy()==CardinalityPolicy.FINITE){
+			if(selector.getMaxCardinality()>0){
+				unfoldCardinalityPolicy(selector,multipleType,ordered,FiniteType.FINITE,selector.getMaxCardinality());
 			}else{
 				unfoldCardinalityPolicy(selector,multipleType,ordered,FiniteType.FINITE,Integer.MAX_VALUE);
 			}
@@ -134,33 +128,27 @@ public final class SelectorFactory {
 
 	private static void unfoldCardinalityPolicy(HTTPSelector selector, 
 			MultipleType multipleType,OrderType ordered, FiniteType finite, int maxCardinality) {
-		map.put(
-			new SelectorDataKey(
-				ordered, finite, maxCardinality, 
-				multipleType, 
-				selector.getClass().getName()
-			),
-			selector);
+			map.put(
+				new SelectorDataKey(
+					ordered, finite, maxCardinality, 
+					multipleType, 
+					selector.getClass().getName()
+				),
+				selector
+			);
 	}
 
 	public static HTTPSelector getSelector(InformationPropertyInfo type) throws InterfaceException{
 		
-		OrderType order=type.getOrderType();
-		FiniteType finite=type.getFiniteType();
-		MultipleType multiple=type.getMultipleType();
-		int cardinality=type.getCardinality();
-		
 		SelectorDataKey minKey=
-			new SelectorDataKey(order, finite, cardinality, multiple, "");
+			new SelectorDataKey(type.getOrderType(), type.getFiniteType(), type.getCardinality(), type.getMultipleType(), "");
 		
 		Map.Entry<SelectorDataKey,HTTPSelector> entry=map.ceilingEntry(minKey);
 		if(entry==null) throw new InterfaceException("selector entry mapping failed for key "+minKey);
 
 		Class<? extends HTTPSelector> cl=entry.getValue().getClass();
-		HTTPSelector selector=null;
 		try {
-			selector = cl.newInstance();
-			return selector;
+			return cl.newInstance();
 		} catch (InstantiationException e) {
 			throw new InterfaceException(e);
 		} catch (IllegalAccessException e) {

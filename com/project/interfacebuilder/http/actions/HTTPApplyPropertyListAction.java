@@ -36,7 +36,7 @@ public class HTTPApplyPropertyListAction extends HTTPApplyActionSupport<Property
 
 		dataRangeForm.setDataSource(dataSource);
 
-		syncValuesWithParameters(
+		synchronizeValuesAndParameters(
 				dataSource, dataSource.getPropertyList(),
 				requestParametersMap,actions);
 

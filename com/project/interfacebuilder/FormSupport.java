@@ -17,15 +17,6 @@ public abstract class FormSupport implements Form {
 	public FormSupport() throws InterfaceException{
 	}
 	
-	//helper method to provide reference to agent
-	public AgentRemote getAgent() throws InterfaceException{
-		try {
-			return ContextBootstrap.getAgentReference(null);
-		} catch (NamingException e) {
-			throw new InterfaceException(e);
-		}
-	}
-
 	private Map<Integer,Action> actions=new TreeMap<Integer,Action>();
 	
 	public void addAction(Action action,int order){
@@ -39,8 +30,8 @@ public abstract class FormSupport implements Form {
 	}
 	
 	public List<Action> getActions(){
-		//can't modify action list except by addAction
-		//don't expose inner data structure?
+		//modify action list only by means of addAction
+		//avoid exposition of inner data structure?
 		return Collections.unmodifiableList(new ArrayList<Action>(actions.values()));
 	}
 	

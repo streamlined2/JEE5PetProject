@@ -10,9 +10,6 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public abstract class SelectorSupport implements HTTPSelector {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6424048727336656427L;
 	
 	private Object value;
@@ -83,7 +80,7 @@ public abstract class SelectorSupport implements HTTPSelector {
 	
 	//helper method to check type & get reference to HTTPForm
 	protected HTTPForm getHTTPForm(Form form) throws InterfaceException{
-		if(!(form instanceof HTTPForm)) throw new InterfaceException("HTTPSelector must be placed in HTTPForm instance");
+		if(!(form instanceof HTTPForm)) throw new InterfaceException("HTTPSelector must be placed on HTTPForm");
 		return (HTTPForm)form;
 	}
 	

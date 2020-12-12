@@ -20,11 +20,11 @@ public class HTTPInformationForm extends HTTPForm {
 		out.print("<br><i>Please do not regard it as fully-fledged commercial application</i></h2></center>");
 		
 		
-		out.print("<h3><p>You may see author's LinkedIn profile <i><a href=\"http://ua.linkedin.com/pub/sergey-pilipenko/6/696/b70\"> here </a></i></p>");
+		out.print("<h3><p>You may check author's LinkedIn profile <i><a href=\"http://ua.linkedin.com/pub/sergey-pilipenko/6/696/b70\"> here </a></i></p>");
 		out.print("<p>or communicate to him by<ul>");
 		out.print("<li><i><a href=\"skype:streamlined2\">getting on phone <u>+38(097)245-222-8</u></a></i></li>");
 		out.print("<li><i><a href=\"mailto:sergij.pilipenko@gmail.com?Subject=We'd like to talk to you on...\">emailing</a></i></li>");
-		out.print("<li><i><a href=\"skype:streamlined2\">sending skype message</a></i></li>");
+		out.print("<li><i><a href=\"skype:streamlined2\">sending skype</a></i></li>");
 		out.print("<li><i><a href=\"icq:343252487\">or icq message</a></i></li>");
 		out.print("</h3><p>");
 		

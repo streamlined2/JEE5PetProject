@@ -3,8 +3,8 @@ package com.project.interfacebuilder.http.forms;
 import java.util.ArrayList;
 
 import com.project.inspection.EntityInfo.EntityData;
-import com.project.inspection.PropertyInfo;
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.selectors.HTTPSelector;

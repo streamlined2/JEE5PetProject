@@ -15,7 +15,7 @@ public abstract class ActionSupport implements Action {
 		return name;
 	}
 	
-	public String getInnerName(){
+	public final String getInnerName(){
 		return "$"+name;
 	}
 

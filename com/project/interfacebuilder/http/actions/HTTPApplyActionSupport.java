@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.project.inspection.ListItem;
 import com.project.inspection.ListIterable;
-import com.project.inspection.PropertyInfo;
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.forms.HTTPForm;
@@ -19,7 +19,7 @@ public abstract class HTTPApplyActionSupport<ItemType extends ListItem> extends 
 		super(name);
 	}
 
-	protected final void syncValuesWithParameters(
+	protected final void synchronizeValuesAndParameters(
 			DataSource dataSource,ListIterable<ItemType> list,
 			Map<String, String[]> parameters, List<HTTPAction> actions) throws InterfaceException {
 				

@@ -8,9 +8,6 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class Combobox extends SelectorSupport {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8406843331854035788L;
 	
 	private int visibleLines;
@@ -80,34 +77,35 @@ public class Combobox extends SelectorSupport {
 	@Override
 	public void place(Form form) throws InterfaceException {
 
-		HTTPForm f=getHTTPForm(form);
-
 		StringBuilder b=new StringBuilder();
-		b.append("<select ");
-		b.append("name=\"");
-		b.append(getPropertyInfo().getPropertyName());
-		b.append("\" ");
-		b.append("id=\"").append(getId()).append("\" ");
-		b.append(" size=").append(visibleLines).append(" ");
-		b.append(getStyle());
-		b.append(">");
+		b
+			.append("<select ")
+			.append("name=\"")
+			.append(getPropertyInfo().getPropertyName())
+			.append("\" ")
+			.append("id=\"").append(getId()).append("\" ")
+			.append(" size=").append(visibleLines).append(" ")
+			.append(getStyle())
+			.append(">");
+
 		for(Object value:EntityInspector.values(getPropertyInfo().getType())){
-			b.append("<option ");
-			
-			b.append("value=\"");
-			b.append(value.toString());
-			b.append("\" ");
+			b
+				.append("<option ")
+				.append("value=\"")
+				.append(value.toString())
+				.append("\" ");
 
 			if(value!=null && value.equals(getInitialValue())){
 				b.append("selected ");
 			}
-			b.append(">");
-			b.append(EntityInspector.convertToString(value));
-			b.append("</option>");
+			b
+				.append(">")
+				.append(EntityInspector.convertToString(value))
+				.append("</option>");
 		}
 		b.append("</select>");
 		
-		f.getOut().print(b.toString());
+		getHTTPForm(form).getOut().print(b.toString());
 		
 	}
 

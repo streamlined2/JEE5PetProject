@@ -7,9 +7,6 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class TextLine extends SelectorSupport {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3062127441788982026L;
 	
 	private int maxLength=-1;

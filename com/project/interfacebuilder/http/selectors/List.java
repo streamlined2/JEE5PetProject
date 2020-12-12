@@ -5,9 +5,6 @@ import com.project.interfacebuilder.InterfaceException;
 
 public class List extends Combobox {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5778258070069269885L;
 
 	public List() {}

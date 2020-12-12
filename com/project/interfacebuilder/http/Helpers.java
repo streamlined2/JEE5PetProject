@@ -29,16 +29,15 @@ public final class Helpers {
 	}
 
 	public static String getStyle(Font font){
-		StringBuilder builder=new StringBuilder();
-		builder.
+		return new StringBuilder().
 			append("style=\"font: ").
 			append(getFontStyle(font)).append(" ").
 			append(font.getSize()).
 			append("px ").
 			append(font.getFontName()).append(",").
 			append(font.getFamily()).
-			append(";\" ");
-		return builder.toString();
+			append(";\" ").
+		toString();
 		
 	}
 

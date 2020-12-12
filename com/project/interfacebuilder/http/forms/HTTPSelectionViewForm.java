@@ -1,7 +1,7 @@
 package com.project.interfacebuilder.http.forms;
 
 import com.project.Helpers;
-import com.project.inspection.PropertyInfo.AlignType;
+import com.project.inspection.property.PropertyInfo.AlignType;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
 

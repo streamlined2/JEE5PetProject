@@ -2,9 +2,9 @@ package com.project.interfacebuilder.http.forms;
 
 import com.project.Helpers;
 import com.project.inspection.ListItem;
-import com.project.inspection.PropertyInfo;
 import com.project.inspection.PropertyListItem;
 import com.project.inspection.property.InformationPropertyInfo;
+import com.project.inspection.property.PropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPApplyPropertyListAction;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
