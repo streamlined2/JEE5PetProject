@@ -146,7 +146,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		return b.toString();
 	}
 
-	private Object formBlankListValue(int columnCount) throws InterfaceException {
+	private String formBlankListValue(int columnCount) throws InterfaceException {
 		StringBuilder b=new StringBuilder();
 		b.append(Helpers.padString(AlignType.RIGHT, COUNTER_WIDTH, "", Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
 		int k=0;

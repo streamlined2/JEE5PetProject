@@ -134,11 +134,13 @@ public final class SelectorFactory {
 
 	private static void unfoldCardinalityPolicy(HTTPSelector selector, 
 			MultipleType multipleType,OrderType ordered, FiniteType finite, int maxCardinality) {
-		SelectorDataKey key=new SelectorDataKey(
+		map.put(
+			new SelectorDataKey(
 				ordered, finite, maxCardinality, 
 				multipleType, 
-				selector.getClass().getName());
-		map.put(key,selector);
+				selector.getClass().getName()
+			),
+			selector);
 	}
 
 	public static HTTPSelector getSelector(InformationPropertyInfo type) throws InterfaceException{

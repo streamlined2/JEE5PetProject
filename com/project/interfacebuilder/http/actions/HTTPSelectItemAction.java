@@ -6,16 +6,12 @@ import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
 import com.project.interfacebuilder.http.forms.HTTPSelectionViewForm;
 
-public class HTTPSelectItemAction <ItemType extends SelectionViewItem> extends HTTPActionSupport {
+public abstract class HTTPSelectItemAction <ItemType extends SelectionViewItem> extends HTTPActionSupport {
 	
 	public HTTPSelectItemAction(String actionName){
 		super(actionName);
 	}
 
-	@Override
-	public void perform() throws InterfaceException {
-	}
-	
 	@Override
 	public FormContextItem findTarget(Form srcForm)
 			throws InterfaceException {

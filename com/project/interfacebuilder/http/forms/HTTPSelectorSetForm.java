@@ -83,10 +83,10 @@ public abstract class HTTPSelectorSetForm extends HTTPDataAwareForm {
 		
 		out.print("</td>");
 
-		selectors.add(selector);
-		
 		out.print("</font>");
 
+		selectors.add(selector);
+		
 	}
 
 	private void addSelector(HTTPSelector selector) throws InterfaceException {

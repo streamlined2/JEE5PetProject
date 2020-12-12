@@ -77,7 +77,7 @@ public abstract class FormSupport implements Form {
 		if(controlId>Integer.MAX_VALUE){
 			controlId=1;
 		}
-		return controlId++;
+		return controlId++;//autoboxing
 	}
 
 	protected void checkState() throws InterfaceException {

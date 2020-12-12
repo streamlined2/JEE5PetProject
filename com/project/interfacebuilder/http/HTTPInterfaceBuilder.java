@@ -32,7 +32,7 @@ import com.project.interfacebuilder.http.forms.HTTPQueryForm;
 import com.project.interfacebuilder.http.forms.HTTPQuerySelectionForm;
 import com.project.interfacebuilder.http.forms.HTTPTopLevelMenuSelectionForm;
 import com.project.interfacebuilder.transition.TransitionRule;
-import com.project.interfacebuilder.transition.UseCase;
+import com.project.interfacebuilder.transition.TransitionRuleSet;
 
 public final class HTTPInterfaceBuilder {
 	
@@ -65,20 +65,20 @@ public final class HTTPInterfaceBuilder {
 	private HTTPRunQueryAction runQueryAction;
 	
 	public enum InterfaceContext {
-		topLevelMenuSelection,
-		dataEditingUseCase,
-		dataBrowsingUseCase,
-		queryPerformanceUseCase,
-		informationContext
+		TOP_LEVEL_MENU_SELECTION,
+		DATA_EDITING_TRANSITION_SET,
+		DATA_BROWSE_TRANSITION_SET,
+		QUERY_EXECUTION_TRANSITION_SET,
+		INFORMATION_CONTEXT
 	};
 	
 	//singleton pattern
 	private static HTTPInterfaceBuilder builder=null;
 	
 	private HTTPInterfaceBuilder() throws InterfaceException{
-		setUseCase(new UseCase());
+		setTransitionRuleSet(new TransitionRuleSet());
 		
-		setCurrentContext(InterfaceContext.topLevelMenuSelection);
+		setCurrentContext(InterfaceContext.TOP_LEVEL_MENU_SELECTION);
 		
 		defineInterfaceElements();
 		defineTransitionRules();
@@ -126,7 +126,7 @@ public final class HTTPInterfaceBuilder {
 			
 	}
 	
-	protected UseCase useCase;
+	protected TransitionRuleSet ruleSet;
 	
 	private InterfaceContext currentContext;
 
@@ -138,71 +138,71 @@ public final class HTTPInterfaceBuilder {
 		this.currentContext = currentContext;
 	}
 
-	public void setUseCase(UseCase useCase) {
-		this.useCase = useCase;
+	public void setTransitionRuleSet(TransitionRuleSet ruleSet) {
+		this.ruleSet = ruleSet;
 	}
 	
 	private void defineTransitionRules(){
 	
 	//top level menu selection
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,topLevelMenuSelectionForm,selectMenuItemAction,entitySelectionForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.queryPerformanceUseCase,topLevelMenuSelectionForm,selectMenuItemAction,querySelectionForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.informationContext,topLevelMenuSelectionForm,selectMenuItemAction,informationForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,topLevelMenuSelectionForm,selectMenuItemAction,entitySelectionForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.QUERY_EXECUTION_TRANSITION_SET,topLevelMenuSelectionForm,selectMenuItemAction,querySelectionForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.INFORMATION_CONTEXT,topLevelMenuSelectionForm,selectMenuItemAction,informationForm));
 
 	//run query form
-		useCase.addRule(new TransitionRule(InterfaceContext.queryPerformanceUseCase,querySelectionForm,runQueryAction,queryResultBrowseForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.QUERY_EXECUTION_TRANSITION_SET,querySelectionForm,runQueryAction,queryResultBrowseForm));
 
 	//entity selection
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,entitySelectionForm,queryAction,queryForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,queryForm,proceedAction,entitySelectionForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,entitySelectionForm,queryAction,queryForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,queryForm,proceedAction,entitySelectionForm));
 
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,entitySelectionForm,browseAction,browseForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,browseForm,proceedAction,entitySelectionForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,entitySelectionForm,browseAction,browseForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,browseForm,proceedAction,entitySelectionForm));
 	
 	//browseForm
 		//editing/adding new record
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,browseForm,editAction,editForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,browseForm,addNewAction,editForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,browseForm,editAction,editForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,browseForm,addNewAction,editForm));
 
 		//range setting
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,browseForm,rangeAction,browseForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,browseForm,rangeAction,browseForm));
 
 		//saving/discarding changes
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,editForm,saveChangesAction,browseForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,editForm,saveChangesAction,browseForm));
 
 		//filtering
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,browseForm,filterAction,filterForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,filterForm,applyFilterAction,browseForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,browseForm,filterAction,filterForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,filterForm,applyFilterAction,browseForm));
 
 		//ordering
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,browseForm,orderAction,orderForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,orderForm,applyOrderAction,browseForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,browseForm,orderAction,orderForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,orderForm,applyOrderAction,browseForm));
 
 		//property list selection
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,browseForm,propertyListAction,propertyListForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,propertyListForm,applyPropertyListAction,browseForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,browseForm,propertyListAction,propertyListForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_EDITING_TRANSITION_SET,propertyListForm,applyPropertyListAction,browseForm));
 
 	//queryForm
 		//range setting
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,queryForm,proceedAction,queryForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,queryForm,rangeAction,queryForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,queryForm,proceedAction,queryForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,queryForm,rangeAction,queryForm));
 
 		//filtering
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,queryForm,filterAction,filterForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,filterForm,applyFilterAction,queryForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,queryForm,filterAction,filterForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,filterForm,applyFilterAction,queryForm));
 
 		//ordering
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,queryForm,orderAction,orderForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,orderForm,applyOrderAction,queryForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,queryForm,orderAction,orderForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,orderForm,applyOrderAction,queryForm));
 
 		//property list selection
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,queryForm,propertyListAction,propertyListForm));
-		useCase.addRule(new TransitionRule(InterfaceContext.dataBrowsingUseCase,propertyListForm,applyPropertyListAction,queryForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,queryForm,propertyListAction,propertyListForm));
+		ruleSet.addRule(new TransitionRule(InterfaceContext.DATA_BROWSE_TRANSITION_SET,propertyListForm,applyPropertyListAction,queryForm));
 
 	}
 	
 	public FormContextItem getTarget(Form sourceForm,Action action) throws InterfaceException{
-		TransitionRule rule=useCase.getTransitionRule(currentContext,sourceForm,action);
+		TransitionRule rule=ruleSet.getTransitionRule(currentContext,sourceForm,action);
 		if(rule==null) throw new InterfaceException("transition rule is undefined for context "+currentContext+", source form "+sourceForm+" and action "+action);
 		return new FormContextItem(rule.getTarget(),rule.getTargetContext());
 	}

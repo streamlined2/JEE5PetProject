@@ -372,7 +372,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		return (Map<String, String[]>)request.getParameterMap();
 	}
 	
-	//handy short form
+	//handy function call
 	@Override
 	protected Form getDefaultForm() throws InterfaceException {
 		return HTTPInterfaceBuilder.getInterfaceBuilder().getDefaultForm();

@@ -7,7 +7,7 @@ import com.project.interfacebuilder.http.forms.HTTPEditForm;
 import com.project.datasource.DataSource;
 import com.project.datasource.EntityDataSource;
 
-public class HTTPEditActionSupport extends HTTPActionSupport /*HTTPSelectItemAction <EntityInfo>*/ {
+public abstract class HTTPEditActionSupport extends HTTPActionSupport /*HTTPSelectItemAction <EntityInfo>*/ {
 
 	public HTTPEditActionSupport(String name) {
 		super(name);

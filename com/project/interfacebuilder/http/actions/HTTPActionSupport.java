@@ -68,8 +68,7 @@ public abstract class HTTPActionSupport extends ActionSupport implements HTTPAct
 		if(sourceForm==null) throw new IllegalStateException("sourceForm must be not null");
 		HTTPInterfaceBuilder builder = HTTPInterfaceBuilder.getInterfaceBuilder();
 		controller.push(sourceForm,builder.getCurrentContext());
-		FormContextItem target = builder.getTarget(sourceForm, this);
-		return target;
+		return builder.getTarget(sourceForm, this);
 	}
 	
 }
