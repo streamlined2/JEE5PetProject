@@ -22,9 +22,9 @@ import com.project.Helpers;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.Filter.FilterRangeBoundary;
+import com.project.inspection.PropertyInfo;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.property.PrimaryKeyPropertyInfo;
-import com.project.inspection.PropertyInfo;
 import com.project.interfacebuilder.Action;
 import com.project.interfacebuilder.ConfirmAction;
 import com.project.interfacebuilder.ControllerSupport;
@@ -35,7 +35,6 @@ import com.project.interfacebuilder.http.actions.HTTPAction;
 import com.project.interfacebuilder.http.forms.HTTPForm;
 import com.project.queries.DataSource;
 import com.project.queries.EntityDataSource;
-import com.sun.org.apache.bcel.internal.generic.UnconditionalBranch;
 
 public class HTTPControllerSupport extends ControllerSupport implements HTTPController {
 	
@@ -398,7 +397,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 	}
 
 	@Override
-	protected void errorPage(Exception e) throws InterfaceException {
+	public void errorPage(Exception e) throws InterfaceException {
 		RequestDispatcher dispatcher=context.getRequestDispatcher("/WEB-INF/errorPage.jsp");
 		request.setAttribute(HTTPController.WRAPPED_EXCEPTION, getWrappedException(e));
 		request.setAttribute(HTTPController.INTERFACE_EXCEPTION_MESSAGE, e.getLocalizedMessage());

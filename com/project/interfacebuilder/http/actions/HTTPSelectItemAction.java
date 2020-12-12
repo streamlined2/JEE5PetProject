@@ -4,6 +4,7 @@ import com.project.interfacebuilder.ControllerSupport.FormContextItem;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.SelectionViewItem;
+import com.project.interfacebuilder.http.forms.HTTPOptionForm;
 import com.project.interfacebuilder.http.forms.HTTPSelectionViewForm;
 
 public class HTTPSelectItemAction <ItemType extends SelectionViewItem> extends HTTPActionSupport {
@@ -29,7 +30,7 @@ public class HTTPSelectItemAction <ItemType extends SelectionViewItem> extends H
 
 	protected HTTPSelectionViewForm<ItemType> getSourceSVForm() throws InterfaceException {
 		
-		if(!(getSourceForm() instanceof HTTPSelectionViewForm<?>)) throw new InterfaceException("source form must instance of HTTPSelectionViewForm");
+		if(!(getSourceForm() instanceof HTTPSelectionViewForm<?>)) throw new InterfaceException("source form must be instance of an HTTPSelectionViewForm");
 		@SuppressWarnings("unchecked")
 		HTTPSelectionViewForm<ItemType> sourceForm = (HTTPSelectionViewForm<ItemType>)getSourceForm();
 		

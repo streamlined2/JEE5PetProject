@@ -31,7 +31,7 @@ public abstract class HTTPApplyActionSupport<ItemType extends ListItem> extends 
 
 	private void removeAbsentValues(
 			Iterable<ItemType> list, Map<String, String[]> parameters,
-			List<HTTPAction> actions) {
+			List<HTTPAction> actions) throws InterfaceException {
 
 		for(Iterator<ItemType> i=list.iterator();i.hasNext();){
 			PropertyInfo pInfo=i.next().getPropertyInfo();

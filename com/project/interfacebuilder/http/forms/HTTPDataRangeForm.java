@@ -2,6 +2,7 @@ package com.project.interfacebuilder.http.forms;
 
 import java.util.List;
 
+import com.project.inspection.ListItem;
 import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
@@ -100,8 +101,8 @@ public abstract class HTTPDataRangeForm extends HTTPDataAwareForm {
 		return getFinish()-getStart()+1;
 	}
 	
-	protected int getColumnWidth(InformationPropertyInfo pInfo){
-		int titleWidth=pInfo.getDisplayName().length();
+	protected int getColumnWidth(InformationPropertyInfo pInfo,ListItem item) throws InterfaceException{
+		int titleWidth=item.getDisplayName().length();
 		int contentWidth=pInfo.getWidth();
 		return Math.max(titleWidth, contentWidth);
 	}

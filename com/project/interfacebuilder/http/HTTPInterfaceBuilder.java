@@ -197,8 +197,9 @@ public final class HTTPInterfaceBuilder {
 
 	}
 	
-	public FormContextItem getTarget(Form sourceForm,Action action){
+	public FormContextItem getTarget(Form sourceForm,Action action) throws InterfaceException{
 		TransitionRule rule=useCase.getTransitionRule(currentContext,sourceForm,action);
+		if(rule==null) throw new InterfaceException("transition rule is undefined for context "+currentContext+", source form "+sourceForm+" and action "+action);
 		return new FormContextItem(rule.getTarget(),rule.getTargetContext());
 	}
 	

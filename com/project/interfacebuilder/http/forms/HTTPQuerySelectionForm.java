@@ -64,7 +64,7 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	public int getSelectedItemIndex() throws InterfaceException {
 		String id = getSelectedItemID();
 		int index=0;
-		for(QueryDefinition def:getQueries()){
+		for(QueryDefinition def:getQueries().getQuerySet()){
 			index++;
 			if(def.getItemID().equals(id)){
 				return index;
@@ -76,7 +76,7 @@ public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinitio
 	@Override
 	public QueryDefinition getSelectedItem() throws InterfaceException {
 		String id = getSelectedItemID();
-		for(QueryDefinition def:getQueries()){
+		for(QueryDefinition def:getQueries().getQuerySet()){
 			if(def.getItemID().equals(id)){
 				return def;
 			}

@@ -1,7 +1,5 @@
 package com.project.interfacebuilder.http.actions;
 
-import java.beans.IntrospectionException;
-
 import com.project.Helpers;
 import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInspector;
@@ -10,7 +8,7 @@ import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
 import com.project.queries.EntityDataSource;
 
-public abstract class HTTPBrowseActionSupport extends HTTPActionSupport {
+public abstract class HTTPBrowseActionSupport extends HTTPSelectItemAction <EntityInfo> {
 
 	public HTTPBrowseActionSupport(String name) {
 		super(name);

@@ -8,6 +8,7 @@ import com.project.inspection.EntityInfo.EntityData;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.ListItem;
 import com.project.inspection.PropertyInfo.AlignType;
+import com.project.inspection.PropertyListItem;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
@@ -15,8 +16,6 @@ import com.project.interfacebuilder.http.actions.HTTPAddNewAction;
 import com.project.interfacebuilder.http.actions.HTTPEditAction;
 
 public class HTTPBrowseForm extends HTTPDataRangeForm {
-	
-	private int visibleLines=20;
 	
 	public HTTPBrowseForm() throws InterfaceException{
 		super();
@@ -33,7 +32,17 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 	
 	}
 
-	private void addTableDefinition(List<EntityData> tableData) throws InterfaceException {
+	protected int visibleLines = 20;
+
+	public void setVisibleLines(int visibleLines) {
+		this.visibleLines = visibleLines;
+	}
+
+	public int getVisibleLines() {
+		return visibleLines;
+	}
+
+private void addTableDefinition(List<EntityData> tableData) throws InterfaceException {
 		
 		Object primaryKey=controller.getAttribute(HTTPController.PRIMARY_KEY_ATTRIBUTE);
 
@@ -113,9 +122,9 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 	private String formListTitle() throws InterfaceException {
 		StringBuilder b=new StringBuilder();
 		b.append(Helpers.padString(AlignType.CENTER, COUNTER_WIDTH, "", Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
-		for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
+		for(PropertyListItem item:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=item.getPropertyInfo();
-			b.append(Helpers.padString(AlignType.CENTER, getColumnWidth(pInfo), pInfo.getDisplayName(), Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
+			b.append(Helpers.padString(AlignType.CENTER, getColumnWidth(pInfo,item), item.getDisplayName(), Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
 		}
 		return b.toString();
 	}
@@ -130,7 +139,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		Object[] data=d.getInfoData();
 		for(ListItem pItem:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=pItem.getPropertyInfo();
-			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo), EntityInspector.convertToString(data[k++]), Helpers.NON_BREAKING_SPACE));
+			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo,pItem), EntityInspector.convertToString(data[k++]), Helpers.NON_BREAKING_SPACE));
 			if(k<data.length){
 				b.append(Helpers.COLUMN_SEPARATOR);
 			}
@@ -144,20 +153,12 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		int k=0;
 		for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
 			InformationPropertyInfo pInfo=item.getPropertyInfo();
-			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo), "", Helpers.NON_BREAKING_SPACE));
+			b.append(Helpers.padString(pInfo.getAlignType(), getColumnWidth(pInfo,item), "", Helpers.NON_BREAKING_SPACE));
 			if(k++<columnCount){
 				b.append(Helpers.NON_BREAKING_SPACE);
 			}
 		}
 		return b.toString();
-	}
-
-	public int getVisibleLines() {
-		return visibleLines;
-	}
-
-	public void setVisibleLines(int visibleLines) {
-		this.visibleLines = visibleLines;
 	}
 
 }

@@ -51,48 +51,48 @@ public abstract class ControllerSupport implements Controller {
 	@Override
 	public final void service() throws InterfaceException{
 		
-		Form targetForm = null;
-		
-		Form sourceForm = getSource();
-		
-		Action action = getAction();
-		
-		if(sourceForm==null || action==null){
-
-			targetForm = getDefaultForm();
-		
-		}else{
-
-			setUpAction(action,sourceForm);
+		try{
 			
-			FormContextItem item = action.findTarget(sourceForm); 
+			Form targetForm = null;
 			
-			if(item!=null){
+			Form sourceForm = getSource();
+			
+			Action action = getAction();
+			
+			if(sourceForm==null || action==null){
+	
+				targetForm = getDefaultForm();
+			
+			}else{
+	
+				setUpAction(action,sourceForm);
 				
-				targetForm = item.getForm();
-				item.getState().reset();
-				HTTPInterfaceBuilder.getInterfaceBuilder().setCurrentContext(item.getContext());
-			
-				setUpActionTarget(action,targetForm);
-				performAction(action);
+				FormContextItem item = action.findTarget(sourceForm); 
+				
+				if(item!=null){
+					
+					targetForm = item.getForm();
+					item.getState().reset();
+					HTTPInterfaceBuilder.getInterfaceBuilder().setCurrentContext(item.getContext());
+				
+					setUpActionTarget(action,targetForm);
+					performAction(action);
+				}
+				
 			}
 			
-		}
+			if(targetForm==null){
+				targetForm = sourceForm; 
+			}
 		
-		if(targetForm==null){
-			targetForm = sourceForm; 
-		}
-	
-		setUpTarget(targetForm);
-		
-		try{
+			setUpTarget(targetForm);
 			
 			activateTarget(targetForm);
 		
 		}catch(Exception e){
 			errorPage(e);
 		}
-	
+		
 	}
 	
 	protected abstract void errorPage(Exception e) throws InterfaceException;
