@@ -23,7 +23,7 @@ public class Client5 {
 		Object ref=con.lookup("Agent#com.project.AgentRemote");
 		AgentRemote agent=(AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
 		
-		System.out.println("name: "+agent.getColumnSize(Customer.class,"name"));
+/*		System.out.println("name: "+agent.getColumnSize(Customer.class,"name"));
 		System.out.println("address: "+agent.getColumnSize(Customer.class,"address"));
 		System.out.println("phone: "+agent.getColumnSize(Customer.class,"phone"));
 		System.out.println("kind: "+agent.getColumnSize(Customer.class,"kind"));
@@ -31,7 +31,7 @@ public class Client5 {
 		System.out.println("creditavailable: "+agent.getColumnSize(Customer.class,"creditavailable"));
 		System.out.println("lasttransactiontime: "+agent.getColumnSize(Customer.class,"lasttransactiontime"));
 		System.out.println("creationdate: "+agent.getColumnSize(Customer.class,"creationdate"));
-
+*/
 	}
 
 }

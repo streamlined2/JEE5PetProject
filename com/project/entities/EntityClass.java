@@ -11,6 +11,8 @@ import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.InterfaceException;
 
+// common ancestor for all entity bean classes
+// it obliges descendants to support entity primary key property by implementing appropriate getter & setter 
 public abstract class EntityClass implements EntityType {
 	
 	private static final long serialVersionUID = -4756534033339779087L;

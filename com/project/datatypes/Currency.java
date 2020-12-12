@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-@Embeddable
+@Embeddable // separate class type created for currency. it allows reusability, data incapsulation & integrity check  
 public class Currency extends Number implements Serializable {
 	
 	private static final long serialVersionUID = 3264674721725127161L;

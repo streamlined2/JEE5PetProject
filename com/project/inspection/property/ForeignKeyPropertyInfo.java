@@ -9,8 +9,8 @@ public class ForeignKeyPropertyInfo extends PropertyInfo {
 	
 	private static final long serialVersionUID = 3732865077315687504L;
 	
-	private Class<? extends EntityType> masterType;
-	private EntityInfo masterEntity;
+	private Class<? extends EntityType> masterType;// type of master entity of relation
+	private EntityInfo masterEntity;// related EntityInfo instance for master type
 
 	public ForeignKeyPropertyInfo(
 			EntityInfo eInfo, String propertyName,
@@ -25,7 +25,7 @@ public class ForeignKeyPropertyInfo extends PropertyInfo {
 	}
 
 	public EntityInfo getMasterEntity() throws InterfaceException {
-		if(masterEntity==null){ // lazy initialization
+		if(masterEntity==null){ // lazily instantiate EntityInfo instance if in need
 			masterEntity = EntityInspector.getEntityInfo(masterType);
 		}
 		return masterEntity;

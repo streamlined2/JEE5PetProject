@@ -1,42 +1,36 @@
 package com.project;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import javax.sql.DataSource;
 
-import org.apache.openjpa.conf.OpenJPAConfiguration;
-import org.apache.openjpa.jdbc.meta.ClassMapping;
-import org.apache.openjpa.jdbc.meta.FieldMapping;
-import org.apache.openjpa.jdbc.meta.MappingRepository;
-import org.apache.openjpa.jdbc.schema.Column;
-import org.apache.openjpa.meta.MetaDataRepository;
-import org.apache.openjpa.persistence.OpenJPAEntityManager;
-import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
-import org.apache.openjpa.persistence.OpenJPAPersistence;
-
-import com.project.Startup;
 import com.project.datasource.EntityDataSource;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo.EntityData;
+import com.project.inspection.EntityInspector;
 import com.project.inspection.Filter;
 import com.project.inspection.FilterItem;
 import com.project.inspection.ListItem;
 import com.project.inspection.Ordering;
 import com.project.inspection.OrderingItem;
 import com.project.inspection.OrderingItem.SortOrderType;
-import com.project.inspection.property.PropertyInfo;
 import com.project.inspection.PropertyList;
 import com.project.interfacebuilder.InterfaceException;
+import com.project.platform.persistence.ApacheOpenJPA;
+import com.project.platform.persistence.JPAProvider;
+import com.project.platform.persistence.OracleTopLink;
 import com.project.queries.QueryDefinition;
 
 /**
@@ -352,63 +346,70 @@ public class Agent implements AgentRemote {
 		return buffer;
 	}
 	
-	private DatabaseMetaData getDatabaseMetaData() throws SQLException{
-		return getConnection().getMetaData();
-	}
-	
-	private String getCatalogName() throws SQLException{
-		return getConnection().getCatalog();
-	}
-
-/*	@Resource(name=Startup.DATA_SOURCE)
+	@Resource(name=Startup.DATA_SOURCE)
 	private DataSource dataSource;
 	
-*/	
-	//persistence provider-specific methods (currently for Apache OpenJPA)
-	private Connection getConnection() throws SQLException {
-		OpenJPAEntityManager em=OpenJPAPersistence.cast(manager);
-		return (Connection)em.getConnection();
-		//return dataSource.getConnection();
-	}
-	
-	private int getColumnSize(String tableName, String columnName) throws SQLException{
-		DatabaseMetaData metaData=getDatabaseMetaData();
-		ResultSet r=metaData.getColumns(getCatalogName(), null, tableName, columnName);
-		while(r.next()){
-			if(r.getString("COLUMN_NAME").equalsIgnoreCase(columnName)){
-				return r.getInt("COLUMN_SIZE");
-			}
-		};
-		return -1;
-	}
-	
-	private Column getColumn(Class<?> type, String fieldName) {
-		OpenJPAEntityManager em=OpenJPAPersistence.cast(manager);
-		OpenJPAEntityManagerSPI spi=(OpenJPAEntityManagerSPI)em;
-		OpenJPAConfiguration conf=spi.getConfiguration();
-		MetaDataRepository repository=conf.getMetaDataRepositoryInstance();
-		MappingRepository mappingRepository=(MappingRepository)repository;
-		ClassMapping classMapping=mappingRepository.getMapping(type, null, true);
-		FieldMapping fieldMapping=classMapping.getFieldMapping(fieldName);
-		return fieldMapping.getColumns()[0];
-	}
-	
-	private String getColumnTable(Class<?> type,String fieldName){
-		return getColumn(type, fieldName).getTable().getFullName().toUpperCase();
-	}
-
-	private String getColumnName(Class<?> type,String fieldName){
-		return getColumn(type, fieldName).getName().toUpperCase();
-	}
-
-	@Override
-	public int getColumnSize(Class<?> type,String fieldName){
+	@Override 
+	public String getCatalog() throws InterfaceException{
 		try {
-			return getColumnSize(getColumnTable(type,fieldName), getColumnName(type,fieldName));
+			return dataSource.getConnection().getCatalog();
 		} catch (SQLException e) {
-		} catch(NullPointerException e2){
+			throw new InterfaceException(e);
 		}
-		return -1;
+	}
+	
+	@Override
+	public String getUserInfo() throws InterfaceException{
+		try {
+			return dataSource.getConnection().getClientInfo().toString();
+		} catch (SQLException e) {
+			throw new InterfaceException(e);
+		}
+	}
+	
+	private List<JPAProvider> knownProviderList = new ArrayList<JPAProvider>();
+	private JPAProvider selectedProvider = null;
+	
+	public void initializeApplication(){
+		
+		initializeJPAProviderList();
+
+	}
+	
+	private void initializeJPAProviderList() {
+		knownProviderList.add(new ApacheOpenJPA(manager,dataSource));
+		knownProviderList.add(new OracleTopLink(manager,dataSource));
+	}
+	
+	@PersistenceUnit(unitName=Startup.UNIT_NAME) EntityManagerFactory factory;
+	
+	public final JPAProvider getJPAProvider() throws InterfaceException{
+		if(selectedProvider == null){
+			try {
+				for(JPAProvider provider:knownProviderList){
+					Class<?> providerFactoryClass = provider.getFactoryClass();
+					Class<?> factoryClass = JPAProvider.getEntityManagerFactory().getClass();
+					if(
+							
+							providerFactoryClass.isAssignableFrom(factoryClass) && 
+							JPAProvider.getJPAVersion().compareTo(provider.getLatestSupportedVersion())<=0){
+						return (selectedProvider=provider);
+					}
+				}
+			} catch (NamingException e) {
+				throw new InterfaceException("cannot obtain EntityManagerFactory reference",e);
+			}
+			throw new InterfaceException("unknown persistence provider");
+		}
+		return selectedProvider;
+	}
+	
+	public int getFieldWidth(Class<?> entityType, Class<?> propertyType, String fieldName) throws InterfaceException {
+		
+		int columnSize = getJPAProvider().getColumnSize(entityType,fieldName);
+
+		return EntityInspector.getDefaultFieldWidth(propertyType, columnSize);
+
 	}
 	
 }

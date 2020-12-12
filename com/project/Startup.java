@@ -23,7 +23,7 @@ public final class Startup {
 	
 	//persistent context unit name for annotation
 	public static final String UNIT_NAME="unit";
-	//public static final String DATA_SOURCE="xe";
+	public static final String DATA_SOURCE="datasource";
 	
 	private Startup(){}
 	
@@ -69,5 +69,5 @@ public final class Startup {
 			throw new InterfaceException(e);//wrap unchecked exception into application exception
 		}
 	}
-
+	
 }

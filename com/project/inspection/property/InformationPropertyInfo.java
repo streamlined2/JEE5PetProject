@@ -7,15 +7,20 @@ public class InformationPropertyInfo extends PropertyInfo {
 
 	private static final long serialVersionUID = -1180150741234444727L;
 	
+	// property name & description
 	private String displayName;
 	private String description;
+	
+	// property characteristic fields
 	private OrderType orderType;
 	private FiniteType finiteType;
 	private MultipleType multipleType;
 	private int cardinality;
 	private AlignType alignType;
-	private Selector selector=null;
 	private int width;
+	
+	// assigned editor for changing property value
+	private Selector selector=null;
 
 	public InformationPropertyInfo(EntityInfo eInfo, String propertyName,
 			String displayName, String description, Class<?> type, int width,

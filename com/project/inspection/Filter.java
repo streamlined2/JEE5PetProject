@@ -31,6 +31,7 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 		return map.get(pInfo);
 	}
 	
+	// Iterator design pattern
 	public Iterator<FilterItem> iterator(){
 		
 		//final reference to host class property
@@ -46,8 +47,7 @@ public class Filter implements Serializable, ListIterable<FilterItem> {
 
 			@Override
 			public FilterItem next() {
-				Entry<PropertyInfo,FilterItem> entry=i.next();
-				return entry.getValue();
+				return i.next().getValue();
 			}
 
 			@Override

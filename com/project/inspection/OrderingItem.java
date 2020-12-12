@@ -37,6 +37,7 @@ public class OrderingItem extends ListItem {
 		return sortOrderType;
 	}
 	
+	// different sort order may be added by introduction of another inner non-static class 
 	public class OrderKey implements Comparable<OrderKey> {
 		
 		private int getKey(){

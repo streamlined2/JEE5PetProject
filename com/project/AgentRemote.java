@@ -24,7 +24,11 @@ public interface AgentRemote {
 	public List<EntityData> fetchEntities(EntityDataSource dataSource) throws InterfaceException;
 	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException;
 	
-	//determine field size by means of EntityManager extensions
-	public int getColumnSize(Class<?> type,String fieldName);
+	public String getUserInfo() throws InterfaceException;
+	public String getCatalog() throws InterfaceException;
+	
+	public void initializeApplication();
+
+	public int getFieldWidth(Class<?> entityType, Class<?> propertyType, String fieldName) throws InterfaceException;
 
 }

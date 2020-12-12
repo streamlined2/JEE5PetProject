@@ -14,10 +14,10 @@ public class EntityNamesBundle extends ListResourceBundle {
 				{"Menu.name","Menu"},
 				{"Menu.desc","Description"},
 				{"Customer.name","Customer"},
-				{"Phone.name","Phone"},
 				{"Customer.desc","Company customer data"},
+				{"Phone.name","Phone"},
 				{"Phone.desc","Private person and company phone information"},
-				{"Country.name","Name"},
+				{"Country.name","Country"},
 				{"Country.desc","Country information"},
 		};
 	}

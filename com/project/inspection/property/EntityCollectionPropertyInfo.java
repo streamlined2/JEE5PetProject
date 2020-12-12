@@ -6,7 +6,7 @@ public class EntityCollectionPropertyInfo extends PropertyInfo {
 	
 	private static final long serialVersionUID = -7504906445376837444L;
 	
-	private ForeignKeyPropertyInfo mappedByForeignKey;
+	private ForeignKeyPropertyInfo mappedByForeignKey;// reference to supporting foreign key property on other side of relation
 
 	public EntityCollectionPropertyInfo(
 			EntityInfo eInfo, String propertyName,
@@ -16,7 +16,7 @@ public class EntityCollectionPropertyInfo extends PropertyInfo {
 		this.mappedByForeignKey = mappedByForeignKey;
 	}
 
-	public boolean isEntityCollection(){
+	public boolean isEntityCollection(){// replace instanceof operator usage with virtual method call
 		return true;
 	}
 

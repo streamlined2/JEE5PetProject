@@ -23,15 +23,14 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.naming.NamingException;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.project.AgentRemote;
-import com.project.Startup;
 import com.project.Helpers;
+import com.project.Startup;
+import com.project.datasource.DataSource;
 import com.project.datatypes.Currency;
 import com.project.entities.EntityClass;
 import com.project.entities.EntityType;
@@ -47,7 +46,6 @@ import com.project.inspection.property.PropertyInfo.FiniteType;
 import com.project.inspection.property.PropertyInfo.MultipleType;
 import com.project.inspection.property.PropertyInfo.OrderType;
 import com.project.interfacebuilder.InterfaceException;
-import com.project.datasource.DataSource;
 
 public final class EntityInspector {
 	
@@ -59,6 +57,7 @@ public final class EntityInspector {
 		//use interface reference to avoid dependency on implementation details of container class 
 		private SortedMap<String,EntityInfo> cache = new TreeMap<String,EntityInfo>();
 		
+		// allow clients to operate cache only by means of addEntity/getEntity, thus hiding cache implementation and avoiding dependency on that   
 		public void addEntity(String name,EntityInfo eInfo) {
 			cache.put(name, eInfo);
 		}
@@ -69,6 +68,7 @@ public final class EntityInspector {
 		
 	}
 	
+	// singleton object design pattern
 	private static EntityInfoPool entityPool = new EntityInfoPool();
 	
 	public static EntityInfo getEntityInfo(Class<?> eClass) throws InterfaceException {
@@ -139,7 +139,7 @@ public final class EntityInspector {
 									getPropertyDisplayName(entityInfo, propertyDescriptor), 
 									propertyDescriptor.getShortDescription(), 
 									pClass, 
-									getFieldWidth(entityInfo.getEntityClass(),pClass,propertyDescriptor.getName()), 
+									Startup.getAgent().getFieldWidth(entityInfo.getEntityClass(),pClass,propertyDescriptor.getName()), 
 									getOrderType(pClass), 
 									getFiniteType(pClass), 
 									getMultipleType(pClass),
@@ -496,44 +496,44 @@ public final class EntityInspector {
 	/* following are methods to check if given type belongs to some ordinary & primitive or common & widely accepted classes
 	 * */
 	
-	private static boolean isComparable(Class<?> cl) {
+	public static boolean isComparable(Class<?> cl) {
 		return Comparable.class.isAssignableFrom(cl);
 	}
 
-	private static boolean isDateTime(Class<?> pClass) {
+	public static boolean isDateTime(Class<?> pClass) {
 		return 
 			isDate(pClass) || 
 			isTime(pClass);
 	}
 
-	private static boolean isTime(Class<?> c) {
+	public static boolean isTime(Class<?> c) {
 		return
 			java.sql.Time.class.isAssignableFrom(c);
 	}
 
-	private static boolean isTimestamp(Class<?> c) {
+	public static boolean isTimestamp(Class<?> c) {
 		return 
 			java.sql.Timestamp.class.isAssignableFrom(c);
 	}
 	
-	private static boolean isDate(Class<?> c) {
+	public static boolean isDate(Class<?> c) {
 		return
 			java.util.Date.class.isAssignableFrom(c)||
 			java.sql.Date.class.isAssignableFrom(c)||
 			Calendar.class.isAssignableFrom(c);
 	}
 
-	private static boolean isNumber(Class<?> cl) {
+	public static boolean isNumber(Class<?> cl) {
 		return 
 			Number.class.isAssignableFrom(cl);
 	}
 
-	private static boolean isCurrency(Class<?> cl) {
+	public static boolean isCurrency(Class<?> cl) {
 		return 
 			Currency.class.isAssignableFrom(cl);
 	}
 
-	private static boolean isInteger(Class<?> cl) {
+	public static boolean isInteger(Class<?> cl) {
 		return (
 			cl.isPrimitive() && (cl==int.class || cl==short.class || cl==byte.class) ||
 			!cl.isPrimitive() && 
@@ -545,7 +545,7 @@ public final class EntityInspector {
 		);
 	}
 
-	private static boolean isLong(Class<?> cl) {
+	public static boolean isLong(Class<?> cl) {
 		return (
 			cl.isPrimitive() && (cl==long.class) ||
 			!cl.isPrimitive() && 
@@ -555,18 +555,18 @@ public final class EntityInspector {
 		);
 	}
 
-	private static boolean isString(Class<?> cl) {
+	public static boolean isString(Class<?> cl) {
 		return 
 			String.class.isAssignableFrom(cl);
 	}
 
-	private static boolean isBoolean(Class<?> pClass){
+	public static boolean isBoolean(Class<?> pClass){
 		return 
 			(pClass.isPrimitive() && pClass==boolean.class) || 
 			(Boolean.class.isAssignableFrom(pClass));
 	}
 	
-	private static boolean isCharacter(Class<?> pClass){
+	public static boolean isCharacter(Class<?> pClass){
 		return
 			pClass.isPrimitive() && (
 				pClass==char.class
@@ -576,7 +576,7 @@ public final class EntityInspector {
 
 	}
 	
-	private static boolean isFloatPoint(Class<?> pClass) {
+	public static boolean isFloatPoint(Class<?> pClass) {
 		return (
 			pClass.isPrimitive() && (
 				pClass==float.class ||
@@ -589,7 +589,7 @@ public final class EntityInspector {
 		);
 	}
 
-	private static boolean isNumeric(Class<?> pClass){
+	public static boolean isNumeric(Class<?> pClass){
 		return
 			isInteger(pClass) ||
 			isLong(pClass) ||
@@ -738,42 +738,6 @@ public final class EntityInspector {
 		return readMethod.invoke(entity, new Object[]{});
 	}
 
-	private static int getFieldWidth(Class<?> entityType,Class<?> propertyType, String fieldName) throws InterfaceException {
-		
-		int columnSize=Startup.getAgent().getColumnSize(entityType,fieldName);
-
-		if(isCharacter(propertyType)){
-			return 1;
-		
-		}else if(isString(propertyType)){
-			return getWidthValue(columnSize,20);
-		
-		}else if(isInteger(propertyType)){
-			return getWidthValue(columnSize,7);
-		
-		}else if(isLong(propertyType)){
-			return getWidthValue(columnSize,10);
-		
-		}else if(isFloatPoint(propertyType)){
-			return getWidthValue(columnSize,15);
-		
-		}else if(isNumber(propertyType)){
-			return getWidthValue(columnSize,15);
-		
-		}else if(isDate(propertyType) || isTime(propertyType) || isTimestamp(propertyType)){
-			return EntityInspector.convertToString(initialValueForType(propertyType)).length();
-		
-		}else if(isBoolean(propertyType) || propertyType.isEnum()){
-			return getValuesMaxWidth(propertyType);
-		}
-
-		return 0;
-	}
-	
-	private static int getWidthValue(int columnSize,int defaultValue){
-		return columnSize==-1?defaultValue:columnSize;
-	}
-
 	public static Class<? extends EntityType> getClassInstance() throws ClassNotFoundException{
 		Throwable t=new Throwable();
 		StackTraceElement[] trace=t.getStackTrace();
@@ -799,6 +763,41 @@ public final class EntityInspector {
 			throw new ClassNotFoundException("found class is not subclass of EntityType");
 		}
 		throw new ClassNotFoundException("entity class not found");
+	}
+	
+	public static int getDefaultFieldWidth(
+			Class<?> propertyType, int columnSize){
+
+		if(isCharacter(propertyType)){
+			return 1;
+		
+		}else if(isString(propertyType)){
+			return getWidthValue(columnSize,20);
+		
+		}else if(isInteger(propertyType)){
+			return getWidthValue(columnSize,7);
+		
+		}else if(isLong(propertyType)){
+			return getWidthValue(columnSize,10);
+		
+		}else if(isFloatPoint(propertyType)){
+			return getWidthValue(columnSize,15);
+		
+		}else if(isNumber(propertyType)){
+			return getWidthValue(columnSize,15);
+		
+		}else if(isDate(propertyType) || isTime(propertyType) || isTimestamp(propertyType)){
+			return EntityInspector.convertToString(initialValueForType(propertyType)).length();
+		
+		}else if(isBoolean(propertyType) || propertyType.isEnum()){
+			return getValuesMaxWidth(propertyType);
+		}
+		return 0;
+		
+	}
+
+	private static int getWidthValue(int columnSize,int defaultValue){
+		return columnSize==-1?defaultValue:columnSize;
 	}
 
 }
