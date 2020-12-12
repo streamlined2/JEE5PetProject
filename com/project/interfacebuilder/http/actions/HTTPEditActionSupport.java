@@ -4,8 +4,8 @@ import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPEditForm;
-import com.project.queries.DataSource;
-import com.project.queries.EntityDataSource;
+import com.project.datasource.DataSource;
+import com.project.datasource.EntityDataSource;
 
 public class HTTPEditActionSupport extends HTTPActionSupport /*HTTPSelectItemAction <EntityInfo>*/ {
 

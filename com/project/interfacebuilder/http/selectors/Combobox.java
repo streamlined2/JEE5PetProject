@@ -8,6 +8,11 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class Combobox extends SelectorSupport {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8406843331854035788L;
+	
 	private int visibleLines;
 
 	public Combobox() {

@@ -6,7 +6,7 @@ import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
 import com.project.interfacebuilder.http.forms.HTTPQuerySelectionForm;
 import com.project.interfacebuilder.menu.MenuItem;
-import com.project.queries.QueryDataSource;
+import com.project.datasource.QueryDataSource;
 import com.project.queries.QueryDefinition;
 
 public class HTTPRunQueryAction extends HTTPSelectItemAction<MenuItem> {

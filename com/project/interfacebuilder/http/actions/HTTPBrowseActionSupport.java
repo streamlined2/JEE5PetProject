@@ -6,7 +6,7 @@ import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
-import com.project.queries.EntityDataSource;
+import com.project.datasource.EntityDataSource;
 
 public abstract class HTTPBrowseActionSupport extends HTTPSelectItemAction <EntityInfo> {
 

@@ -154,8 +154,7 @@ public final class SelectorFactory {
 		Map.Entry<SelectorDataKey,HTTPSelector> entry=map.ceilingEntry(minKey);
 		if(entry==null) throw new InterfaceException("selector entry mapping failed for key "+minKey);
 
-		HTTPSelector sel=(HTTPSelector)entry.getValue();
-		Class<? extends HTTPSelector> cl=sel.getClass();
+		Class<? extends HTTPSelector> cl=entry.getValue().getClass();
 		HTTPSelector selector=null;
 		try {
 			selector = cl.newInstance();

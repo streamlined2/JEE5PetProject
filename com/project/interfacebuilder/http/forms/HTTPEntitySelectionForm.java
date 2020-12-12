@@ -12,8 +12,8 @@ import com.project.interfacebuilder.http.actions.HTTPQueryAction;
 
 public class HTTPEntitySelectionForm extends HTTPSelectionViewForm<EntityInfo> {
 	
-	private static final int ENTITY_NAME_WIDTH = 10;
-	private static final int ENTITY_DESC_WIDTH = 60;
+	private static final int ENTITY_NAME_WIDTH = 15;
+	private static final int ENTITY_DESC_WIDTH = 80;
 	
 	public HTTPEntitySelectionForm() throws InterfaceException {
 		super();

@@ -8,17 +8,14 @@ public final class Helpers {
 	private Helpers(){}
 
 	public static String getColorCode(Color color) {
-		int green=color.getGreen();
-		int red=color.getRed();
-		int blue=color.getBlue();
 		StringBuilder colorCode=new StringBuilder();
 		colorCode.
 			append("rgb(").
-			append(Integer.toString(red)).
+			append(Integer.toString(color.getRed())).
 			append(",").
-			append(Integer.toString(green)).
+			append(Integer.toString(color.getGreen())).
 			append(",").
-			append(Integer.toString(blue)).
+			append(Integer.toString(color.getBlue())).
 			append(")");
 		return colorCode.toString();
 	}

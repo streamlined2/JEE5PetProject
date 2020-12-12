@@ -21,7 +21,7 @@ public interface Form {
 	public interface State {
 		
 		/**
-		 * set form's state back from internal object
+		 * recover previous state of the form
 		 */
 		public void reset();
 		

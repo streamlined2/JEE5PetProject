@@ -3,7 +3,6 @@ package com.project.interfacebuilder;
 import java.awt.Font;
 import java.io.Serializable;
 
-import com.project.inspection.PropertyInfo;
 import com.project.inspection.property.InformationPropertyInfo;
 
 public interface Selector extends Serializable {

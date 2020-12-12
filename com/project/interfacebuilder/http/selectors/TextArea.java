@@ -4,6 +4,11 @@ import com.project.interfacebuilder.Form;
 
 public class TextArea extends SelectorSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4128889847843071883L;
+
 	public TextArea() {}
 
 	@Override

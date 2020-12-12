@@ -8,6 +8,11 @@ import com.project.interfacebuilder.http.HTTPInterfaceBuilder.InterfaceContext;
 
 public class MenuItem implements Serializable, SelectionViewItem, Comparable<MenuItem> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4297802628035969207L;
+	
 	private String name;
 	private InterfaceContext context=null;
 	private int order = 0;

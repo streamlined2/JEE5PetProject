@@ -4,14 +4,12 @@ import java.awt.Color;
 import java.util.List;
 
 import com.project.inspection.EntityInfo.EntityData;
-import com.project.inspection.property.InformationPropertyInfo;
 import com.project.inspection.EntityInspector;
 import com.project.inspection.ListItem;
-import com.project.inspection.PropertyInfo;
+import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.Helpers;
 import com.project.interfacebuilder.http.actions.HTTPProceedAction;
-import com.project.queries.DataSource;
 
 public class HTTPQueryForm extends HTTPDataRangeForm {
 	
@@ -63,8 +61,7 @@ public class HTTPQueryForm extends HTTPDataRangeForm {
 			append(">");
 		
 		for(ListItem item:getDataSource().getPropertyList().getOrderedSet()){
-			InformationPropertyInfo pInfo=item.getPropertyInfo();
-			buffer.append("<th align=\"center\">").append(pInfo.getDisplayName()).append("</th>");
+			buffer.append("<th align=\"center\">").append(item.getPropertyInfo().getDisplayName()).append("</th>");
 		}
 
 		for(EntityData entityData:tableData){

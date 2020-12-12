@@ -12,7 +12,7 @@ import com.project.queries.QueryListBuilder;
 
 public class HTTPQuerySelectionForm extends HTTPSelectionViewForm<QueryDefinition> {
 	
-	private static final int QUERY_NAME_WIDTH = 10;
+	private static final int QUERY_NAME_WIDTH = 30;
 	private static final int QUERY_DESC_WIDTH = 60;
 	
 	private QueryList queries = null;

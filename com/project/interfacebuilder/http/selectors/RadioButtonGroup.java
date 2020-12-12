@@ -8,6 +8,11 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class RadioButtonGroup extends SelectorSupport {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5584223794463079998L;
+
 	public RadioButtonGroup() {}
 
 	private OrientationType orientation=OrientationType.VERTICAL;

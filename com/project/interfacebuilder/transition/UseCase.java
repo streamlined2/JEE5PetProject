@@ -13,17 +13,11 @@ public class UseCase {
 	public UseCase(){}
 	
 	public void addRule(TransitionRule rule){
-		TransitionRule.TransitionRuleKey key=rule.getKey();
-		map.put(key, rule);
+		map.put(rule.getKey(), rule);
 	}
 	
 	public TransitionRule getTransitionRule(InterfaceContext context, Form source, Action action){
-		
-		TransitionRule rule=new TransitionRule(context,source,action);
-		if(map.containsKey(rule.getKey())){
-			return map.get(rule.getKey());
-		}
-		return null;
+		return map.get(new TransitionRule(context,source,action).getKey());
 	}
 
 }

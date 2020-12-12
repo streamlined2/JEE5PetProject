@@ -5,7 +5,7 @@ import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
 import com.project.interfacebuilder.http.actions.HTTPSaveChangesAction;
-import com.project.queries.EntityDataSource;
+import com.project.datasource.EntityDataSource;
 
 public class HTTPEditForm extends HTTPSelectorSetForm {
 

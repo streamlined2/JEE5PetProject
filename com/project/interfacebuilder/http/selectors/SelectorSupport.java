@@ -10,6 +10,11 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public abstract class SelectorSupport implements HTTPSelector {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6424048727336656427L;
+	
 	private Object value;
 	private Object initialValue;
 	private InformationPropertyInfo propertyInfo;

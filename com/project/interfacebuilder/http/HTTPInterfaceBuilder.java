@@ -51,7 +51,6 @@ public final class HTTPInterfaceBuilder {
 	private HTTPEditAction editAction;
 	private HTTPAddNewAction addNewAction;
 	private HTTPSaveChangesAction saveChangesAction;
-	private HTTPCancelAction cancelAction;
 	private HTTPRangeAction rangeAction;
 	private HTTPProceedAction proceedAction;
 	private HTTPSelectMenuItemAction selectMenuItemAction;
@@ -111,7 +110,7 @@ public final class HTTPInterfaceBuilder {
 		editAction=new HTTPEditAction();
 		addNewAction=new HTTPAddNewAction();
 		saveChangesAction=new HTTPSaveChangesAction();
-		cancelAction=new HTTPCancelAction();
+		new HTTPCancelAction();
 		rangeAction=new HTTPRangeAction();
 		proceedAction=new HTTPProceedAction();
 		selectMenuItemAction=new HTTPSelectMenuItemAction();

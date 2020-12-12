@@ -2,13 +2,12 @@ package com.project.interfacebuilder.http.actions;
 
 import java.util.Map;
 
-import com.project.inspection.EntityInfo;
+import com.project.datasource.DataSource;
 import com.project.inspection.PropertyListItem;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
 import com.project.interfacebuilder.http.forms.HTTPPropertyListForm;
-import com.project.queries.DataSource;
 
 public class HTTPApplyPropertyListAction extends HTTPApplyActionSupport<PropertyListItem> {
 

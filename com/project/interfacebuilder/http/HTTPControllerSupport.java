@@ -33,8 +33,8 @@ import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.Selector;
 import com.project.interfacebuilder.http.actions.HTTPAction;
 import com.project.interfacebuilder.http.forms.HTTPForm;
-import com.project.queries.DataSource;
-import com.project.queries.EntityDataSource;
+import com.project.datasource.DataSource;
+import com.project.datasource.EntityDataSource;
 
 public class HTTPControllerSupport extends ControllerSupport implements HTTPController {
 	
@@ -71,10 +71,6 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 			this.session = session;
 			this.session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
 		}
-	}
-	
-	private HttpSession getSession(){
-		return session;
 	}
 	
 	public void setRequest(HttpServletRequest request){
@@ -350,11 +346,8 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 			java.util.List<HTTPAction> actions, java.util.Map<String,String[]> requestParameters) {
 	
 		for(Iterator<String> keys=requestParameters.keySet().iterator();keys.hasNext();){
-			String pName=keys.next();
-	
-			HTTPAction a=getActivatedAction(pName,actions);
+			HTTPAction a=getActivatedAction(keys.next(),actions);
 			if(a!=null) return a;
-		
 		}
 	
 		return null;
@@ -379,6 +372,7 @@ public class HTTPControllerSupport extends ControllerSupport implements HTTPCont
 		return (Map<String, String[]>)request.getParameterMap();
 	}
 	
+	//handy short form
 	@Override
 	protected Form getDefaultForm() throws InterfaceException {
 		return HTTPInterfaceBuilder.getInterfaceBuilder().getDefaultForm();

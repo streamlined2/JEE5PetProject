@@ -2,12 +2,12 @@ package com.project.interfacebuilder.http.actions;
 
 import java.util.Map;
 
+import com.project.datasource.DataSource;
 import com.project.inspection.FilterItem;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.forms.HTTPDataRangeForm;
 import com.project.interfacebuilder.http.forms.HTTPFilterForm;
-import com.project.queries.DataSource;
 
 public class HTTPApplyFilterAction extends HTTPApplyActionSupport<FilterItem> {
 
@@ -31,8 +31,6 @@ public class HTTPApplyFilterAction extends HTTPApplyActionSupport<FilterItem> {
 		
 		if(!(getSourceForm() instanceof HTTPFilterForm)) throw new InterfaceException("source form must be an instance of HTTPFilterForm");
 			
-		HTTPFilterForm filterForm=(HTTPFilterForm)getSourceForm();
-
 		if(!(getTargetForm() instanceof HTTPDataRangeForm)) throw new InterfaceException("target form must be an instance of HTTPDataRangeForm");
 
 		HTTPDataRangeForm dataRangeForm=(HTTPDataRangeForm)getTargetForm();

@@ -1,5 +1,7 @@
 package com.project.interfacebuilder.http.forms;
 
+import java.awt.Dimension;
+
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.actions.HTTPCancelAction;
 
@@ -8,6 +10,7 @@ public class HTTPInformationForm extends HTTPForm {
 	public HTTPInformationForm() throws InterfaceException {
 		super();
 		addAction(new HTTPCancelAction());
+		setDimension(new Dimension(1200,1200));
 	}
 
 	@Override

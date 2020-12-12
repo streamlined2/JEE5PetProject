@@ -8,6 +8,11 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class Checkbox extends SelectorSupport {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7938515626661336508L;
+
 	public Checkbox() {}
 
 	@Override

@@ -7,17 +7,21 @@ import com.project.interfacebuilder.http.forms.HTTPForm;
 
 public class TextLine extends SelectorSupport {
 	
-	private int size=20;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3062127441788982026L;
+	
 	private int maxLength=-1;
 
 	public TextLine() {}
 
 	public TextLine(int size) {
-		this.size=Math.max(size, 1);
+		Math.max(size, 1);
 	}
 
 	public TextLine(int size, int maxLength) {
-		this.size=Math.max(size, 1);
+		Math.max(size, 1);
 		this.maxLength=Math.max(maxLength, size);
 	}
 
@@ -76,7 +80,6 @@ public class TextLine extends SelectorSupport {
 	}
 
 	public void setSize(int size) {
-		this.size = size;
 	}
 
 	public int getMaxLength() {

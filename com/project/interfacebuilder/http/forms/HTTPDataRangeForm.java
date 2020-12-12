@@ -12,7 +12,7 @@ import com.project.interfacebuilder.http.actions.HTTPFilterAction;
 import com.project.interfacebuilder.http.actions.HTTPOrderAction;
 import com.project.interfacebuilder.http.actions.HTTPPropertyListAction;
 import com.project.interfacebuilder.http.actions.HTTPRangeAction;
-import com.project.queries.DataSource;
+import com.project.datasource.DataSource;
 
 public abstract class HTTPDataRangeForm extends HTTPDataAwareForm {
 

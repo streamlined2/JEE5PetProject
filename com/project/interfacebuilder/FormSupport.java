@@ -1,7 +1,6 @@
 package com.project.interfacebuilder;
 
 import java.awt.Font;
-import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,8 +11,6 @@ import javax.naming.NamingException;
 
 import com.project.AgentRemote;
 import com.project.ContextBootstrap;
-import com.project.inspection.EntityInspector;
-import com.project.interfacebuilder.Form.State;
 
 public abstract class FormSupport implements Form {
 	
@@ -23,8 +20,7 @@ public abstract class FormSupport implements Form {
 	//helper method to provide reference to agent
 	public AgentRemote getAgent() throws InterfaceException{
 		try {
-			AgentRemote agent = ContextBootstrap.getAgentReference(null);
-			return agent;
+			return ContextBootstrap.getAgentReference(null);
 		} catch (NamingException e) {
 			throw new InterfaceException(e);
 		}

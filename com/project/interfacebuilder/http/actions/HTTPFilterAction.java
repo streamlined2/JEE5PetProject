@@ -2,7 +2,6 @@ package com.project.interfacebuilder.http.actions;
 
 import java.io.PrintWriter;
 
-import com.project.inspection.Filter.FilterRangeBoundary;
 import com.project.interfacebuilder.Form;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;

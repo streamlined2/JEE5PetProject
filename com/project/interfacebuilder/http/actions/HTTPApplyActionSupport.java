@@ -11,7 +11,7 @@ import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPControllerSupport;
 import com.project.interfacebuilder.http.forms.HTTPForm;
-import com.project.queries.DataSource;
+import com.project.datasource.DataSource;
 
 public abstract class HTTPApplyActionSupport<ItemType extends ListItem> extends HTTPActionSupport {
 

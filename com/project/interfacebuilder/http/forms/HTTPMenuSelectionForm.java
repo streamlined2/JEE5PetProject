@@ -12,7 +12,7 @@ import com.project.interfacebuilder.menu.MenuItem;
 public abstract class HTTPMenuSelectionForm extends HTTPSelectionViewForm<MenuItem> {
 	
 	private static final int DEFAULT_MENU_ITEM_NAME_WIDTH = 10;
-	private static final int DEFAULT_MENU_ITEM_DESC_WIDTH = 60;
+	private static final int DEFAULT_MENU_ITEM_DESC_WIDTH = 80;
 	
 	private Menu menu;
 	

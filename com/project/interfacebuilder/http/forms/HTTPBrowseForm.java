@@ -123,8 +123,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		StringBuilder b=new StringBuilder();
 		b.append(Helpers.padString(AlignType.CENTER, COUNTER_WIDTH, "", Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
 		for(PropertyListItem item:getDataSource().getPropertyList().getOrderedSet()){
-			InformationPropertyInfo pInfo=item.getPropertyInfo();
-			b.append(Helpers.padString(AlignType.CENTER, getColumnWidth(pInfo,item), item.getDisplayName(), Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
+			b.append(Helpers.padString(AlignType.CENTER, getColumnWidth(item.getPropertyInfo(),item), item.getDisplayName(), Helpers.NON_BREAKING_SPACE)).append(Helpers.NON_BREAKING_SPACE);
 		}
 		return b.toString();
 	}
