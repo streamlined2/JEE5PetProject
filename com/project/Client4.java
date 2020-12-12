@@ -29,7 +29,7 @@ public class Client4 {
 
 		EntityInfo info=EntityInspector.getEntityInfo(entityClass);
 		
-		Context con = ContextBootstrap.getInitialContext(null);
+		Context con = Startup.getInitialContext();
 		Object ref=con.lookup("Agent#com.project.AgentRemote");
 		AgentRemote agent=(AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
 		

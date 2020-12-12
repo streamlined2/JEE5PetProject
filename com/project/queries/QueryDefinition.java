@@ -29,6 +29,8 @@ import com.project.interfacebuilder.SelectionViewItem;
 import com.project.queries.QueryDefinition.FilterEntry.Relation;
 import com.project.queries.QueryDefinition.OrderByEntry.SortOrder;
 
+//this class encompasses JPQL query definition
+//the approach resolves problems, that are addressed by JPA 2 (query validity check by compiler)
 public class QueryDefinition implements Serializable, SelectionViewItem, Comparable<QueryDefinition> {
 
 	private static final long serialVersionUID = 6281065723667190950L;
@@ -49,6 +51,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		return hasPrimaryKey;
 	}
 
+	//factory method: creates object of appropriate type depending on given parameter value
 	public AggregatedProperty getAggregatedProperty(GroupEntry entry,int order) throws InterfaceException{
 		InformationProperty dataProperty = new InformationProperty(
 				entry.getDataPropertyEntityType(), entry.getDataPropertyAlias(), entry.getAlias(), order);
@@ -142,6 +145,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		}
 	}
 	
+	//root hierarchy class to represent aggregated property of query
 	public abstract class AggregatedProperty extends Property {
 		
 		private static final long serialVersionUID = 8290209885349421913L;
@@ -175,6 +179,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 		
 	}
 	
+	//derived from AggregatedProperty class to represent AVG aggregation operation
 	public class AverageProperty extends AggregatedProperty {
 		
 		private static final long serialVersionUID = -5043913274803273260L;
@@ -394,6 +399,7 @@ public class QueryDefinition implements Serializable, SelectionViewItem, Compara
 	
 	}
 	
+	// chain of constructor calls to implement various parameter set: extend parameter set by calling previously defined narrow parameter set constructor 
 	public QueryDefinition(
 			String name,
 			String description,

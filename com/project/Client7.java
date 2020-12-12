@@ -14,7 +14,7 @@ public class Client7 {
 	 * @throws NamingException 
 	 */
 	public static void main(String[] args) throws NamingException {
-		Context con=ContextBootstrap.getInitialContext(args);
+		Context con=Startup.getInitialContext();
 		Object ref=con.lookup("Agent#com.project.AgentRemote");
 		AgentRemote agent=(AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
 		

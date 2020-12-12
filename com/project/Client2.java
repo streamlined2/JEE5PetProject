@@ -31,7 +31,7 @@ public class Client2 {
 	 * @throws InterfaceException 
 	 */
 	public static void main(String[] args) throws NamingException, IntrospectionException, SecurityException, NoSuchFieldException, NoSuchMethodException, InterfaceException {
-		Context con=ContextBootstrap.getInitialContext(args);
+		Context con=Startup.getInitialContext();
 		Object ref=con.lookup("Agent#com.project.AgentRemote");
 		AgentRemote agent=(AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
 		

@@ -25,7 +25,7 @@ public class ForeignKeyPropertyInfo extends PropertyInfo {
 	}
 
 	public EntityInfo getMasterEntity() throws InterfaceException {
-		if(masterEntity==null){
+		if(masterEntity==null){ // lazy initialization
 			masterEntity = EntityInspector.getEntityInfo(masterType);
 		}
 		return masterEntity;

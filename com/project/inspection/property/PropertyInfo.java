@@ -59,6 +59,8 @@ public abstract class PropertyInfo implements Serializable, Comparable<PropertyI
 		else return this.propertyName.compareToIgnoreCase(o.propertyName); 
 	}
 	
+	/* following methods will be overridden in descendants to distinguish different properties (instead of using instanceof operator) 
+	 * */
 	public boolean isPrimaryKey(){
 		return false;
 	}

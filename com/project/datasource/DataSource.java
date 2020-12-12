@@ -10,6 +10,7 @@ import com.project.inspection.Range;
 import com.project.inspection.property.InformationPropertyInfo;
 import com.project.interfacebuilder.InterfaceException;
 
+//basic behavior for data source determined by this abstract class
 public abstract class DataSource {
 	
 	public abstract boolean isModifiable();

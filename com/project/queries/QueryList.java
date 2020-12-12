@@ -27,7 +27,7 @@ public class QueryList implements Iterable<QueryDefinition>{
 		return Collections.unmodifiableSet(new TreeSet<QueryDefinition>(list.values()));
 	}
 
-	@Override
+	@Override // anonymous Iterator class 
 	public Iterator<QueryDefinition> iterator() {
 		
 		final Iterator<Entry<String, QueryDefinition>> i=list.entrySet().iterator();
@@ -36,6 +36,7 @@ public class QueryList implements Iterable<QueryDefinition>{
 
 			@Override
 			public boolean hasNext() {
+				// delegate method call
 				return i.hasNext();
 			}
 

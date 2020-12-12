@@ -2,16 +2,19 @@ package com.project;
 
 import java.util.ResourceBundle;
 
-import javax.naming.NamingException;
 
 import com.project.inspection.property.PropertyInfo.AlignType;
-import com.project.interfacebuilder.InterfaceException;
 
+// utility class (final, no public constructor, just collection of helper methods, constants, and system properties)
 public final class Helpers {
 	
 	public static final String NON_BREAKING_SPACE = "&nbsp;";
 	public static final char COLUMN_SEPARATOR=(char)0x2502;
 
+	private final static String localizationPackageName="com.project.i18n";
+	
+	private final static String ENTITIES_PACKAGE_NAME="com.project.entities";
+	
 	private Helpers(){}
 	
 	public static boolean nonEmtpyParameter(String parameter){
@@ -60,8 +63,7 @@ public final class Helpers {
 		return b.toString();
 	}
 	
-	private final static String localizationPackageName="com.project.i18n";
-	
+	// to avoid dependency on localization package name
 	public static String getLocalizationBundleFullName(String bundleName){
 		return localizationPackageName+"."+bundleName; 
 	}
@@ -70,32 +72,22 @@ public final class Helpers {
 		return getLocalizedDisplayName(bundleName,prefix,suffix,suffix);
 	}
 
+	// convenient method to stick to standard localization behavior  
 	public static String getLocalizedDisplayName(String bundleName,String prefix,String suffix,String defaultName) {
 		ResourceBundle bundle=ResourceBundle.getBundle(Helpers.getLocalizationBundleFullName(bundleName));
 		String localizedName=defaultName;
-		String nameKey=prefix.isEmpty()?suffix:prefix+"."+suffix;
+		String nameKey=(prefix==null || prefix.isEmpty())?suffix:prefix+"."+suffix;
 		if(bundle!=null && bundle.containsKey(nameKey)){
 			localizedName=bundle.getString(nameKey);
 		}
 		return localizedName;
 	}
 	
-	private final static String ENTITIES_PACKAGE_NAME="com.project.entities";
-	
 	public static String getEntityFullClassName(String entityName){
 		return ENTITIES_PACKAGE_NAME+"."+entityName; 
 	}
 	
-	//helper method to provide reference to agent
-	public static AgentRemote getAgent() throws InterfaceException{
-		try {
-			return ContextBootstrap.getAgentReference(null);
-		} catch (NamingException e) {
-			throw new InterfaceException(e);
-		}
-	}
-
-	public static String getValue(String[] args,int index,String defValue){
+/*	public static String getValue(String[] args,int index,String defValue){
 		if(args!=null && index>=0 && index<args.length){
 			String v=args[index];
 			if(v.isEmpty()) return defValue;
@@ -104,5 +96,5 @@ public final class Helpers {
 			return defValue;
 		}
 	}
-
+*/
 }

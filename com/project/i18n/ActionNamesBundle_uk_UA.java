@@ -2,6 +2,7 @@ package com.project.i18n;
 
 import java.util.ListResourceBundle;
 
+//typical class used for localization of action names in Ukrainian  
 public class ActionNamesBundle_uk_UA extends ListResourceBundle {
 
 	@Override

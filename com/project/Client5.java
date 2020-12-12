@@ -19,7 +19,7 @@ public class Client5 {
 	 */
 	public static void main(String[] args) throws IntrospectionException, NamingException, SQLException {
 
-		Context con = ContextBootstrap.getInitialContext(null);
+		Context con = Startup.getInitialContext();
 		Object ref=con.lookup("Agent#com.project.AgentRemote");
 		AgentRemote agent=(AgentRemote)PortableRemoteObject.narrow(ref,AgentRemote.class);
 		

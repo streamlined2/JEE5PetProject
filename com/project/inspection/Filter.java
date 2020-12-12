@@ -14,7 +14,7 @@ import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
 import com.project.interfacebuilder.http.actions.HTTPAction;
 
-//Iterable implementation for Java 5 loop iteration
+//Iterable implementation for Java 5 foreach loop
 public class Filter implements Serializable, ListIterable<FilterItem> {
 	
 	private static final long serialVersionUID = -729480478609313439L;

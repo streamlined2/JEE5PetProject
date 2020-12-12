@@ -24,6 +24,7 @@ import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerSPI;
 import org.apache.openjpa.persistence.OpenJPAPersistence;
 
+import com.project.Startup;
 import com.project.datasource.EntityDataSource;
 import com.project.entities.EntityType;
 import com.project.inspection.EntityInfo.EntityData;
@@ -44,10 +45,10 @@ import com.project.queries.QueryDefinition;
 @Stateless(mappedName = "Agent")
 public class Agent implements AgentRemote {
 	
-	@PersistenceContext(unitName=ContextBootstrap.UNIT_NAME)
+	@PersistenceContext(unitName=Startup.UNIT_NAME)
 	private EntityManager manager;
 
-	@Override
+	@Override /* impose restrictions on generic type parameter: it must be a descendant of EntityType to be accessible by identifier */
 	public <T extends EntityType> T createEntity(T entity){
 		manager.persist(entity);
 		return entity;
@@ -68,13 +69,15 @@ public class Agent implements AgentRemote {
 		return entity;
 	}
 
-	@Override
+	@Override //retrieve entity ID by calling EntityType.getId method
 	public void removeEntity(EntityType entity) throws EntityNotFoundException{
 		EntityType managed=
 				manager.getReference(entity.getClass(), entity.getId());
 		manager.remove(managed);
 	}
 
+	// get QL statement from query definition, run it, and return result as list of entities  
+	@Override
 	public List<EntityData> runQuery(QueryDefinition queryDefinition) throws InterfaceException{
 		Query query=manager.createQuery(queryDefinition.getStatement());
 		
@@ -84,11 +87,12 @@ public class Agent implements AgentRemote {
 		return copyQueryResultToEntityData(list,queryDefinition.hasPrimaryKey());
 	}
 
-	//TODO implement it with Criteria Builder (JPA2)
 	@Override
+	// fetch entity list data for given EntityDataSource instance 
+	//TODO redo using Criteria Builder
 	public List<EntityData> fetchEntities(EntityDataSource dataSource) throws InterfaceException{
 		
-		Query query=getQuery(dataSource);
+		Query query=prepareQueryForEntityDataSource(dataSource);
 		setFilterParameterValues(query,dataSource.getFilter());
 		query.setFirstResult(dataSource.getRange().getStartFrom());
 		query.setMaxResults(dataSource.getRange().getFinishAt()-dataSource.getRange().getStartFrom()+1);
@@ -124,91 +128,89 @@ public class Agent implements AgentRemote {
 		return d;
 	}
 
+	@Override //fetch single entity by primary key
 	public EntityData fetchEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
 
-		Query query=getQuery(dataSource,primaryKey);
+		Query query=prepareQueryForSingleEntity(dataSource,primaryKey);
 
 		return getEntityData((Object[])query.getSingleResult(),new PropertyList(dataSource.getEntityInfo()),true);
 	}
 
 
-	private String getQueryString(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
+	private String getQueryStatementForSingleEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException{
 
-		final String prefix="a";
+		final String tablePrefix="a";
 		
 		return new StringBuilder().
 			append("select ").
-			append(getPKInfoFieldList(prefix,dataSource)).
+			append(getPKInfoFieldList(tablePrefix,dataSource)).
 			append(" from ").
 			append(dataSource.getEntityInfo().getEntityName()).
 			append(" ").
-			append(prefix).
+			append(tablePrefix).
 			append(" where ").
-			append(prefix).
+			append(tablePrefix).
 			append(".").
 			append(dataSource.getEntityInfo().getPrimaryKeyInfo().getPropertyName()).
 			append("=?1").
 		toString();
 	}
 	
-	private Query getQuery(EntityDataSource dataSource, Object primaryKey) throws InterfaceException {
+	private Query prepareQueryForSingleEntity(EntityDataSource dataSource, Object primaryKey) throws InterfaceException {
 		
-		Query query=manager.createQuery(getQueryString(dataSource,primaryKey));
+		Query query=manager.createQuery(getQueryStatementForSingleEntity(dataSource,primaryKey));
 		
 		query.setParameter(1, primaryKey);
 
 		return query;
 	}
 
-	private Query getQuery(
+	private Query prepareQueryForEntityDataSource(
 			EntityDataSource dataSource) throws InterfaceException{
 		
-		final String prefix="a";
+		final String tablePrefix="a";
 		
 		StringBuilder q=new StringBuilder().
 			append("select ").
-			append(getPKInfoFieldList(prefix,dataSource)).
+			append(getPKInfoFieldList(tablePrefix,dataSource)).
 			append(" from ").
 			append(dataSource.getEntityInfo().getEntityName()).
 			append(" ").
-			append(prefix).
+			append(tablePrefix).
 			append(" ").
-			append(getFilterCondition(prefix,dataSource.getFilter())).
+			append(getFilterCondition(tablePrefix,dataSource.getFilter())).
 			append(" ").
-			append(getOrderClause(prefix,dataSource.getOrdering()));
+			append(getQueryOrderClause(tablePrefix,dataSource.getOrdering()));
 		
 		Query query=manager.createQuery(q.toString());
 		
 		return query;
 	}
 	
-	private String getOrderClause(String prefix, Ordering ordering) throws InterfaceException {
+	private String getQueryOrderClause(
+			String prefix, Ordering ordering) throws InterfaceException {
 		
-		final String LIST_SEPARATOR = ",";
-		
-		StringBuilder clause=new StringBuilder();
+		final String listSeparator = ",";
 		
 		if(doFormOrderClause(ordering)){
 			
-			clause.append("order by ");
+			StringBuilder clause=new StringBuilder("order by ");
 			
 			int itemIndex=1;
-			for(OrderingItem item:ordering.getOrderedSet()){
-				PropertyInfo pInfo=item.getPropertyInfo();
-				
+			for(OrderingItem item:ordering.getOrderedSet()){// foreach loop: get rid of container implementation dependency 
 				clause.
-					append(prefix).append(".").append(pInfo.getPropertyName());
+					append(prefix).append(".").append(item.getPropertyInfo().getPropertyName());
 				if(item.getSortOrderType()==SortOrderType.DESCENDING){
 					clause.append(" ").append("desc");
 				}
 				if(itemIndex<ordering.size()){
-					clause.append(LIST_SEPARATOR);
+					clause.append(listSeparator);
 				}
 				itemIndex++;
 			}
-			
+			return clause.toString();
 		}
-		return clause.toString();
+		return "";
 	}
 
 	private boolean doFormOrderClause(Ordering ordering){
@@ -237,7 +239,7 @@ public class Agent implements AgentRemote {
 	private boolean doFormFilterCondition(Filter filter){
 		if(filter==null || filter.size()==0) return false;
 		int validCount=0;
-		for(FilterItem item:filter){
+		for(FilterItem item:filter){//walk through Iterable-supporting container
 			if(getFilterKind(item)!=FilterKind.UNDEFINED) validCount++;
 		}
 		if(validCount==0) return false;
@@ -245,34 +247,34 @@ public class Agent implements AgentRemote {
 	}
 
 	private String getFilterCondition(String prefix, Filter filter) throws InterfaceException {
-		StringBuilder condition=new StringBuilder();
+
 		if(doFormFilterCondition(filter)){
 
-			condition.append("where ");
+			StringBuilder condition=new StringBuilder("where ");
+
 			int itemIndex=1;
 			int parameterIndex=1;
 			
 			for(FilterItem item:filter){
 				
-				PropertyInfo pInfo=item.getPropertyInfo();
-				FilterKind kind=getFilterKind(item);
-				
-				switch(kind){
+				switch(getFilterKind(item)){
+					
 					case EQUALITY_BY_MIN_VALUE:
 					case EQUALITY_BY_MAX_VALUE:
 						condition.
 							append(prefix).
 							append(".").
-							append(pInfo.getPropertyName()).
+							append(item.getPropertyInfo().getPropertyName()).
 							append("=").
 							append("?").
 							append(parameterIndex++);
 						break;
+					
 					case RANGE:
 						condition.
 							append(prefix).
 							append(".").
-							append(pInfo.getPropertyName()).
+							append(item.getPropertyInfo().getPropertyName()).
 							append(" between ").
 							append("?").
 							append(parameterIndex++).
@@ -280,6 +282,7 @@ public class Agent implements AgentRemote {
 							append("?").
 							append(parameterIndex++);
 						break;
+					
 					default:
 				}
 				
@@ -289,8 +292,10 @@ public class Agent implements AgentRemote {
 				
 				itemIndex++;
 			}
+			return condition.toString();
 		}
-		return condition.toString();
+		
+		return "";
 	}
 
 	private void setFilterParameterValues(Query query,Filter filter) {
@@ -301,6 +306,7 @@ public class Agent implements AgentRemote {
 
 			for(FilterItem item:filter){
 				switch(getFilterKind(item)){
+				
 				case EQUALITY_BY_MIN_VALUE:
 					query.setParameter(parameterIndex++, item.getMinValue());
 					break;
@@ -346,7 +352,6 @@ public class Agent implements AgentRemote {
 		return buffer;
 	}
 	
-	//persistence provider-specific methods (OpenJPA)
 	private DatabaseMetaData getDatabaseMetaData() throws SQLException{
 		return getConnection().getMetaData();
 	}
@@ -355,10 +360,12 @@ public class Agent implements AgentRemote {
 		return getConnection().getCatalog();
 	}
 
-/*	@Resource(name=ContextBootstrap.DATA_SOURCE)
+/*	@Resource(name=Startup.DATA_SOURCE)
 	private DataSource dataSource;
 	
-*/	private Connection getConnection() throws SQLException {
+*/	
+	//persistence provider-specific methods (currently for Apache OpenJPA)
+	private Connection getConnection() throws SQLException {
 		OpenJPAEntityManager em=OpenJPAPersistence.cast(manager);
 		return (Connection)em.getConnection();
 		//return dataSource.getConnection();
@@ -394,6 +401,7 @@ public class Agent implements AgentRemote {
 		return getColumn(type, fieldName).getName().toUpperCase();
 	}
 
+	@Override
 	public int getColumnSize(Class<?> type,String fieldName){
 		try {
 			return getColumnSize(getColumnTable(type,fieldName), getColumnName(type,fieldName));

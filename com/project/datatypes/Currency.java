@@ -12,6 +12,7 @@ public class Currency extends Number implements Serializable {
 	private Integer major;
 	private Integer minor;
 	
+	//overloaded constructors 
 	public Currency(Double value){
 		if(value<0) throw new IllegalArgumentException("negative parameters are illegal");
 		major=(int) Math.floor(value);
@@ -19,7 +20,7 @@ public class Currency extends Number implements Serializable {
 	}
 	
 	public Currency(Integer majors,Integer minors){
-		if(majors<0 || minors<0) throw new IllegalArgumentException("negative parameters are illegal");
+		if(majors<0 || minors<0) throw new IllegalArgumentException("negative parameters are illegal");//parameters should be checked before they are used
 		major = majors;
 		minor = minors;
 	}

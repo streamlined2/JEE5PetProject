@@ -30,7 +30,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.project.AgentRemote;
-import com.project.ContextBootstrap;
+import com.project.Startup;
 import com.project.Helpers;
 import com.project.datatypes.Currency;
 import com.project.entities.EntityClass;
@@ -53,7 +53,10 @@ public final class EntityInspector {
 	
 	private EntityInspector(){}
 
+	//private EntityInfo instance pool to avoid excessive introspection and speed up execution just a tad
 	private static class EntityInfoPool {
+		
+		//use interface reference to avoid dependency on implementation details of container class 
 		private SortedMap<String,EntityInfo> cache = new TreeMap<String,EntityInfo>();
 		
 		public void addEntity(String name,EntityInfo eInfo) {
@@ -72,7 +75,6 @@ public final class EntityInspector {
 		return getEntityInfo(eClass,true);
 	}
 	
-	//TODO must be replaced with Metamodel JPA 2 implementation
 	public static EntityInfo getEntityInfo(Class<?> eClass,boolean constructEntityCollectionProperties) throws InterfaceException {
 		
 		if(!EntityType.class.isAssignableFrom(eClass)) throw new InterfaceException("parameter must be ancestor of interface EntityType");
@@ -86,13 +88,14 @@ public final class EntityInspector {
 			
 			try{
 				
+				//involve JavaBeans Introspection API to pry into entity bean class details
 				BeanInfo info=Introspector.getBeanInfo(entityClass,Object.class);//,Introspector.IGNORE_ALL_BEANINFO
 				
 				PropertyDescriptor[] propertyDescriptors=info.getPropertyDescriptors();
 				
 				entityInfo=new EntityInfo(entityClass);
 				
-				for(PropertyDescriptor propertyDescriptor:propertyDescriptors){
+				for(PropertyDescriptor propertyDescriptor:propertyDescriptors){//foreach loop walks through arrays
 					
 					Class<?> pClass=propertyDescriptor.getPropertyType();
 					
@@ -103,6 +106,7 @@ public final class EntityInspector {
 						
 						Field field=entityClass.getDeclaredField(propertyDescriptor.getName());
 		
+						//use Java Reflection API to guess if proper annotation is present for primary or foreign keys or entity collection
 						if(isPrimaryKeyField(readMethod) || isPrimaryKeyField(field)){
 						
 							entityInfo.setPrimaryKeyProperty(new PrimaryKeyPropertyInfo(
@@ -118,7 +122,7 @@ public final class EntityInspector {
 						
 						}else if(isEntityCollection(readMethod) || isEntityCollection(field)){
 							
-							if(constructEntityCollectionProperties){//to avoid infinite recursion on initialization
+							if(constructEntityCollectionProperties){//skip entity collection property construction on initialization thus avoiding infinite recursion
 								
 								entityInfo.addEntityCollectionProperty(new EntityCollectionPropertyInfo(
 										entityInfo, propertyDescriptor.getName(), pClass, 
@@ -158,12 +162,12 @@ public final class EntityInspector {
 				return entityInfo;
 			
 			}catch(IntrospectionException e){
-				throw new InterfaceException(e);
+				throw new InterfaceException(e);//wrap sub-system exception into application exception
 			}
 
 		}
 		
-		return entityInfo;
+		return entityInfo;//take advantage of pooled instance of one has been found
 		
 	}
 	
@@ -171,6 +175,7 @@ public final class EntityInspector {
 						Class<? extends EntityType> masterEntityClass, 
 						Method readMethod, Field field) throws InterfaceException {
 		
+		//either getter or field may be marked by annotation 
 		ForeignKeyPropertyInfo foreignKey = getMappedByForeignKey(masterEntityClass,readMethod);
 		if(foreignKey == null){
 			foreignKey = getMappedByForeignKey(masterEntityClass,field);
@@ -182,18 +187,18 @@ public final class EntityInspector {
 	private static ForeignKeyPropertyInfo getMappedByForeignKey(
 			Class<? extends EntityType> masterEntityClass, AccessibleObject object) throws InterfaceException {
 		
-		Annotation annotation = object.getAnnotation(OneToMany.class);
+		Annotation annotation = object.getAnnotation(OneToMany.class);//use Java Reflection API to check if relation 1:M annotation present
 		
 		if(annotation != null){
 			
-			String foreignKeyName = ((OneToMany)annotation).mappedBy();
-			Class<? extends EntityClass> targetEntityClass = ((OneToMany)annotation).targetEntity();
+			String foreignKeyName = ((OneToMany)annotation).mappedBy();// get annotation "mappedBy" parameter value by calling appropriate method
+			Class<? extends EntityClass> targetEntityClass = ((OneToMany)annotation).targetEntity();//try to find target entity the same way
 			
 			SortedSet<ForeignKeyPropertyInfo> foreignKeyPropertyCandidates = new TreeSet<ForeignKeyPropertyInfo>();
 			
 			if(isEmptyTargetEntityClass(targetEntityClass)){
 				
-				for(Class<? extends EntityType> slave:EntityClass.getEntityClassSet()){
+				for(Class<? extends EntityType> slave:EntityClass.getEntityClassSet()){//foreach loop may walk through Iterable collection also
 					
 					if(!slave.equals(masterEntityClass.getClass())){
 						
@@ -235,6 +240,7 @@ public final class EntityInspector {
 	
 	private static Class<? extends EntityType> getMasterType(Method readMethod, Field field) throws InterfaceException {
 		
+		//try first getter, then field itself to see if they may yield master entity bean type
 		Class<? extends EntityType> masterEntity = getMasterEntity(readMethod.getAnnotations(),readMethod.getReturnType());
 		if(masterEntity == null){
 			masterEntity = getMasterEntity(field.getAnnotations(),field.getType());
@@ -302,9 +308,12 @@ public final class EntityInspector {
 	}
 
 	private static String getPropertyDisplayName(EntityInfo entityInfo, PropertyDescriptor p) {
+		//call helper method to localize property name
 		return Helpers.getLocalizedDisplayName("PropertyNamesBundle", entityInfo.getEntityName(), p.getName(), p.getDisplayName());
 	}
 	
+	/* following are methods to determine given type's features and map entity properties to interface elements (selectors) later
+	 * */
 	private static MultipleType getMultipleType(Class<?> pClass) {
 		if(pClass.isArray()) return MultipleType.MULTIPLE;
 		else return MultipleType.SINGLE;
@@ -346,6 +355,7 @@ public final class EntityInspector {
 					OrderType.UNORDERED;
 	}
 
+	//convert string value to given type object
 	public static Object convertFromString(String pValue, Class<?> propertyType) {
 		
 		if(pValue==null) return null;
@@ -424,6 +434,7 @@ public final class EntityInspector {
 		return decorated.toString();
 	}
 	
+	//convert object value to string according to it's type
 	public static String convertToString(Object value){
 		
 		if(value==null){
@@ -482,6 +493,9 @@ public final class EntityInspector {
 		return result;
 	}
 
+	/* following are methods to check if given type belongs to some ordinary & primitive or common & widely accepted classes
+	 * */
+	
 	private static boolean isComparable(Class<?> cl) {
 		return Comparable.class.isAssignableFrom(cl);
 	}
@@ -605,6 +619,8 @@ public final class EntityInspector {
 	public static Object[] values(Class<?> pClass){
 		if(pClass.isEnum()){
 			try {
+				// look inside enumeration class for 'values' method and invoke it by means of Java Reflection API
+				// thus we collect all defined values of enumeration 
 				Method vMethod=pClass.getMethod("values", new Class[]{});
 				return (Object[])vMethod.invoke(null, new Object[]{});
 			} catch (SecurityException e) {
@@ -688,6 +704,7 @@ public final class EntityInspector {
 
 	}
 	
+	// set entity bean property value by reflection API
 	public static void setPropertyValue(
 			PropertyInfo pInfo,
 			Object entity, 
@@ -705,6 +722,7 @@ public final class EntityInspector {
 	
 	}
 
+	// get entity bean property value by reflection API
 	public static Object getPropertyValue(
 			PropertyInfo pInfo,
 			Object entity) 
@@ -722,7 +740,7 @@ public final class EntityInspector {
 
 	private static int getFieldWidth(Class<?> entityType,Class<?> propertyType, String fieldName) throws InterfaceException {
 		
-		int columnSize=Helpers.getAgent().getColumnSize(entityType,fieldName);
+		int columnSize=Startup.getAgent().getColumnSize(entityType,fieldName);
 
 		if(isCharacter(propertyType)){
 			return 1;
