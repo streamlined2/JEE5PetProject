@@ -11,6 +11,7 @@ public class HTTPTopLevelMenuSelectionForm extends HTTPMenuSelectionForm {
 		public TopLevelMenu(){
 			addMenuItem(new MenuItem("Entity",InterfaceContext.dataEditingUseCase));
 			addMenuItem(new MenuItem("Query",InterfaceContext.queryPerformanceUseCase));
+			addMenuItem(new MenuItem("Info",InterfaceContext.informationContext));
 		}
 	}
 

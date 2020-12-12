@@ -10,6 +10,7 @@ public class MenuItem implements Serializable, SelectionViewItem, Comparable<Men
 	
 	private String name;
 	private InterfaceContext context=null;
+	private int order = 0;
 	
 	public MenuItem(String name){
 		this.name = name;
@@ -29,6 +30,14 @@ public class MenuItem implements Serializable, SelectionViewItem, Comparable<Men
 	public String getItemName() {
 		return Helpers.getLocalizedDisplayName("MenuItemNamesBundle", name, "name");
 	}
+	
+	public int getOrder(){
+		return order;
+	}
+	
+	public void setOrder(int order){
+		this.order = order;
+	}
 
 	public InterfaceContext getContext() {
 		return context;
@@ -41,7 +50,7 @@ public class MenuItem implements Serializable, SelectionViewItem, Comparable<Men
 
 	@Override
 	public int compareTo(MenuItem item) {
-		return getItemName().compareTo(item.getItemName());
+		return getOrder()-item.getOrder();
 	}
 
 }

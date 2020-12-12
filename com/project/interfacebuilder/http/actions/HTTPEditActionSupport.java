@@ -1,6 +1,5 @@
 package com.project.interfacebuilder.http.actions;
 
-import com.project.inspection.EntityInfo;
 import com.project.inspection.EntityInspector;
 import com.project.interfacebuilder.InterfaceException;
 import com.project.interfacebuilder.http.HTTPController;
@@ -8,7 +7,7 @@ import com.project.interfacebuilder.http.forms.HTTPEditForm;
 import com.project.queries.DataSource;
 import com.project.queries.EntityDataSource;
 
-public class HTTPEditActionSupport extends HTTPSelectItemAction <EntityInfo> {
+public class HTTPEditActionSupport extends HTTPActionSupport /*HTTPSelectItemAction <EntityInfo>*/ {
 
 	public HTTPEditActionSupport(String name) {
 		super(name);

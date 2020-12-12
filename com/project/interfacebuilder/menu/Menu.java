@@ -2,7 +2,6 @@ package com.project.interfacebuilder.menu;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -11,9 +10,14 @@ public class Menu implements Iterable<MenuItem>{
 
 	private TreeMap<String,MenuItem> list=new TreeMap<String,MenuItem>();
 	
-	public Menu(){}
+	private int order;
+	
+	public Menu(){
+		order = 0;
+	}
 	
 	public void addMenuItem(MenuItem item){
+		item.setOrder(++order);
 		list.put(item.getItemID(), item);
 	}
 	

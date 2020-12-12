@@ -25,6 +25,7 @@ import com.project.interfacebuilder.http.forms.HTTPEditForm;
 import com.project.interfacebuilder.http.forms.HTTPEntitySelectionForm;
 import com.project.interfacebuilder.http.forms.HTTPFilterForm;
 import com.project.interfacebuilder.http.forms.HTTPForm;
+import com.project.interfacebuilder.http.forms.HTTPInformationForm;
 import com.project.interfacebuilder.http.forms.HTTPOrderForm;
 import com.project.interfacebuilder.http.forms.HTTPPropertyListForm;
 import com.project.interfacebuilder.http.forms.HTTPQueryForm;
@@ -45,6 +46,7 @@ public final class HTTPInterfaceBuilder {
 	private HTTPEntitySelectionForm entitySelectionForm;
 	private HTTPQuerySelectionForm querySelectionForm;
 	private HTTPTopLevelMenuSelectionForm topLevelMenuSelectionForm;
+	private HTTPInformationForm informationForm;
 	
 	private HTTPEditAction editAction;
 	private HTTPAddNewAction addNewAction;
@@ -67,7 +69,8 @@ public final class HTTPInterfaceBuilder {
 		topLevelMenuSelection,
 		dataEditingUseCase,
 		dataBrowsingUseCase,
-		queryPerformanceUseCase
+		queryPerformanceUseCase,
+		informationContext
 	};
 	
 	//singleton pattern
@@ -103,6 +106,7 @@ public final class HTTPInterfaceBuilder {
 		entitySelectionForm=new HTTPEntitySelectionForm();
 		querySelectionForm=new HTTPQuerySelectionForm();
 		topLevelMenuSelectionForm=new HTTPTopLevelMenuSelectionForm();
+		informationForm=new HTTPInformationForm();
 			
 		editAction=new HTTPEditAction();
 		addNewAction=new HTTPAddNewAction();
@@ -144,6 +148,7 @@ public final class HTTPInterfaceBuilder {
 	//top level menu selection
 		useCase.addRule(new TransitionRule(InterfaceContext.dataEditingUseCase,topLevelMenuSelectionForm,selectMenuItemAction,entitySelectionForm));
 		useCase.addRule(new TransitionRule(InterfaceContext.queryPerformanceUseCase,topLevelMenuSelectionForm,selectMenuItemAction,querySelectionForm));
+		useCase.addRule(new TransitionRule(InterfaceContext.informationContext,topLevelMenuSelectionForm,selectMenuItemAction,informationForm));
 
 	//run query form
 		useCase.addRule(new TransitionRule(InterfaceContext.queryPerformanceUseCase,querySelectionForm,runQueryAction,queryResultBrowseForm));

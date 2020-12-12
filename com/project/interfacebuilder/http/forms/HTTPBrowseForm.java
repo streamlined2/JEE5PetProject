@@ -42,7 +42,7 @@ public class HTTPBrowseForm extends HTTPDataRangeForm {
 		return visibleLines;
 	}
 
-private void addTableDefinition(List<EntityData> tableData) throws InterfaceException {
+	private void addTableDefinition(List<EntityData> tableData) throws InterfaceException {
 		
 		Object primaryKey=controller.getAttribute(HTTPController.PRIMARY_KEY_ATTRIBUTE);
 
